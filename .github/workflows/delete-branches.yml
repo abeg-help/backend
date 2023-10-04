@@ -1,0 +1,22 @@
+name: Delete Merged Branches
+
+on:
+  push:
+    branches:
+      [main, staging, alpha]
+jobs:
+  delete_merged_branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Delete Merged Branches
+        run: |
+          # Assuming 'main' is your default branch
+          git checkout main
+          git remote prune origin
+          git fetch --prune --tags
+          git branch --merged main | grep -v "main" | xargs -I {} git branch -d {}
+          git push origin --delete $(git branch -r --merged main | grep -v "main" | awk -F/ '{print $2}')
