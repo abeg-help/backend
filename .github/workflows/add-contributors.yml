@@ -1,13 +1,13 @@
 name: Add contributors
 
 on:
-  push:
-    branches:
-      - main
-      - dev
+  pull_request:
+    types:
+      - closed
 
 jobs:
   contrib-readme-job:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     name: A job to automate contrib in readme
     steps:
