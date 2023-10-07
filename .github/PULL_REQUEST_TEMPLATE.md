@@ -10,7 +10,7 @@ Please include a summary of the change and which issue is fixed (if applicable).
 
 ## Contribution Guidelines
 
-Before submitting this pull request, please review our [Contribution Guidelines](https://github.com/abeg-help/frontend/blob/dev/CONTRIBUTING.md) to understand how to contribute to this project.
+Before submitting this pull request, please review our [Contribution Guidelines](https://github.com/abeg-help/backend/blob/dev/CONTRIBUTING.md) to understand how to contribute to this project.
 
 ## Checklist
 
