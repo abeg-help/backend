@@ -3,7 +3,7 @@ name: Delete Merged Branches
 on:
   push:
     branches:
-      [main, staging, alpha]
+      [main, dev]
 jobs:
   delete_merged_branches:
     runs-on: ubuntu-latest
