@@ -8,6 +8,6 @@ import {
  * @param {number} length - The length of the random string to generate.
  * @return {string} - The generated random string.
  */
-export function generateRandomString(length) {
+export function generateRandomString(length: number) {
   return randomBytes(length).toString('hex');
 }

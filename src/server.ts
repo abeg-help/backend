@@ -1,22 +1,18 @@
-import { ENVIRONMENT } from './common/config/environment.js';
-import express from 'express';
-import AppError from './common/utils/appError.js';
-import { setRoutes } from './modules/routes/index.js';
-import {
-  catchAsync,
-  handleError,
-  timeoutMiddleware
-} from './common/utils/errorHandler.js';
 import cors from 'cors';
-import helmet from 'helmet';
-import { stream } from './common/utils/logger.js';
 import morgan from 'morgan';
-import { connectDb } from './common/config/database.js';
+import helmet from 'helmet';
+import { ENVIRONMENT } from './common/config';
+import express, { Express, Request, Response, NextFunction } from 'express';
+import { stream } from './common/utils/logger';
+import { connectDb } from './common/config/database';
+import { setRoutes } from './modules/routes';
+import AppError from './common/utils/appError';
+import { catchAsync, handleError, timeoutMiddleware } from './common/utils';
 
 /**
  * Default app configurations
  */
-const app = express();
+const app: Express = express();
 const port = ENVIRONMENT.APP.PORT;
 const appName = ENVIRONMENT.APP.NAME;
 
@@ -36,9 +32,8 @@ app.use(
   morgan(ENVIRONMENT.APP.ENV !== 'local' ? 'combined' : 'dev', { stream })
 );
 
-// append request time to all request
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
+app.use((req: Request, res: Response, next: NextFunction) => {
+  req['requestTime'] = new Date().toISOString();
   next();
 });
 
@@ -50,7 +45,7 @@ app.use('/', setRoutes());
 // catch 404 and forward to error handler
 app.all(
   '*',
-  catchAsync(async (req, res) => {
+  catchAsync(async (req: Request, res: Response) => {
     throw new AppError('route not found', 404);
   })
 );
@@ -64,7 +59,7 @@ app.use(handleError);
 /**
  * status check
  */
-app.get('*', (req, res) =>
+app.get('*', (req: Request, res: Response) =>
   res.send({
     Time: new Date(),
     status: 'running'
@@ -75,6 +70,6 @@ app.get('*', (req, res) =>
  * Bootstrap server
  */
 app.listen(port, () => {
-  console.log('=> ' + appName + 'app listening on port' + port + '!');
   connectDb();
+  console.log('=> ' + appName + ' app listening on port ' + port + ' !');
 });
