@@ -3,17 +3,12 @@ import { ENVIRONMENT } from '../config/environment';
 import { logger } from './logger';
 import { NextFunction, Request, Response } from 'express';
 
-/**
- * Wraps an async function to handle errors.
- *
- * @param {function} fn - The async function to be wrapped.
- * @return {function} - The wrapped function.
- */
 type catchAsync = (
   req: Request,
   res: Response,
   next?: NextFunction
 ) => Promise<any>;
+
 export const catchAsync = (fn: catchAsync) => {
   return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch((err: Error) => next(err));
