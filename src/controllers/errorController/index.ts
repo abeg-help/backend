@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { ENVIRONMENT } from 'src/common/config';
 import AppError from '../../common/utils/appError';
 import { logger } from '../../common/utils/logger';
 
@@ -22,7 +23,7 @@ const handleCastErrorDB: ErrorHandler = (err, req, res, next) => {
 const handleDuplicateFieldsDB: ErrorHandler = (err, req, res, next) => {
   if (err instanceof Error) {
     const castError = err as any;
-    const value = castError.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+    const value = castError.errmsg.match(/(["'])(\\[^]*?)\1/)[0];
     const message = `${value} has already been used!`;
     next(new AppError(message, 400));
   } else {
@@ -94,9 +95,9 @@ const errorHandler = (
     `${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
   );
 
-  if (process.env.NODE_ENV === 'development') {
+  if (ENVIRONMENT.APP.ENV === 'development') {
     sendErrorDev(err, res);
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (ENVIRONMENT.APP.ENV === 'production') {
     let error = { ...err };
 
     if (error.name === 'CastError') handleCastErrorDB(error, req, res, next);
