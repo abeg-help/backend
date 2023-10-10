@@ -1,5 +1,6 @@
-import AppError from '../../common/utils/appError';
-import { catchAsync } from '../../common/utils/errorHandler';
+import { catchAsync } from "../common/utils";
+import AppError from "../common/utils/appError";
+
 
 export const getUser = catchAsync(async (req, res) => {
   const user = {

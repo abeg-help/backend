@@ -5,7 +5,7 @@ import { ENVIRONMENT } from './common/config';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { stream } from './common/utils/logger';
 import { connectDb } from './common/config/database';
-import { setRoutes } from './modules/routes';
+import { setRoutes } from './routes';
 import AppError from './common/utils/appError';
 import { catchAsync, handleError, timeoutMiddleware } from './common/utils';
 

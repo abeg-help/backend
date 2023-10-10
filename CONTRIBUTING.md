@@ -1,6 +1,7 @@
 # Project Contribution Guidelines
 
 ## Table of Contents
+
 1. [Getting Started](#getting-started)
 2. [Finding an Issue](#finding-an-issue)
 3. [Creating a Pull Request](#creating-a-pull-request)
@@ -57,7 +58,8 @@ Before you begin contributing, make sure you have the following set up on your l
 - If you make significant changes, update the project's README or documentation files.
 
 ### 7. Review Process
-To update or create documentation, you need to have Markdown knowledge. 
+
+To update or create documentation, you need to have Markdown knowledge.
 Visit [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) to read about GitHub Markdown and [here](https://www.markdowntutorial.com/) to practice.
 
 - Your PR will be reviewed by maintainers and contributors.
