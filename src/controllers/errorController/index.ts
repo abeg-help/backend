@@ -23,7 +23,8 @@ const handleCastErrorDB: ErrorHandler = (err, req, res, next) => {
 const handleDuplicateFieldsDB: ErrorHandler = (err, req, res, next) => {
   if (err instanceof Error) {
     const castError = err as any;
-    const value = castError.errmsg.match(/(["'])(\\[^]*?)\1/)[0];
+    // const value = castError.errmsg.match(/(["'])(\\[^]*?)\1/)[0]; // TODO: fix this regex
+    const value = castError.errmsg.split('index: ')[1].split('_1')[0];
     const message = `${value} has already been used!`;
     next(new AppError(message, 400));
   } else {
