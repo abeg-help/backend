@@ -5,7 +5,6 @@ import { ENVIRONMENT } from './common/config';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { stream } from './common/utils/logger';
 import { connectDb } from './common/config/database';
-import { setRoutes } from './routes';
 import AppError from './common/utils/appError';
 import { catchAsync, handleError, timeoutMiddleware } from './common/utils';
 
@@ -40,7 +39,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 /**
  * Initialize routes
  */
-app.use('/', setRoutes());
 
 // catch 404 and forward to error handler
 app.all(
