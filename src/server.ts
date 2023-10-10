@@ -7,9 +7,11 @@ import morgan from 'morgan';
 import xss from 'xss-clean';
 import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
-import { catchAsync, handleError, timeoutMiddleware } from './common/utils';
 import AppError from './common/utils/appError';
 import { stream } from './common/utils/logger';
+import errorHandler from './controllers/errorController';
+import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
+import { timeoutMiddleware } from './middlewares/timeout';
 
 /**
  *  uncaughtException handler
@@ -63,18 +65,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 // catch 404 and forward to error handler
-app.all(
-  '*',
-  catchAsync(async (req: Request, res: Response) => {
-    throw new AppError('route not found', 404);
-  })
-);
+app.all('*', async (req: Request, res: Response) => {
+  throw new AppError('route not found', 404);
+});
 
 /**
  * Error handler middlewares
  */
 app.use(timeoutMiddleware);
-app.use(handleError);
+app.use(errorHandler);
+app.use(routeErrorHandlerWrapper);
 
 /**
  * status check
@@ -82,7 +82,7 @@ app.use(handleError);
 app.get('*', (req: Request, res: Response) =>
   res.send({
     Time: new Date(),
-    status: 'running'
+    status: 'Up and running'
   })
 );
 

@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from 'mongoose';
-import { IUserDocument } from '../../common/interfaces/user';
+import { IUserDocument } from '../common/interfaces/user';
 
 const UserSchema: Schema<IUserDocument> = new Schema({
   username: {

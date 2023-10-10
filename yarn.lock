@@ -146,6 +146,13 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/hpp@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.npmjs.org/@types/hpp/-/hpp-0.2.3.tgz"
+  integrity sha512-EIbnUHlMgZ7lndrm6p8GZsFnnFnw1w17ZWwT5q/6Mb+62o8BqdpgKxvEZFTYVOqOsOhXEbFmWSzZXVurP0XSnQ==
+  dependencies:
+    "@types/express" "*"
+
 "@types/http-errors@*":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@types/http-errors/-/http-errors-2.0.2.tgz"
