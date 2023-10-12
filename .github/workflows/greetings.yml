@@ -9,9 +9,8 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Welcome to Abeg Help! 🎉 Please feel free to ask questions, contribute if you encounter a bug, or open an issue if you want to suggest an improvement. We're here to help!"
-        pr-message: "Thanks for your contribution! 🙌 We appreciate your pull request. Our team will review it as soon as possible. If you have any questions or need assistance, please don't hesitate to ask."
-
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: "Welcome to Abeg Help! 🎉 Please feel free to ask questions, contribute if you encounter a bug, or open an issue if you want to suggest an improvement. We're here to help!"
+          pr-message: "Thanks for your contribution! 🙌 We appreciate your pull request. Our team will review it as soon as possible. If you have any questions or need assistance, please don't hesitate to ask."

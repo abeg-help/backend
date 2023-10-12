@@ -7,18 +7,17 @@ on:
 
 jobs:
   delete_branch:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check if pull request was merged
-      run: |
-        pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        merged_status=$(curl -s -X GET -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number/merge" | jq -r .merged)
+      - name: Check if pull request was merged
+        run: |
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          merged_status=$(curl -s -X GET -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number/merge" | jq -r .merged)
 
-        if [ "$merged_status" == "true" ]; then
-          source_branch=$(curl -s -X GET -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number" | jq -r .head.ref)
-          git push origin --delete "$source_branch"
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if [ "$merged_status" == "true" ]; then
+            source_branch=$(curl -s -X GET -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number" | jq -r .head.ref)
+            git push origin --delete "$source_branch"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

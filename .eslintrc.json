@@ -18,9 +18,6 @@
     // Allow named and default exports
     "import/prefer-default-export": "off",
 
-    // Disable importing non js/ts files like svg
-    "import/extensions": "error",
-
     // Allow using console methods
     "no-console": "off",
 
@@ -30,13 +27,23 @@
     // Allow nested ternary expressions
     "no-nested-ternary": "off",
 
+    // Allow using regex
+    "no-control-regex": "off",
+
     // Allow parameter reassignment
     "no-param-reassign": "off",
 
-    // Disallow the use of any type
-    "@typescript-eslint/no-explicit-any": "error",
+    // Warn when any type is used
+    "@typescript-eslint/no-explicit-any": "warn",
 
     // Disallow unused variables
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": "error",
+
+    // Allow unused expressions
+    "@typescript-eslint/no-unused-expressions": "off",
+
+    // Allow the use of _ in code
+    "no-underscore-dangle": "off",
+    "prefer-const": "warn"
   }
 }
