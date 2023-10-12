@@ -1,16 +1,42 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended",
-      "prettier"
-    ],
-    "rules": {
-        // Custom rules here
-    }
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    // Prettier plugin should always be the last to overwrite existing plugins settings that might conflict with prettier
+    "prettier"
+  ],
+  "rules": {
+    // Add additional configurations or overwrite plugin configurations here
+
+    // Allow named and default exports
+    "import/prefer-default-export": "off",
+
+    // Disable importing non js/ts files like svg
+    "import/extensions": "error",
+
+    // Allow using console methods
+    "no-console": "off",
+
+    // Allow boolean casting
+    "no-extra-boolean-cast": "off",
+
+    // Allow nested ternary expressions
+    "no-nested-ternary": "off",
+
+    // Allow parameter reassignment
+    "no-param-reassign": "off",
+
+    // Disallow the use of any type
+    "@typescript-eslint/no-explicit-any": "error",
+
+    // Disallow unused variables
+    "@typescript-eslint/no-unused-vars": "error"
   }
+}
