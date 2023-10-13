@@ -4,7 +4,6 @@
   "description": "Expressjs project generated using startease CLI tool",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch src/server.js",
     "precommit": "lint-staged",
     "prepare": "husky install",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register build/index.js",
