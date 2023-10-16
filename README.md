@@ -123,6 +123,13 @@ Your backend server should now be running at http://localhost:<specified-port>.
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Chimise">
+            <img src="https://avatars.githubusercontent.com/u/66853110?v=4" width="100;" alt="Chimise"/>
+            <br />
+            <sub><b>Chisom Promise</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/jemmycodes">
             <img src="https://avatars.githubusercontent.com/u/110843645?v=4" width="100;" alt="jemmycodes"/>
             <br />
