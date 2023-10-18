@@ -75,6 +75,7 @@ userSchema.method('toJSON', function (this: HydratedDocument<User>) {
 });
 
 // Verify user password
+
 userSchema.method('verifyPassword', async function (this: HydratedDocument<User>, enteredPassword: string) {
   if (!this.password) {
     return false;
