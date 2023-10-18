@@ -28,7 +28,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/bcryptjs": "^2.4.5",
     "bcryptjs": "^2.4.3",
     "connect-timeout": "^1.9.0",
     "cors": "^2.8.5",
@@ -44,6 +43,7 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.5",
     "@types/connect-timeout": "^0.0.37",
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.18",
