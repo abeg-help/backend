@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import { IUserDocument } from '../common/interfaces/user';
 
-const UserSchema: Schema<IUserDocument> = new Schema({
+const UserSchema: Schema<IUserDocument> = new Schema( {
   username: {
     type: String,
     required: true,
@@ -16,8 +16,8 @@ const UserSchema: Schema<IUserDocument> = new Schema({
     type: Number,
     required: true,
   },
-});
+} );
 
-const UserModel: Model<IUserDocument> = mongoose.model('User', UserSchema);
+const UserModel: Model<IUserDocument> = mongoose.model( 'User', UserSchema );
 
 export default UserModel;

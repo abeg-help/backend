@@ -7,4 +7,7 @@ export interface IEnvironment {
   DB: {
     URL: string;
   };
+
+  JWT_SECRET_KEY: string | undefined;
+
 }
