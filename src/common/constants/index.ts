@@ -18,6 +18,6 @@ export enum IDType {
 export enum Gender {
 	Male = 'male',
 	Female = 'female',
-	Others = 'others',
+	Other = 'other',
 	None = 'none',
 }

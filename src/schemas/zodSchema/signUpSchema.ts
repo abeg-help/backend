@@ -18,8 +18,7 @@ const SignUpSchema = z
 			.string()
 			.min(12, 'Password must have at least 12 characters!')
 			.regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/, {
-				message: `Password must contain at least one uppercase letter, one lowercase letter,
-		  one number and one special character or symbol`,
+				message: `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character or symbol`,
 			}),
 
 		phoneNumber: z
