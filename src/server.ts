@@ -17,9 +17,9 @@ import { timeoutMiddleware } from './middlewares/timeout';
  *  uncaughtException handler
  */
 process.on('uncaughtException', (error: Error) => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Server Shutting down...');
-  console.log(error.name, error.message);
-  process.exit(1);
+	console.log('UNCAUGHT EXCEPTION! 💥 Server Shutting down...');
+	console.log(error.name, error.message);
+	process.exit(1);
 });
 
 /**
@@ -43,9 +43,9 @@ app.use(mongoSanitize());
 app.use(xss());
 // Prevent parameter pollution
 app.use(
-  hpp({
-    whitelist: ['date', 'createdAt'], // whitelist some parameters
-  })
+	hpp({
+		whitelist: ['date', 'createdAt'], // whitelist some parameters
+	})
 );
 
 /**
@@ -54,8 +54,8 @@ app.use(
 app.use(morgan(ENVIRONMENT.APP.ENV !== 'local' ? 'combined' : 'dev', { stream }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  req['requestTime'] = new Date().toISOString();
-  next();
+	req['requestTime'] = new Date().toISOString();
+	next();
 });
 
 /**
@@ -64,7 +64,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // catch 404 and forward to error handler
 app.all('*', async () => {
-  throw new AppError('route not found', 404);
+	throw new AppError('route not found', 404);
 });
 
 /**
@@ -78,18 +78,18 @@ app.use(routeErrorHandlerWrapper);
  * status check
  */
 app.get('*', (req: Request, res: Response) =>
-  res.send({
-    Time: new Date(),
-    status: 'Up and running',
-  })
+	res.send({
+		Time: new Date(),
+		status: 'Up and running',
+	})
 );
 
 /**
  * Bootstrap server
  */
 const server = app.listen(port, () => {
-  connectDb();
-  console.log('=> ' + appName + ' app listening on port ' + port + ' !');
+	connectDb();
+	console.log('=> ' + appName + ' app listening on port ' + port + ' !');
 });
 
 /**
@@ -97,9 +97,9 @@ const server = app.listen(port, () => {
  */
 
 process.on('unhandledRejection', (error: Error) => {
-  console.log('UNHANDLED REJECTION! 💥 Server Shutting down...');
-  console.log(error.name, error.message);
-  server.close(() => {
-    process.exit(1);
-  });
+	console.log('UNHANDLED REJECTION! 💥 Server Shutting down...');
+	console.log(error.name, error.message);
+	server.close(() => {
+		process.exit(1);
+	});
 });
