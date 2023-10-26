@@ -32,7 +32,7 @@ const handleMongooseDuplicateFieldsError = (err: CustomError, req: Request, res:
 	if (matchResult && matchResult.length > 0) {
 		const value = matchResult[0];
 		const message = `Duplicate field value: ${value}. Please use a different value.`;
-		next(new AppError(message, 400));
+		next(new AppError(message, 409));
 	} else {
 		next(err);
 	}
