@@ -12,7 +12,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"watch": "tsc --watch & nodemon build/index.js",
 		"lint": "npx eslint src/",
-		"format": "npx prettier --write ."
+		"format": "npx prettier --write .",
+		"email": "email dev --dir src/emailTemplates"
 	},
 	"husky": {
 		"hooks": {
@@ -28,6 +29,8 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@react-email/button": "0.0.10",
+		"@react-email/html": "0.0.4",
 		"bcryptjs": "^2.4.3",
 		"connect-timeout": "^1.9.0",
 		"cors": "^2.8.5",
@@ -38,6 +41,7 @@
 		"hpp": "^0.2.3",
 		"mongoose": "^7.6.0",
 		"morgan": "^1.10.0",
+		"react-email": "1.9.5",
 		"tsconfig-paths": "^3.14.1",
 		"winston": "^3.10.0",
 		"xss-clean": "^0.1.4",
