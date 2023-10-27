@@ -1,3 +1,6 @@
+import { createBullBoard } from '@bull-board/api';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { ExpressAdapter } from '@bull-board/express';
 import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
@@ -7,18 +10,20 @@ import morgan from 'morgan';
 import xss from 'xss-clean';
 import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
-import AppError from './common/utils/appError';
-import { stream } from './common/utils/logger';
+import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
 import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
 import { timeoutMiddleware } from './middlewares/timeout';
-
+import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
+import { userRouter } from './routes';
 /**
  *  uncaughtException handler
  */
 process.on('uncaughtException', (error: Error) => {
 	console.log('UNCAUGHT EXCEPTION! 💥 Server Shutting down...');
 	console.log(error.name, error.message);
+	logger.error('UNCAUGHT EXCEPTION!! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
+	stopQueue();
 	process.exit(1);
 });
 
@@ -28,6 +33,14 @@ process.on('uncaughtException', (error: Error) => {
 const app: Express = express();
 const port = ENVIRONMENT.APP.PORT;
 const appName = ENVIRONMENT.APP.NAME;
+
+// QUEUE
+const serverAdapter = new ExpressAdapter();
+serverAdapter.setBasePath('/api/v1/queue');
+createBullBoard({
+	queues: [new BullMQAdapter(emailQueue)],
+	serverAdapter,
+});
 
 /**
  * App Security
@@ -51,7 +64,7 @@ app.use(
 /**
  * Logger Middleware
  */
-app.use(morgan(ENVIRONMENT.APP.ENV !== 'local' ? 'combined' : 'dev', { stream }));
+app.use(morgan(ENVIRONMENT.APP.ENV !== 'development' ? 'combined' : 'dev', { stream }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
 	req['requestTime'] = new Date().toISOString();
@@ -63,8 +76,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 // catch 404 and forward to error handler
-app.all('*', async () => {
-	throw new AppError('route not found', 404);
+app.use('/api/v1/queue', serverAdapter.getRouter());
+app.use('/api/v1/user', userRouter);
+
+app.all('/*', async (req, res) => {
+	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
+	res.status(404).json({
+		status: 'error',
+		message: 'Invalid endpoint',
+	});
 });
 
 /**
@@ -89,7 +109,14 @@ app.get('*', (req: Request, res: Response) =>
  */
 const server = app.listen(port, () => {
 	connectDb();
-	console.log('=> ' + appName + ' app listening on port ' + port + ' !');
+	console.log('=> ' + appName + ' app listening on port ' + port + '!');
+
+	// start the email worker and queues
+	(async () => {
+		await emailQueue.waitUntilReady();
+		await emailWorker.waitUntilReady();
+		await emailQueueEvent.waitUntilReady();
+	})();
 });
 
 /**
@@ -99,6 +126,8 @@ const server = app.listen(port, () => {
 process.on('unhandledRejection', (error: Error) => {
 	console.log('UNHANDLED REJECTION! 💥 Server Shutting down...');
 	console.log(error.name, error.message);
+	logger.error('UNHANDLED REJECTION! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
+	stopQueue();
 	server.close(() => {
 		process.exit(1);
 	});

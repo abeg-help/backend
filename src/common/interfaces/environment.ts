@@ -7,4 +7,12 @@ export interface IEnvironment {
 	DB: {
 		URL: string;
 	};
+	REDIS: {
+		URL: string;
+		PORT: number;
+		PASSWORD: string;
+	};
+	EMAIL: {
+		API_KEY: string;
+	};
 }
