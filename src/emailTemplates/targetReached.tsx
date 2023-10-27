@@ -15,9 +15,9 @@ const targetReached = () => {
             <tr>
               <td style="padding: 20px; text-align: center;">
                 <h1 style="color: #4CAF50;">🎉 Target Reached! 🎉</h1>
-                <p style="font-size: 16px; line-height: 24px; color: #555;">Dear [User],
+                <p style="font-size: 16px; line-height: 24px; color: #555;">Dear John Doe,
       
-                  We are thrilled to share the fantastic news with you! Thanks to your support and the generosity of our community, we've successfully reached our fundraising target.
+                  We are thrilled to share the fantastic news with you! Thanks to your support and the generosity of our community, we've successfully reached your fundraising target.
       
                   Your contribution has played a vital role in making this achievement possible. Together, we are making a positive impact and turning our shared vision into reality.
       
