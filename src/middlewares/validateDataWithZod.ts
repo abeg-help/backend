@@ -8,9 +8,9 @@ const validateDataWithZod =
 		const result = Schema.safeParse(rawData);
 
 		if (!result.success) {
-			const zodErrors = { errors: result.error.flatten().fieldErrors };
-
-			res.status(422).json(zodErrors);
+			const errors = result.error.flatten().fieldErrors;
+			const message = `${Object.keys(errors).toString()} fields are required!`;
+			res.status(422).json({ error: message });
 			return;
 		}
 

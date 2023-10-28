@@ -12,6 +12,7 @@ import { stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
 import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
 import { timeoutMiddleware } from './middlewares/timeout';
+import authRouter from './routes/authRoutes';
 
 /**
  *  uncaughtException handler
@@ -61,6 +62,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 /**
  * Initialize routes
  */
+
+app.use('/api', authRouter);
 
 // catch 404 and forward to error handler
 app.all('*', async () => {
