@@ -27,13 +27,8 @@ export const SignUpSchema = z
 			.regex(/(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/g, {
 				message: 'Please enter a valid phone number!',
 			}),
-		photo: z.string().min(2, 'character must be greater than 2'),
-		providers: z.enum(),
-		role: z.enum(['guest', 'superuser', 'user']),
 		gender: z.enum(['male', 'female', 'other', 'none']),
-		address: z.string(),
 		confirmPassword: z.string().min(1, 'Password confirmation is required!'),
-		acceptTerms: z.boolean().optional(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Both passwords must match!',

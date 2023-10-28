@@ -16,7 +16,6 @@ import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
 import { timeoutMiddleware } from './middlewares/timeout';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { userRouter } from './routes';
-import authRouter from './routes/authRoutes';
 
 /**
  *  uncaughtException handler
@@ -76,8 +75,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 /**
  * Initialize routes
  */
-
-app.use('/api/v1', authRouter);
 
 // catch 404 and forward to error handler
 app.use('/api/v1/queue', serverAdapter.getRouter());
