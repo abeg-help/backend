@@ -77,7 +77,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  * Initialize routes
  */
 
-app.use('/api', authRouter);
+app.use('/api/v1', authRouter);
 
 // catch 404 and forward to error handler
 app.use('/api/v1/queue', serverAdapter.getRouter());
