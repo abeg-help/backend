@@ -28,6 +28,7 @@ export const SignUpSchema = z
 				message: 'Please enter a valid phone number!',
 			}),
 		photo: z.string().min(2, 'character must be greater than 2'),
+		providers: z.enum(),
 		role: z.enum(['guest', 'superuser', 'user']),
 		gender: z.enum(['male', 'female', 'other', 'none']),
 		address: z.string(),
