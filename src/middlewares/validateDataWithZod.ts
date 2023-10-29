@@ -9,7 +9,14 @@ const validateDataWithZod =
 
 		if (!result.success) {
 			const errors = result.error.flatten().fieldErrors;
-			const message = `${Object.keys(errors).toString()} fields are required!`;
+			let message = '';
+			for (const [key, value] of Object.entries(errors)) {
+				if (value?.includes('Required')) {
+					message += `${key} is ${value} \n`;
+				} else {
+					message += `${key}: ${value} \n`;
+				}
+			}
 			res.status(422).json({ error: message });
 			return;
 		}
