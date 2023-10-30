@@ -27,7 +27,11 @@ export const SignUpSchema = z
 			.regex(/(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/g, {
 				message: 'Please enter a valid phone number!',
 			}),
-		gender: z.enum(['male', 'female', 'other', 'none']),
+		gender: z
+			.enum(['male', 'female', 'other', 'none'])
+			.refine((gender) => !['male', 'female', 'other', 'none'].includes(gender), {
+				message: 'Invalid gender! Please choose one of the options',
+			}),
 		confirmPassword: z.string().min(1, 'Password confirmation is required!'),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
