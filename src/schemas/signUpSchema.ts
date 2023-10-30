@@ -34,5 +34,4 @@ export const SignUpSchema = z
 		message: 'Both passwords must match!',
 		path: ['confirmPassword'],
 	});
-
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
