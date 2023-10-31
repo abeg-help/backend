@@ -1,7 +1,9 @@
 import express from 'express';
+import { validateDataWithZod } from 'src/middlewares/validateDataWithZod';
+import { SignUpSchema } from 'src/schemas';
 import { test } from '../controllers';
 const router = express.Router();
 
-router.post('/test', test);
+router.post('/test', validateDataWithZod(SignUpSchema), test);
 
 export { router as userRouter };
