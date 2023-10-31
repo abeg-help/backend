@@ -170,5 +170,5 @@ userSchema.method('generateRefreshToken', function (this: HydratedDocument<IUser
 	// Implement functionality to generate refresh token for user
 });
 
-const User = mongoose.model<IUser, UserModel>('User', userSchema);
-export { User };
+const UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
+export { UserModel };
