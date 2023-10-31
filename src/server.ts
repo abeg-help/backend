@@ -14,7 +14,7 @@ import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
 import { timeoutMiddleware } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import { userRouter } from './routes';
+import { userRouter, authRoute } from './routes';
 
 /**
  *  uncaughtException handler
@@ -78,6 +78,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // catch 404 and forward to error handler
 app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/auth', authRoute);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
