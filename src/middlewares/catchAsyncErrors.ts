@@ -1,23 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
+import AppError from 'src/common/utils/appError';
 
-type CatchAsyncFunction = (req: Request, res: Response, next: NextFunction) => Promise<Response>;
+type CatchAsyncFunction = (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
 
 const catchAsync = (fn: CatchAsyncFunction) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const result = await fn(req, res, next);
-			return result; // Optionally return the result from the controller
+			if (result instanceof Response) {
+				return result;
+			}
 		} catch (err) {
-			next(err);
+			if (err instanceof AppError) {
+				return next(err);
+			}
+			return next(new AppError('An unexpected error occurred', 500));
 		}
 	};
 };
 
-// Create a custom middleware to wrap route handlers
-const routeErrorHandlerWrapper = (middleware: CatchAsyncFunction) => {
-	return (req: Request, res: Response, next: NextFunction) => {
-		return catchAsync(middleware)(req, res, next);
-	};
-};
-
-export { catchAsync, routeErrorHandlerWrapper };
+export { catchAsync };

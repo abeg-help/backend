@@ -12,8 +12,7 @@ import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
 import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
-import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
-import { timeoutMiddleware } from './middlewares/timeout';
+import { timeoutMiddleware } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { userRouter } from './routes';
 
@@ -89,13 +88,6 @@ app.all('/*', async (req, res) => {
 });
 
 /**
- * Error handler middlewares
- */
-app.use(timeoutMiddleware);
-app.use(errorHandler);
-app.use(routeErrorHandlerWrapper);
-
-/**
  * status check
  */
 app.get('*', (req: Request, res: Response) =>
@@ -119,6 +111,12 @@ const server = app.listen(port, () => {
 		await emailQueueEvent.waitUntilReady();
 	})();
 });
+
+/**
+ * Error handler middlewares
+ */
+app.use(timeoutMiddleware);
+app.use(errorHandler);
 
 /**
  * unhandledRejection  handler

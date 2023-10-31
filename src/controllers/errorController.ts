@@ -5,7 +5,7 @@ import AppError from '../common/utils/appError';
 import { logger } from '../common/utils/logger';
 
 // Define custom error types
-type CustomError = CastError | MongooseError.ValidationError | AppError | Error; // Add more custom error types as needed
+type CustomError = AppError | MongooseError; // Add more custom error types as needed
 
 type ErrorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => void;
 
@@ -53,7 +53,6 @@ const handleTimeoutError = (err: CustomError, req: Request, res: Response, next:
 const sendErrorDev = (err: AppError, res: Response) => {
 	res.status(err.statusCode).json({
 		status: err.status,
-		error: err,
 		message: err.message,
 		stack: err.stack,
 	});
@@ -76,11 +75,6 @@ const sendErrorProd = (err: AppError, res: Response) => {
 
 const errorHandler: ErrorHandler = (err, req, res, next) => {
 	if (err instanceof AppError) {
-		// Handle custom AppError
-		err.statusCode = err.statusCode || 500;
-		err.status = err.status || 'error';
-		err.message = err.message || 'Something went wrong';
-
 		const { statusCode, message } = err;
 		logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
@@ -101,6 +95,12 @@ const errorHandler: ErrorHandler = (err, req, res, next) => {
 		handleJWTExpiredError(err, req, res, next);
 	} else if ('code' in err && err.code === 11000) {
 		handleMongooseDuplicateFieldsError(err, req, res, next);
+	} else {
+		res.status(500).json({
+			status: 'error',
+			message: 'Something went wrong',
+		});
+		logger.error(`unhandled error: ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 	}
 };
 

@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
+import AppError from 'src/common/utils/appError';
+import { catchAsync } from 'src/middlewares';
 import { addEmailToQueue } from 'src/queues/emailQueue';
 
-export const test = (req: Request, res: Response) => {
+export const test = catchAsync(async (req: Request, res: Response) => {
+	if (!req.body) throw new AppError('Test error', 400);
+
 	addEmailToQueue({
 		type: 'passwordResetSuccessful',
 		data: {
@@ -9,8 +13,8 @@ export const test = (req: Request, res: Response) => {
 			priority: 'high',
 		},
 	});
-	res.status(200).json({
+	return res.status(200).json({
 		status: 'success',
 		message: 'Test route',
 	});
-};
+});
