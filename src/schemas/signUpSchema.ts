@@ -38,10 +38,10 @@ export const SignUpSchema = z
 		gender: z.enum(['male', 'female', 'other', 'none'], {
 			errorMap: () => ({ message: 'Please choose one of the gender options' }),
 		}),
-		confirmPassword: z.string().min(1, 'Password confirmation is required!'),
+		confirmPassword: z.string().min(8, 'Password confirmation is required!'),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
-		message: 'Passwords do not match match!',
+		message: 'Passwords do not match!',
 		path: ['confirmPassword'],
 	});
 
