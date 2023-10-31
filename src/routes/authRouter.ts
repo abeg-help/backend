@@ -7,4 +7,4 @@ const router = Router();
 
 router.post('/signup', validateDataWithZod(SignUpSchema), signUp);
 
-export { router as authRoute };
+export { router as authRouter };
