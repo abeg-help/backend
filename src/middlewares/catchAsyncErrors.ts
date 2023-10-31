@@ -11,6 +11,7 @@ const catchAsync = (fn: CatchAsyncFunction) => {
 				return result;
 			}
 		} catch (err) {
+			console.log(err);
 			if (err instanceof AppError) {
 				return next(err);
 			}
