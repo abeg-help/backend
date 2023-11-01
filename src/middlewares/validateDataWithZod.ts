@@ -10,6 +10,10 @@ const validateDataWithZod =
 				status: 'error',
 				error: 'No data provided',
 			});
+		if (rawData.phoneNumber) {
+			const phone = rawData.phoneNumber.includes('234') ? rawData.phoneNumber : `234${rawData.phoneNumber}`;
+			rawData.phoneNumber = phone;
+		}
 		const result = Schema.safeParse(rawData);
 		if (!result.success) {
 			const errorDetails: { [key: string]: string[] } = {};

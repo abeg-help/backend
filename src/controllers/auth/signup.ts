@@ -4,12 +4,14 @@ import { catchAsync } from 'src/middlewares';
 import { UserModel } from 'src/models';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
-	const body = req.body;
-	console.log(req.body);
-	const userExists = await UserModel.find({ email: body.email });
-	if (userExists) throw new AppError('Duplicate', 409);
+	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
+	if (!email || !firstName || !lastName || !phoneNumber || !password || !gender) {
+		throw new AppError('Incomplete signup data', 400);
+	}
+	const userExists = await UserModel.findOne({ $or: [{ email }, { phoneNumber }] });
+	if (userExists) {
+		throw new AppError(`${userExists.email === email ? 'Email' : 'Phone number'} has already been used`, 409);
+	}
 
-	const user = await UserModel.create(body);
-	console.log(user);
-	return res.status(201).json({ data: user });
+	return res.status(201).json({ data: userExists });
 });
