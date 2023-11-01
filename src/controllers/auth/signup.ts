@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import AppError from 'src/common/utils/appError';
-import { catchAsync } from 'src/middlewares';
 import { UserModel } from 'src/models';
 
-export const signUp = catchAsync(async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response) => {
 	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
 	if (!email || !firstName || !lastName || !phoneNumber || !password || !gender) {
 		throw new AppError('Incomplete signup data', 400);
@@ -14,4 +13,4 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	}
 
 	return res.status(201).json({ data: userExists });
-});
+};

@@ -7,24 +7,34 @@ const verifyPhoneNumber = (value: string) => {
 	return phoneUtil.isValidNumber(number);
 };
 
-export const SignUpSchema = z
+export const baseSchema = z.object({
+	firstName: z.string(),
+	lastName: z.string(),
+	email: z.string(),
+	password: z.string(),
+	phoneNumber: z.string(),
+	gender: z.enum(['male', 'female', 'other', 'none']),
+	confirmPassword: z.string(),
+});
+
+export const mainSchema = z
 	.object({
 		firstName: z
 			.string()
 			.min(2, 'First name must be at least 2 characters long')
 			.max(50, 'First name must not be 50 characters long')
-			.regex(
-				/^[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g,
-				'Firstname must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").'
-			),
+			.refine((name) => /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(name), {
+				message:
+					'Firstname must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").',
+			}),
 		lastName: z
 			.string()
 			.min(2, 'Last name must be at least 2 characters long')
 			.max(50, 'Last name must not be 50 characters long')
-			.regex(
-				/^[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g,
-				'Lastname must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").'
-			),
+			.refine((name) => /^(?!.*-[a-z])[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g.test(name), {
+				message:
+					'Lastname must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").',
+			}),
 		email: z.string().email('Please enter a valid email address!'),
 		password: z
 			.string()
@@ -44,5 +54,3 @@ export const SignUpSchema = z
 		message: 'Passwords do not match!',
 		path: ['confirmPassword'],
 	});
-
-export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
