@@ -15,4 +15,8 @@ export interface IEnvironment {
 	EMAIL: {
 		API_KEY: string;
 	};
+	JWT: {
+		ACCESS_KEY: string;
+		REFRESH_KEY: string;
+	};
 }

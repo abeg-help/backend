@@ -46,7 +46,7 @@ createBullBoard({
  * App Security
  */
 app.use(helmet());
-app.use(cors());
+app.use(cors({ credentials: true, origin: true, allowedHeaders: ['Set-Cookie', 'Content-Type'] }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.disable('x-powered-by');

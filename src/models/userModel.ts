@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
-import { Gender, IDType, Role } from 'src/common/constants';
-import { IUser, UserMethods } from 'src/common/interfaces';
+import jwt, { SignOptions } from 'jsonwebtoken';
+import { Gender, IDType, Role, JWTExpiresIn } from '../common/constants';
+import { IUser, UserMethods } from '../common/interfaces';
+import { ENVIRONMENT } from '../common/config';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 
@@ -162,12 +164,40 @@ userSchema.method('verifyPassword', async function (this: HydratedDocument<IUser
 	return isValid;
 });
 
-userSchema.method('generateAuthToken', function (this: HydratedDocument<IUser>) {
-	// Implement functionality to generate auth token for user
+userSchema.method('toJSON', function (this: HydratedDocument<IUser>, fields?: Array<keyof IUser>) {
+	const user = this.toObject();
+	if (fields && fields.length === 0) {
+		return user;
+	}
+
+	if (fields && fields.length > 0) {
+		for (const field of fields) {
+			if (field in user) {
+				delete user[field];
+			}
+		}
+		return user;
+	}
+
+	const { _id, firstName, lastName, email, photo } = user;
+	return { _id, firstName, lastName, email, photo };
 });
 
-userSchema.method('generateRefreshToken', function (this: HydratedDocument<IUser>) {
-	// Implement functionality to generate refresh token for user
+userSchema.method('generateAccessToken', function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
+	const accessToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.ACCESS_KEY, {
+		...options,
+		expiresIn: JWTExpiresIn.Access,
+	});
+	return accessToken;
+});
+
+userSchema.method('generateRefreshToken', function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
+	const refreshToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.REFRESH_KEY, {
+		...options,
+		expiresIn: JWTExpiresIn.Refresh,
+	});
+	this.refreshToken = refreshToken;
+	return refreshToken;
 });
 
 export default mongoose.model<IUser, UserModel>('User', userSchema);
