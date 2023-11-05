@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import AppError from 'src/common/utils/appError';
+import { catchAsync } from 'src/middlewares';
 import { addEmailToQueue } from 'src/queues/emailQueue';
 
-export const test = async (req: Request, res: Response) => {
+export const test = catchAsync(async (req: Request, res: Response) => {
 	if (req.body) throw new AppError('Test error without catchAsync wrapper', 400);
 
 	addEmailToQueue({
@@ -16,4 +17,4 @@ export const test = async (req: Request, res: Response) => {
 		status: 'success',
 		message: 'Test route',
 	});
-};
+});

@@ -78,10 +78,10 @@ const errorHandler: ErrorHandler = (err, req, res, next) => {
 		const { statusCode, message } = err;
 		logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
-		if (ENVIRONMENT.APP.ENV === 'development') {
-			sendErrorDev(err, res);
-		} else if (ENVIRONMENT.APP.ENV === 'production') {
+		if (ENVIRONMENT.APP.ENV === 'production') {
 			sendErrorProd(err, res);
+		} else {
+			sendErrorDev(err, res);
 		}
 	} else if (err instanceof mongoose.Error.CastError) {
 		handleMongooseCastError(err, req, res, next);
