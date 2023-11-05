@@ -4,7 +4,7 @@ import { catchAsync } from 'src/middlewares';
 import { generateRandomString, hashData } from '../common/utils';
 import AppError from '../common/utils/appError';
 import { AppResponse } from '../common/utils/appResponse';
-import UserModel from '../models/userModel';
+import { UserModel } from '../models/userModel';
 
 export const seedUser = catchAsync(async (req: Request, res: Response) => {
 	const user = await UserModel.create({
