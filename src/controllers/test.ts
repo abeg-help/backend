@@ -4,7 +4,7 @@ import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 
 export const test = catchAsync(async (req: Request, res: Response) => {
-	console.log(req.body);
+	console.log(req);
 
 	if (req.body) throw new AppError('Test error without catchAsync wrapper', 400);
 

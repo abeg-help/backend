@@ -9,10 +9,12 @@ import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import compression from 'compression';
+import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
+import helmet, { HelmetOptions } from 'helmet';
+import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
@@ -44,6 +46,11 @@ createBullBoard({
 });
 
 /**
+ * Express configuration
+ */
+app.use(express.json({ limit: '10kb' }));
+
+/**
  * Compression Middleware
  */
 app.use(compression());
@@ -60,25 +67,25 @@ const limiter = rateLimit({
 });
 app.use('/*', limiter);
 
-// Middleware to allow CORS from frontend
-// app.use(
-// 	cors({
-// 		origin: ['https://your-real-frontend-url.com', 'http://localhost'], // TODO: change this to your frontend url
-// 		credentials: true,
-// 	})
-// );
-// Configure Content Security Policy (CSP)
-// const contentSecurityPolicy = {
-// 	directives: {
-// 		defaultSrc: ["'self'"],
-// 		scriptSrc: ["'self'", 'https://ajax.googleapis.com'], // TODO: change this to your frontend url, scripts and other trusted sources
-// 		styleSrc: ["'self'", 'trusted-cdn.com', "'unsafe-inline'"], // TODO: change this to your frontend url, styles and other trusted sources
-// 		imgSrc: ["'self'", 's3-bucket-url', 'data:'], // TODO: change this to your frontend url, images and other trusted sources
-// 		frameAncestors: ["'none'"],
-// 		objectSrc: ["'none'"],
-// 		upgradeInsecureRequests: "'self'",
-// 	},
-// };
+//Middleware to allow CORS from frontend
+app.use(
+	cors({
+		origin: ['https://your-real-frontend-url.com', 'http://localhost'], // TODO: change this to your frontend url
+		credentials: true,
+	})
+);
+//Configure Content Security Policy (CSP)
+const contentSecurityPolicy = {
+	directives: {
+		defaultSrc: ["'self'"],
+		scriptSrc: ["'self'", 'https://ajax.googleapis.com'], // TODO: change this to your frontend url, scripts and other trusted sources
+		styleSrc: ["'self'", 'trusted-cdn.com', "'unsafe-inline'"], // TODO: change this to your frontend url, styles and other trusted sources
+		imgSrc: ["'self'", 's3-bucket-url', 'data:'], // TODO: change this to your frontend url, images and other trusted sources
+		frameAncestors: ["'none'"],
+		objectSrc: ["'none'"],
+		upgradeInsecureRequests: "'self'",
+	},
+};
 
 // Use Helmet middleware for security headers
 app.use(
@@ -87,34 +94,34 @@ app.use(
 	})
 );
 // Use helmet-csp middleware for Content Security Policy
-// app.use(helmetCsp(contentSecurityPolicy));
+app.use(helmetCsp(contentSecurityPolicy));
 
-// const helmetConfig: HelmetOptions = {
-// 	// X-Frame-Options header to prevent clickjacking
-// 	frameguard: { action: 'deny' },
-// 	// X-XSS-Protection header to enable browser's built-in XSS protection
-// 	xssFilter: true,
-// 	// Referrer-Policy header
-// 	referrerPolicy: { policy: 'same-origin' },
-// 	// Strict-Transport-Security (HSTS) header for HTTPS enforcement
-// 	hsts: { maxAge: 15552000, includeSubDomains: true, preload: true },
-// };
+const helmetConfig: HelmetOptions = {
+	// X-Frame-Options header to prevent clickjacking
+	frameguard: { action: 'deny' },
+	// X-XSS-Protection header to enable browser's built-in XSS protection
+	xssFilter: true,
+	// Referrer-Policy header
+	referrerPolicy: { policy: 'same-origin' },
+	// Strict-Transport-Security (HSTS) header for HTTPS enforcement
+	hsts: { maxAge: 15552000, includeSubDomains: true, preload: true },
+};
 
-// app.use(helmet(helmetConfig));
+app.use(helmet(helmetConfig));
 
-// Secure cookies and other helmet-related configurations
-// app.use(helmet.hidePoweredBy());
-// app.use(helmet.noSniff());
-// app.use(helmet.ieNoOpen());
-// app.use(helmet.dnsPrefetchControl());
-// app.use(helmet.permittedCrossDomainPolicies());
-// // Prevent browser from caching sensitive information
-// app.use((req, res, next) => {
-// 	res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-// 	res.set('Pragma', 'no-cache');
-// 	res.set('Expires', '0');
-// 	next();
-// });
+//Secure cookies and other helmet-related configurations
+app.use(helmet.hidePoweredBy());
+app.use(helmet.noSniff());
+app.use(helmet.ieNoOpen());
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.permittedCrossDomainPolicies());
+// Prevent browser from caching sensitive information
+app.use((req, res, next) => {
+	res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+	res.set('Pragma', 'no-cache');
+	res.set('Expires', '0');
+	next();
+});
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 // Data sanitization against XSS
@@ -169,7 +176,7 @@ app.get('*', (req: Request, res: Response) =>
  */
 
 const server = app.listen(port, async () => {
-	 connectDb();
+	connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 
 	// start the email worker and queues
