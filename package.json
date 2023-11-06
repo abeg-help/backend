@@ -12,7 +12,7 @@
 		"watch": "tsc --watch & nodemon build/index.js",
 		"lint": "npx eslint src/",
 		"format": "npx prettier --write .",
-		"check-types": "tsc --noEmit --pretty --skipLibCheck --incremental --project tsconfig.json --strict"
+		"check-types": "tsc --noEmit"
 	},
 	"husky": {
 		"hooks": {
@@ -60,6 +60,7 @@
 		"@types/express": "^4.17.18",
 		"@types/hpp": "^0.2.3",
 		"@types/morgan": "^1.9.6",
+		"@types/redis-info": "^3.0.2",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",
 		"@typescript-eslint/parser": "^6.7.4",
 		"concurrently": "^8.2.1",

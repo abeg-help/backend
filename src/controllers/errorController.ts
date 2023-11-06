@@ -1,8 +1,8 @@
+import { ENVIRONMENT } from '@/common/config';
+import AppError from '@/common/utils/appError';
+import { logger } from '@/common/utils/logger';
 import { NextFunction, Request, Response } from 'express';
 import mongoose, { CastError, Error as MongooseError } from 'mongoose';
-import { ENVIRONMENT } from 'src/common/config';
-import AppError from '../common/utils/appError';
-import { logger } from '../common/utils/logger';
 
 // Define custom error types
 type CustomError = AppError | MongooseError; // Add more custom error types as needed

@@ -1,7 +1,7 @@
+import { Gender, IDType, Role } from '@/common/constants';
+import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
-import { Gender, IDType, Role } from 'src/common/constants';
-import { IUser, UserMethods } from 'src/common/interfaces';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 

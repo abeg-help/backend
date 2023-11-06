@@ -1,6 +1,6 @@
+import AppError from '@/common/utils/appError';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
-import AppError from 'src/common/utils/appError';
-import { UserModel } from 'src/models';
 
 export const signUp = async (req: Request, res: Response) => {
 	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;

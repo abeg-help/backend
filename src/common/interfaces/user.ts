@@ -1,5 +1,5 @@
+import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { Document, Model } from 'mongoose';
-import { Gender, IDType, Provider, Role } from 'src/common/constants';
 
 interface IUser {
 	firstName: string;

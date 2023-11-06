@@ -1,3 +1,10 @@
+import { ENVIRONMENT } from '@/common/config';
+import { connectDb } from '@/common/config/database';
+import { logger, stream } from '@/common/utils/logger';
+import errorHandler from '@/controllers/errorController';
+import { timeoutMiddleware, validateDataWithZod } from '@/middlewares';
+import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from '@/queues/emailQueue';
+import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
@@ -11,13 +18,6 @@ import { default as helmetCsp } from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
-import { ENVIRONMENT } from './common/config';
-import { connectDb } from './common/config/database';
-import { logger, stream } from './common/utils/logger';
-import errorHandler from './controllers/errorController';
-import { timeoutMiddleware, validateDataWithZod } from './middlewares';
-import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import { authRouter, userRouter } from './routes';
 
 /**
  *  uncaughtException handler
