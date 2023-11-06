@@ -169,8 +169,8 @@ app.get('*', (req: Request, res: Response) =>
 /**
  * Bootstrap server
  */
-const server = app.listen(port, () => {
-	connectDb();
+const server = app.listen(port, async () => {
+	await connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 
 	// start the email worker and queues
