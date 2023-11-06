@@ -169,7 +169,7 @@ app.get('*', (req: Request, res: Response) =>
 /**
  * Bootstrap server
  */
-const server = app.listen(port, () => {
+const server = app.listen(port, '0.0.0.0', () => {
 	connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 
