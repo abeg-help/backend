@@ -1,5 +1,5 @@
+import { resetPassword, seedUser } from '@/controllers/resetPasswordController';
 import { Router } from 'express';
-import { resetPassword, seedUser } from '../controllers/resetPasswordController';
 
 const router = Router();
 

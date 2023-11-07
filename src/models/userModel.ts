@@ -1,9 +1,9 @@
+import { Gender, IDType, Role, JWTExpiresIn } from '@/common/constants';
+import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { Gender, IDType, Role, JWTExpiresIn } from '../common/constants';
-import { IUser, UserMethods } from '../common/interfaces';
-import { ENVIRONMENT } from '../common/config';
+import { ENVIRONMENT } from '@/common/config';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 
@@ -200,4 +200,5 @@ userSchema.method('generateRefreshToken', function (this: HydratedDocument<IUser
 	return refreshToken;
 });
 
-export default mongoose.model<IUser, UserModel>('User', userSchema);
+const UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
+export { UserModel };

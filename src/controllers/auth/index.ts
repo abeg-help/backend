@@ -1,3 +1,2 @@
-import signInController from './signinController';
-
-export { signInController };
+export * from './signin';
+export * from './signup';

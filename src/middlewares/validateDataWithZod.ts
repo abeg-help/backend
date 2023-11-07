@@ -1,6 +1,6 @@
+import { baseSchema, mainSchema } from '@/schemas';
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
-import { baseSchema, mainSchema } from '../schemas'; // replace with the actual path to mainSchema
 
 type MyDataShape = z.infer<typeof baseSchema>;
 

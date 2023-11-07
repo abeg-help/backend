@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express';
-import User from '../../models/userModel';
+import { UserModel as User } from '../../models/userModel';
 import AppError from '../../common/utils/appError';
 import { Provider } from '../../common/constants';
 import { JWTExpiresIn } from '../../common/constants';
 import { setCookie, setCache } from 'src/common/utils';
 
-const signInController = async (req: Request, res: Response) => {
+export const signInController = async (req: Request, res: Response) => {
 	const body = req.body as { email: string; password: string };
 	if (!body.email) {
 		throw new AppError('Email field is required', 401);
@@ -65,5 +65,3 @@ const signInController = async (req: Request, res: Response) => {
 	await setCache(id, user.toJSON([]));
 	res.json({ user });
 };
-
-export default signInController;

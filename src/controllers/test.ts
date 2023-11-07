@@ -1,9 +1,11 @@
+import AppError from '@/common/utils/appError';
+import { catchAsync } from '@/middlewares';
+import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
-import AppError from '../common/utils/appError';
-import { catchAsync } from '../middlewares';
-import { addEmailToQueue } from '../queues/emailQueue';
 
 export const test = catchAsync(async (req: Request, res: Response) => {
+	console.log(req);
+
 	if (req.body) throw new AppError('Test error without catchAsync wrapper', 400);
 
 	addEmailToQueue({

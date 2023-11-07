@@ -1,7 +1,7 @@
+import { ENVIRONMENT } from '@/common/config';
+import { EmailJobData } from '@/common/interfaces/emailQueue';
+import { logger } from '@/common/utils';
 import { Resend } from 'resend';
-import { ENVIRONMENT } from '../../common/config';
-import { EmailJobData } from '../../common/interfaces/emailQueue';
-import { logger } from '../../common/utils';
 import { passwordResetComplete } from '../templates/passwordResetComplete';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
