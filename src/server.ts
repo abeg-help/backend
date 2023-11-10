@@ -11,6 +11,8 @@ import { default as helmetCsp } from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
 import { logger, stream } from './common/utils/logger';
@@ -138,6 +140,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 
+app.use(bodyParser.json());
+app.use(cookieParser());
 /**
  * Initialize routes
  */

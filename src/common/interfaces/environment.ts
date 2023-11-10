@@ -15,4 +15,10 @@ export interface IEnvironment {
 	EMAIL: {
 		API_KEY: string;
 	};
+	ACCESS: {
+		SECRET: string;
+	};
+	REFRESH: {
+		SECRET: string;
+	};
 }

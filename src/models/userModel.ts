@@ -138,7 +138,7 @@ userSchema.pre('save', async function (next) {
 			this.email,
 			this.phoneNumber,
 			this.photo,
-			this.address.length,
+			//this.address.length,
 			this.gender,
 			this.isIdVerified,
 			this.isMobileVerified,
