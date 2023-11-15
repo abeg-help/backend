@@ -18,13 +18,6 @@ import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
-import { ENVIRONMENT } from './common/config';
-import { connectDb } from './common/config/database';
-import { logger, stream } from './common/utils/logger';
-import errorHandler from './controllers/errorController';
-import { timeoutMiddleware, validateDataWithZod } from './middlewares';
-import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import { authRouter, userRouter } from './routes';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
@@ -196,8 +189,8 @@ const server = app.listen(port, async () => {
 	// start the email worker and queues
 	(async () => {
 		await emailQueue.waitUntilReady();
-		await emailWorker.waitUntilReady();
-		await emailQueueEvent.waitUntilReady();
+		// await emailWorker.waitUntilReady();
+		// await emailQueueEvent.waitUntilReady();
 	})();
 });
 
