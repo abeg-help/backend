@@ -1,8 +1,8 @@
+import { ENVIRONMENT } from '@/common/config/environment';
+import { EmailJobData } from '@/common/interfaces/emailQueue';
+import { logger } from '@/common/utils/logger';
 import { Job, Queue, QueueEvents, Worker, WorkerOptions } from 'bullmq';
 import IORedis from 'ioredis';
-import { ENVIRONMENT } from '../common/config/environment';
-import { EmailJobData } from '../common/interfaces/emailQueue';
-import { logger } from '../common/utils/logger';
 import { sendEmail } from './handlers';
 
 // create a connection to Redis

@@ -6,13 +6,13 @@
 	"scripts": {
 		"pre-commit": "lint-staged",
 		"prepare": "husky install",
-		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register build/index.js",
+		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register build/server.js",
 		"build": "tsc",
 		"dev": "nodemon",
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"watch": "tsc --watch & nodemon build/index.js",
 		"lint": "npx eslint src/",
-		"format": "npx prettier --write ."
+		"format": "npx prettier --write .",
+		"check-types": "tsc --noEmit --pretty --skipLibCheck --incremental --project tsconfig.json --strict"
 	},
 	"husky": {
 		"hooks": {
@@ -49,6 +49,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"luxon": "^3.4.3",
 		"mongoose": "^8.0.0",
+		"jsonwebtoken": "^9.0.2",
 		"morgan": "^1.10.0",
 		"resend": "^1.1.0",
 		"tsconfig-paths": "^3.14.1",
@@ -65,6 +66,7 @@
 		"@types/hpp": "^0.2.3",
 		"@types/jsonwebtoken": "^9.0.4",
 		"@types/morgan": "^1.9.6",
+		"@types/redis-info": "^3.0.2",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",
 		"@typescript-eslint/parser": "^6.7.4",
 		"concurrently": "^8.2.1",

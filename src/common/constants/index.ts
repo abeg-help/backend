@@ -21,3 +21,8 @@ export enum Gender {
 	Other = 'other',
 	None = 'none',
 }
+
+export enum JWTExpiresIn {
+	Access = 15 * 60 * 1000,
+	Refresh = 24 * 60 * 60 * 1000,
+}

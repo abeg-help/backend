@@ -1,7 +1,7 @@
 export interface IEnvironment {
 	APP: {
 		NAME?: string;
-		PORT: string | number;
+		PORT: number;
 		ENV?: string;
 	};
 	DB: {

@@ -1,3 +1,10 @@
+import { ENVIRONMENT, connectDb } from '@/common/config';
+import { logger, stream } from '@/common/utils/logger';
+import errorHandler from '@/controllers/errorController';
+import { validateDataWithZod } from '@/middlewares';
+import { timeoutMiddleware } from '@/middlewares/timeout';
+import { emailQueue, stopQueue } from '@/queues/emailQueue';
+import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
@@ -7,7 +14,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import helmet, { HelmetOptions } from 'helmet';
-import { default as helmetCsp } from 'helmet-csp';
+import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
@@ -48,13 +55,18 @@ createBullBoard({
 });
 
 /**
+ * Express configuration
+ */
+app.set('trust proxy', true); // Enable trust proxy
+
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.disable('x-powered-by');
+
+/**
  * Compression Middleware
  */
 app.use(compression());
-
-/**
- * App Security
- */
 
 // Rate limiter middleware
 const limiter = rateLimit({
@@ -64,14 +76,14 @@ const limiter = rateLimit({
 });
 app.use('/*', limiter);
 
-// Middleware to allow CORS from frontend
+//Middleware to allow CORS from frontend
 app.use(
 	cors({
 		origin: ['https://your-real-frontend-url.com', 'http://localhost'], // TODO: change this to your frontend url
 		credentials: true,
 	})
 );
-// Configure Content Security Policy (CSP)
+//Configure Content Security Policy (CSP)
 const contentSecurityPolicy = {
 	directives: {
 		defaultSrc: ["'self'"],
@@ -106,7 +118,7 @@ const helmetConfig: HelmetOptions = {
 
 app.use(helmet(helmetConfig));
 
-// Secure cookies and other helmet-related configurations
+//Secure cookies and other helmet-related configurations
 app.use(helmet.hidePoweredBy());
 app.use(helmet.noSniff());
 app.use(helmet.ieNoOpen());
@@ -149,6 +161,9 @@ app.use(cookieParser());
 // catch 404 and forward to error handler
 app.use(validateDataWithZod);
 app.use('/api/v1/queue', serverAdapter.getRouter());
+app.use('/api/v1/alive', (req, res) =>
+	res.status(200).json({ status: 'success', message: 'Server is up and running' })
+);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
 
@@ -156,7 +171,7 @@ app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
 	res.status(404).json({
 		status: 'error',
-		message: 'Invalid endpoint',
+		message: `OOPs!! Server can't find ${req.url}. This could be a typographical issue. Check the API documentation for further guidance`,
 	});
 });
 
@@ -173,7 +188,8 @@ app.get('*', (req: Request, res: Response) =>
 /**
  * Bootstrap server
  */
-const server = app.listen(port, () => {
+
+const server = app.listen(port, async () => {
 	connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 
