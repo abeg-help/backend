@@ -19,10 +19,8 @@ export const ENVIRONMENT: IEnvironment = {
 	EMAIL: {
 		API_KEY: process.env.RESEND_API_KEY!,
 	},
-	ACCESS: {
-		SECRET: process.env.ACCESS_SECRET!,
-	},
-	REFRESH: {
-		SECRET: process.env.REFRESH_SECRET!,
+	JWT: {
+		REFRESH_KEY: process.env.REFRESH_JWT_KEY!,
+		ACCESS_KEY: process.env.ACCESS_JWT_KEY!,
 	},
 };

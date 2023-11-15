@@ -25,12 +25,12 @@ export const signUp = async (req: Request, res: Response) => {
 
 		await newUser.save();
 
-		const token = jwt.sign({ _id: newUser._id }, ENVIRONMENT.ACCESS.SECRET, {
+		const token = jwt.sign({ _id: newUser._id }, ENVIRONMENT.JWT.ACCESS_KEY, {
 			expiresIn: '1h',
 		});
 		res.cookie('jwtToken', token, { httpOnly: true });
 
-		const refreshToken = jwt.sign({ _id: newUser._id }, ENVIRONMENT.REFRESH.SECRET, { expiresIn: '30d' });
+		const refreshToken = jwt.sign({ _id: newUser._id }, ENVIRONMENT.JWT.REFRESH_KEY, { expiresIn: '30d' });
 		res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
 		return res.status(201).json({ message: 'You have successfully created an account', data: newUser });
