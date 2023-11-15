@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { resetPassword, seedUser } from '../controllers/resetPasswordController';
-import { signUp } from '../controllers/auth/signup';
+import { resetPassword, seedUser } from '@/controllers/resetPasswordController';
+import { signUp } from '@/controllers/auth/signup';
 
 const router = Router();
 
