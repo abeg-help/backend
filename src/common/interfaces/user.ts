@@ -1,5 +1,6 @@
+import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { Document, Model } from 'mongoose';
-import { Gender, IDType, Provider, Role } from 'src/common/constants';
+import type { SignOptions } from 'jsonwebtoken';
 
 interface IUser {
 	firstName: string;
@@ -30,10 +31,11 @@ interface IUser {
 	updatedAt: Date;
 }
 
-interface UserMethods extends IUser, Document {
-	generateAuthToken(): string;
-	generateRefreshToken(): string;
+interface UserMethods extends IUser, Omit<Document, 'toJSON'> {
+	generateAccessToken(options?: SignOptions): string;
+	generateRefreshToken(options?: SignOptions): string;
 	verifyPassword(enteredPassword: string): Promise<boolean>;
+	toJSON(excludedFields?: Array<keyof IUser>): object;
 }
 
 type UserModel = Model<UserMethods>;
