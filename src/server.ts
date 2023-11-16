@@ -158,7 +158,7 @@ app.use('/api/v1/alive', (req, res) =>
 	res.status(200).json({ status: 'success', message: 'Server is up and running' })
 );
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/auth', limiter, authRouter);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
