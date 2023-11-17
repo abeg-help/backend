@@ -50,7 +50,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		}
 
 		if (!user.isEmailVerified) {
-			throw new AppError('Your email is yet to be verified', 401);
+			throw new AppError('Your email is yet to be verified', 422);
 		}
 
 		// check if user has changed password after the token was issued
