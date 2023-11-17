@@ -7,7 +7,6 @@ import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
-import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -51,7 +50,7 @@ createBullBoard({
  * Express configuration
  */
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']); // Enable trust proxy
-
+app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.disable('x-powered-by');
@@ -72,7 +71,7 @@ app.use('/*', limiter);
 //Middleware to allow CORS from frontend
 app.use(
 	cors({
-		origin: ['https://your-real-frontend-url.com', 'http://localhost'], // TODO: change this to your frontend url
+		origin: ['https://abeghelp.me', 'http://localhost:3000'], // TODO: change this to your frontend url
 		credentials: true,
 	})
 );
@@ -145,8 +144,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 
-app.use(bodyParser.json());
-app.use(cookieParser());
 /**
  * Initialize routes
  */
@@ -158,7 +155,7 @@ app.use('/api/v1/alive', (req, res) =>
 	res.status(200).json({ status: 'success', message: 'Server is up and running' })
 );
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1/auth', limiter, authRouter);
+app.use('/api/v1/auth', authRouter);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
