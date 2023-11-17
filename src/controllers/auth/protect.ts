@@ -96,7 +96,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 				next(new AppError('Invalid token, please log in again', 500));
 			}
 		} else {
-			next(new AppError('Invalid token, please log in again', 500));
+			next(new AppError('Invalid token, please log in again', 401));
 		}
 	}
 	next();
