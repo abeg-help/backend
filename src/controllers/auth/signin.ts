@@ -1,13 +1,13 @@
+import { JWTExpiresIn, Provider } from '@/common/constants';
+import AppError from '@/common/utils/appError';
+import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
+import { UserModel as User } from '@/models/userModel';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 import { setCache, setCookie } from 'src/common/utils';
-import { JWTExpiresIn, Provider } from '../../common/constants';
-import AppError from '../../common/utils/appError';
-import { AppResponse } from '../../common/utils/appResponse';
-import { UserModel as User } from '../../models/userModel';
 
-export const signInController = catchAsync(async (req: Request, res: Response) => {
+export const signIn = catchAsync(async (req: Request, res: Response) => {
 	const { email, password } = req.body as { email: string; password: string };
 
 	if (!email || !password) {
@@ -51,14 +51,14 @@ export const signInController = catchAsync(async (req: Request, res: Response) =
 	const refreshToken = user.generateRefreshToken();
 	const accessToken = user.generateAccessToken();
 
-	setCookie(res, 'abeg-help-access-token', accessToken, {
+	setCookie(res, 'abegAccessToken', accessToken, {
 		maxAge: JWTExpiresIn.Access / 1000,
 		path: '/',
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
 	});
 
-	setCookie(res, 'abeg-help-refresh-token', refreshToken, {
+	setCookie(res, 'abegRefreshToken', refreshToken, {
 		maxAge: JWTExpiresIn.Refresh / 1000,
 		path: '/',
 		httpOnly: true,

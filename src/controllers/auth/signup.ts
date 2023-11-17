@@ -1,11 +1,10 @@
-import { JWTExpiresIn } from '@/common/constants';
+import { JWTExpiresIn, Provider } from '@/common/constants';
 import { setCache, setCookie } from '@/common/utils';
+import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
 import { Request, Response } from 'express';
-import AppError from 'src/common/utils/appError';
-import { Provider } from '../../common/constants';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
 	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
@@ -32,18 +31,12 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	const accessToken = user.generateAccessToken();
 	const refreshToken = user.generateRefreshToken();
 
-	setCookie(res, 'abeg-help-access-token', accessToken, {
+	setCookie(res, 'abegAccessToken', accessToken, {
 		maxAge: JWTExpiresIn.Access / 1000,
-		path: '/',
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
 	});
 
-	setCookie(res, 'abeg-help-refresh-token', refreshToken, {
+	setCookie(res, 'abegRefreshToken', refreshToken, {
 		maxAge: JWTExpiresIn.Refresh / 1000,
-		path: '/',
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
 	});
 
 	await setCache(user._id.toString(), user.toJSON([]));
