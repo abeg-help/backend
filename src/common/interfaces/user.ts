@@ -2,7 +2,7 @@ import { Gender, IDType, Provider, Role } from '@/common/constants';
 import type { SignOptions } from 'jsonwebtoken';
 import { Document, Model } from 'mongoose';
 
-interface IUser {
+interface IUser extends Document {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -32,7 +32,7 @@ interface IUser {
 	updatedAt: Date;
 }
 
-interface UserMethods extends IUser, Omit<Document, 'toJSON'> {
+interface UserMethods extends Omit<IUser, 'toJSON'> {
 	generateAccessToken(options?: SignOptions): string;
 	generateRefreshToken(options?: SignOptions): string;
 	verifyPassword(enteredPassword: string): Promise<boolean>;

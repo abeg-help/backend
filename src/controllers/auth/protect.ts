@@ -1,5 +1,6 @@
 import { ENVIRONMENT } from '@/common/config';
 import { JWTExpiresIn } from '@/common/constants';
+import type { CustomRequest } from '@/common/interfaces';
 import { IUser } from '@/common/interfaces';
 import { getFromCache, setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
@@ -66,14 +67,10 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		return user;
 	};
 
-	interface CustomRequest extends Request {
-		user?: IUser;
-	}
-
 	try {
 		const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
 		const decodeAccessToken = verifyAsync(abegAccessToken, ENVIRONMENT.JWT.ACCESS_KEY!);
-		const currentUser = await handleUserVerification(decodeAccessToken);
+		const currentUser: IUser = await handleUserVerification(decodeAccessToken);
 
 		// attach the user to the request object
 		(req as CustomRequest).user = currentUser;
@@ -84,10 +81,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 				const verifyAsync = promisify<string, string>(jwt.verify);
 				const decodeRefreshToken = await verifyAsync(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
 
-				interface newUSer extends IUser {
-					_id?: string;
-				}
-				const currentUser: newUSer = await handleUserVerification(decodeRefreshToken);
+				const currentUser: IUser = await handleUserVerification(decodeRefreshToken);
 
 				const accessToken = jwt.sign({ id: currentUser._id }, ENVIRONMENT.JWT.ACCESS_KEY, {
 					expiresIn: JWTExpiresIn.Access,
