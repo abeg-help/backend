@@ -30,6 +30,7 @@
 	"dependencies": {
 		"@bull-board/api": "^5.9.1",
 		"@bull-board/express": "^5.9.1",
+		"@types/luxon": "^3.3.4",
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.20.2",
 		"bullmq": "^4.12.6",

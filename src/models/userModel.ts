@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: String,
 			unique: true,
 			select: false,
+			required: [true, 'Phone number is required'],
 		},
 		photo: {
 			type: String,
@@ -58,7 +59,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			select: false,
 		},
 		providers: {
-			type: [String],
+			type: [String], /// refactor later
 			select: false,
 		},
 		passwordResetToken: {
@@ -86,6 +87,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: String,
 			enum: Object.values(Gender),
 			select: false,
+			required: [true, 'Gender is required'],
 		},
 		verificationMethod: {
 			type: String,
