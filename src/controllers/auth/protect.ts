@@ -19,7 +19,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 	};
 
 	if (!abegAccessToken || !abegRefreshToken) {
-		throw new AppError('Auth tokens not provided', 401);
+		throw new AppError('Unauthorized', 401);
 	}
 
 	// verify user access
