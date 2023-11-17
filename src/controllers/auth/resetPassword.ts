@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const resetPassword = catchAsync(async (req: Request, res: Response) => {
-	const { email } = req.body as { email: string };
+	const { email } = req.body;
 
 	if (!email) {
 		throw new AppError('Email is required', 400);
