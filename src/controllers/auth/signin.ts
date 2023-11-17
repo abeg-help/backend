@@ -25,6 +25,7 @@ export const signInController = catchAsync(async (req: Request, res: Response) =
 	// check if user has exceeded login retries (3 times in 12 hours)
 	const currentRequestTime = DateTime.now();
 	const lastLoginRetry = currentRequestTime.diff(DateTime.fromISO(user.updatedAt.toISOString()), 'hours');
+	console.log(lastLoginRetry);
 
 	if (user.loginRetries >= 3 && lastLoginRetry.hours < 12) {
 		throw new AppError('login retries exceeded!', 401);
@@ -69,6 +70,6 @@ export const signInController = catchAsync(async (req: Request, res: Response) =
 		lastLogin: DateTime.now(),
 	});
 
-	await setCache(user._id.toString(), user.toJSON([]));
+	await setCache(user._id.toString(), user.toJSON(['password']));
 	AppResponse(res, 201, user.toJSON(), 'You have successfully created an account');
 });

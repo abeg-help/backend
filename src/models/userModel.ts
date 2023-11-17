@@ -70,6 +70,11 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: Date,
 			select: false,
 		},
+		passwordResetRetries: {
+			type: Number,
+			default: 0,
+			select: false,
+		},
 		passwordChangedAt: {
 			type: Date,
 			select: false,

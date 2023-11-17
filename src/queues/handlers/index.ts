@@ -12,6 +12,11 @@ const TEMPLATES = {
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: passwordResetComplete,
 	},
+	resetPassword: {
+		subject: 'Reset Password',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: passwordResetComplete,
+	},
 };
 
 export const sendEmail = async (job: EmailJobData) => {

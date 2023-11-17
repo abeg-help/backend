@@ -19,13 +19,6 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError(`${existingUser.email === email ? 'Email' : 'Phone number'} has already been used`, 409);
 	}
 
-	// const newUser = new UserModel({
-	// 	providers: Provider.Local,
-	// 	...req.body,
-	// });
-
-	// await newUser.save();
-
 	const user = await User.create({
 		email,
 		firstName,

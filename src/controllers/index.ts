@@ -1,4 +1,4 @@
 export * from './auth';
 export * from './errorController';
-export * from './resetPasswordController';
+export * from './auth/resetPassword';
 export * from './test';

@@ -1,6 +1,6 @@
 import { Gender, IDType, Provider, Role } from '@/common/constants';
-import { Document, Model } from 'mongoose';
 import type { SignOptions } from 'jsonwebtoken';
+import { Document, Model } from 'mongoose';
 
 interface IUser {
 	firstName: string;
@@ -15,6 +15,7 @@ interface IUser {
 	phoneNumber: string;
 	passwordResetToken: string;
 	passwordResetExpires: Date;
+	passwordResetRetries: number;
 	passwordChangedAt: Date;
 	ipAddress: string;
 	loginRetries: number;
