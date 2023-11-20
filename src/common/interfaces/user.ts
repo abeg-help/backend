@@ -1,8 +1,8 @@
 import { Gender, IDType, Provider, Role } from '@/common/constants';
 import type { SignOptions } from 'jsonwebtoken';
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 
-interface IUser extends Document {
+interface IUser {
 	firstName: string;
 	lastName: string;
 	email: string;

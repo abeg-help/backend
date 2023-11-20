@@ -10,6 +10,7 @@ import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { DateTime } from 'luxon';
 import { promisify } from 'util';
+import type { Require_id } from 'mongoose';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	// get the cookies from the request headers
@@ -26,12 +27,12 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 
 	const handleUserVerification = async (decoded) => {
 		// fetch user from redis cache or db
-		const cachedUser = (await getFromCache(decoded.id)) as IUser;
+		const cachedUser = await getFromCache<Require_id<IUser>>(decoded.id);
 		const user = cachedUser
 			? cachedUser
 			: ((await User.findOne({ _id: decoded.id })
 					.select('refreshToken loginRetries isSuspended isEmailVerified lastLogin')
-					.lean()) as IUser);
+					.lean()) as Require_id<IUser>);
 
 		if (!cachedUser && user) {
 			await setCache(decoded.id, user);
@@ -70,7 +71,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 	try {
 		const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
 		const decodeAccessToken = verifyAsync(abegAccessToken, ENVIRONMENT.JWT.ACCESS_KEY!);
-		const currentUser: IUser = await handleUserVerification(decodeAccessToken);
+		const currentUser = await handleUserVerification(decodeAccessToken);
 
 		// attach the user to the request object
 		(req as CustomRequest).user = currentUser;
@@ -81,9 +82,9 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 				const verifyAsync = promisify<string, string>(jwt.verify);
 				const decodeRefreshToken = await verifyAsync(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
 
-				const currentUser: IUser = await handleUserVerification(decodeRefreshToken);
+				const currentUser = await handleUserVerification(decodeRefreshToken);
 
-				const accessToken = jwt.sign({ id: currentUser._id }, ENVIRONMENT.JWT.ACCESS_KEY, {
+				const accessToken = jwt.sign({ id: currentUser._id.toString() }, ENVIRONMENT.JWT.ACCESS_KEY, {
 					expiresIn: JWTExpiresIn.Access,
 				});
 
