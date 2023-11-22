@@ -9,6 +9,7 @@ interface CustomConnectOptions extends ConnectOptions {
 }
 
 export const connectDb = async (): Promise<void> => {
+	console.log(ENVIRONMENT.DB.URL);
 	try {
 		const conn = await mongoose.connect(ENVIRONMENT.DB.URL, {
 			// minPoolSize: 100,
