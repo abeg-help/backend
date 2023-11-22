@@ -5,9 +5,12 @@ import { catchAsync } from '@/middlewares';
 import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 import { UserModel as User } from '@/models/userModel';
+import { decryptData } from '../../common/utils';
 
 export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 	const { token, password, confirmPassword } = req.body;
+
+	console.log('body', req.body);
 
 	if (!token || !password || !confirmPassword) {
 		throw new AppError('All fields are required', 400);
@@ -17,8 +20,19 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Passwords do not match', 400);
 	}
 
+	console.log('check1');
+
+	const decryptedData = await decryptData(token);
+
+	console.log('decryptedData', decryptedData);
+
+	if (!decryptedData) {
+		throw new AppError('Password reset token is invalid or has expired', 400);
+	}
+
 	const user = await User.findOne({
-		passwordResetToken: token,
+		_id: decryptedData['id'],
+		passwordResetToken: decryptData['token'],
 		passwordResetExpires: {
 			$gt: DateTime.now().toJSDate(),
 		},

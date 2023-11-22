@@ -14,27 +14,35 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('Email is required', 400);
 	}
 
-	const user = await User.findOne({ email });
+	const user = await User.findOne({ email }).select('+passwordResetToken +passwordResetExpires +passwordResetRetries');
 
 	if (!user) {
 		throw new AppError('No user found with provided email', 404);
 	}
 
-	if (user.passwordResetRetries >= 3) {
+	console.log('user', user);
+
+	if (user?.passwordResetRetries >= 3) {
 		await User.findByIdAndUpdate(user._id, {
-			suspended: true,
+			isSuspended: true,
 		});
+
 		throw new AppError('Password reset retries exceeded! and account suspended', 401);
 	}
 
-	const passwordResetToken = hashData(generateRandomString());
-	const passwordResetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${passwordResetToken}`;
+	const passwordResetToken = await generateRandomString();
+	const hashedPasswordResetToken = hashData({
+		id: user._id,
+		token: passwordResetToken,
+	});
+
+	const passwordResetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${hashedPasswordResetToken}`;
 
 	await User.findByIdAndUpdate(user._id, {
-		passwordResetToken,
+		passwordResetToken: passwordResetToken,
 		passwordResetExpires: DateTime.now().plus({ minutes: 15 }).toJSDate(),
-		passwordResetRetries: {
-			$inc: 1,
+		$inc: {
+			passwordResetRetries: 1,
 		},
 	});
 

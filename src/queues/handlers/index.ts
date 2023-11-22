@@ -28,6 +28,9 @@ const TEMPLATES = {
 export const sendEmail = async (job: EmailJobData) => {
 	const { data, type } = job as EmailJobData;
 	const options = TEMPLATES[type];
+
+	console.log('job send email', job);
+	console.log('options', options);
 	try {
 		const dispatch = await resend.emails.send({
 			from: options.from,

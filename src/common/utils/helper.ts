@@ -1,8 +1,9 @@
-import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
 import type { CookieOptions, Response } from 'express';
 import Redis from 'ioredis';
 import { ENVIRONMENT } from '../config';
+import { IHashData } from '../interfaces/helper';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
@@ -13,8 +14,14 @@ const generateRandomString = () => {
 	return randomBytes(32).toString('hex');
 };
 
-const hashData = (data: string) => {
-	return bcrypt.hashSync(data, 10);
+const hashData = (data: IHashData, options?: SignOptions) => {
+	return jwt.sign({ data }, ENVIRONMENT.JWT.ACCESS_KEY, {
+		expiresIn: options?.expiresIn || '5m',
+	});
+};
+
+const decryptData = async (token: string) => {
+	return await jwt.verify(token, ENVIRONMENT.JWT.ACCESS_KEY);
 };
 
 const setCookie = (res: Response, name: string, value: string | number, options: CookieOptions = {}) => {
@@ -66,4 +73,4 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-export { generateRandomString, getFromCache, hashData, setCache, setCookie };
+export { generateRandomString, getFromCache, hashData, setCache, setCookie, decryptData };

@@ -47,7 +47,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 
 	// add welcome email to queue for user to verify account
 	const tokenString = await generateRandomString();
-	const emailVerificationToken = await hashData(tokenString);
+	const emailVerificationToken = await hashData({ token: tokenString });
 
 	addEmailToQueue({
 		type: 'welcomeEmail',
