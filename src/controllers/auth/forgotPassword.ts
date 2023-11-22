@@ -32,7 +32,6 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 
 	const passwordResetToken = await generateRandomString();
 	const hashedPasswordResetToken = hashData({
-		id: user._id,
 		token: passwordResetToken,
 	});
 

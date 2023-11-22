@@ -8,12 +8,12 @@ export interface WelcomeEmailData extends CommonDataFields {
 	verificationLink: string;
 }
 
-export interface ResetPasswordData extends CommonDataFields {
+export interface ForgotPasswordData extends CommonDataFields {
 	token: string;
 	name: string;
 }
 
-export interface ForgotPasswordData extends CommonDataFields {
+export interface ResetPasswordData extends CommonDataFields {
 	// Add other specific fields for the password reset successful data
 }
 

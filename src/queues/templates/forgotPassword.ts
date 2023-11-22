@@ -1,5 +1,3 @@
-import { ENVIRONMENT } from '../../common/config';
-
 export const forgotPassword = (data) => {
 	return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -19,7 +17,7 @@ export const forgotPassword = (data) => {
               <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="text-align: center;">
                 <tr>
                   <td>
-                    <a href="${ENVIRONMENT.APP.CLIENT}/reset-password?token=${data.token}"
+                    <a href=${data.token}
                        target="_blank"
                        style="line-height: 100%; text-decoration: none; display: inline-block; padding: 12px 20px; background-color: #000; border-radius: 4px; color: #fff; font-size: 14px; font-weight: 600; text-align: center;">
                       Reset Password
@@ -33,8 +31,8 @@ export const forgotPassword = (data) => {
               <hr style="width: 100%; border: 1px solid #eaeaea; margin: 26px 0;" />
               <p style="font-size: 12px; line-height: 24px; margin: 16px 0; color: #666;">
                 If you're having trouble clicking the password reset button, copy and paste the URL below into your web browser:
-                <a href="${ENVIRONMENT.APP.CLIENT}/reset-password?token=${data.token}" target="_blank" style="color: #2563eb; text-decoration: none;">
-                  ${ENVIRONMENT.APP.CLIENT}/reset-password?token=${data.token}
+                <a href=${data.token} target="_blank" style="color: #2563eb; text-decoration: none;">
+                  ${data.token}
                 </a>
               </p>
               <p style="font-size: 12px; line-height: 24px; margin: 16px 0; color: #666;">
