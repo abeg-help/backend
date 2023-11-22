@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import AppError from '../../common/utils/appError';
-import { AppResponse } from '../../common/utils/appResponse';
-import { catchAsync } from '../../middlewares';
-import { addEmailToQueue } from '../../queues/emailQueue';
+import { AppResponse } from '@/common/utils/appResponse';
+import { catchAsync } from '@/middlewares';
+import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 import { UserModel as User } from '@/models/userModel';
 

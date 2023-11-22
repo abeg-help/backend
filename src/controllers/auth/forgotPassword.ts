@@ -5,7 +5,7 @@ import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models/userModel';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import { addEmailToQueue } from '../../queues/emailQueue';
+import { addEmailToQueue } from '@/queues/emailQueue';
 
 export const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 	const { email } = req.body;
