@@ -46,7 +46,8 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	// add welcome email to queue for user to verify account
-	const emailVerificationToken = await hashData(generateRandomString());
+	const tokenString = await generateRandomString();
+	const emailVerificationToken = await hashData(tokenString);
 
 	addEmailToQueue({
 		type: 'welcomeEmail',
@@ -58,7 +59,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	// save email token to cache
-	await setCache(`verification:${user._id.toString()}`, emailVerificationToken, 3600);
+	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
 
 	// save user to cache without password
 	await setCache(user._id.toString(), user.toJSON(['password']));
