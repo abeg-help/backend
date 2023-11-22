@@ -2,21 +2,21 @@ import { ENVIRONMENT } from '@/common/config';
 import { EmailJobData } from '@/common/interfaces/emailQueue';
 import { logger } from '@/common/utils';
 import { Resend } from 'resend';
-import { passwordResetComplete, welcomeEmail } from '../templates';
-import { passwordResetRequest } from '../templates/passwordResetRequest';
+import { resetPassword, welcomeEmail } from '../templates';
+import { forgotPassword } from '../templates/forgotPassword';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
 const TEMPLATES = {
-	passwordResetSuccessful: {
-		subject: 'Password Reset Complete',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
-		template: passwordResetComplete,
-	},
 	resetPassword: {
-		subject: 'Reset Password',
+		subject: 'Password Reset Successful',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
-		template: passwordResetRequest,
+		template: resetPassword,
+	},
+	forgotPassword: {
+		subject: 'Reset Your Password',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: forgotPassword,
 	},
 	welcomeEmail: {
 		subject: 'Welcome to AbegHelp',

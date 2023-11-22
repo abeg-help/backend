@@ -48,7 +48,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 
 	// add email to queue
 	addEmailToQueue({
-		type: 'resetPassword',
+		type: 'forgotPassword',
 		data: {
 			to: email,
 			priority: 'high',
