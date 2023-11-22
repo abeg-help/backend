@@ -54,7 +54,7 @@ export const mainSchema = z
 			errorMap: () => ({ message: 'Please choose one of the gender options' }),
 		}),
 		confirmPassword: z.string().min(8, 'Password confirmation is required!'),
-		token: z.string({ required_error: 'Token is required!' }),
+		token: z.string(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',

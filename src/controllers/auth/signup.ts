@@ -10,10 +10,13 @@ import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
 	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
+	console.log(req.body);
 
 	if (!email || !firstName || !lastName || !phoneNumber || !password || !gender) {
 		throw new AppError('Incomplete signup data', 400);
 	}
+
+	console.log('test');
 
 	const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
 	if (existingUser) {

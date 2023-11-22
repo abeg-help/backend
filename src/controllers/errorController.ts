@@ -41,7 +41,7 @@ const handleJWTError = (err: CustomError, req: Request, res: Response, next: Nex
 };
 
 const handleJWTExpiredError = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
-	next(new AppError('Your token has expired! Please log in again.', 401));
+	next(new AppError('Your token has expired!', 401));
 };
 
 const handleTimeoutError = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
@@ -75,34 +75,22 @@ const sendErrorProd = (err: AppError, res: Response) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-	console.log(err instanceof AppError);
-	if (err instanceof AppError) {
-		const { statusCode, message } = err;
-		logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+	err.statusCode = err.statusCode || 500;
+	err.status = err.status || 'error';
+	logger.error(`${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
-		if (ENVIRONMENT.APP.ENV === 'production') {
-			sendErrorProd(err, res);
-		} else {
-			sendErrorDev(err, res);
-		}
-	} else if (err instanceof MongooseError.CastError) {
-		handleMongooseCastError(err, req, res, next);
-	} else if (err instanceof MongooseError.ValidationError) {
-		handleMongooseValidationError(err, req, res, next);
-	} else if ('timeout' in err && err.timeout) {
-		handleTimeoutError(err, req, res, next);
-	} else if (err.name === 'JsonWebTokenError') {
-		handleJWTError(err, req, res, next);
-	} else if (err.name === 'TokenExpiredError') {
-		handleJWTExpiredError(err, req, res, next);
-	} else if ('code' in err && err.code === 11000) {
-		handleMongooseDuplicateFieldsError(err, req, res, next);
+	if (ENVIRONMENT.APP.ENV === 'development') {
+		sendErrorDev(err, res);
 	} else {
-		res.status(500).json({
-			status: 'error',
-			message: 'Something went wrong',
-		});
-		logger.error(`unhandled error: ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+		let error = { ...err };
+		if (err instanceof MongooseError.CastError) error = handleMongooseCastError(err, req, res, next);
+		else if (err instanceof MongooseError.ValidationError) error = handleMongooseValidationError(err, req, res, next);
+		if ('timeout' in err && err.timeout) error = handleTimeoutError(err, req, res, next);
+		if (err.name === 'JsonWebTokenError') error = handleJWTError(err, req, res, next);
+		if (err.name === 'TokenExpiredError') error = handleJWTExpiredError(err, req, res, next);
+		if ('code' in err && err.code === 11000) error = handleMongooseDuplicateFieldsError(err, req, res, next);
+
+		sendErrorProd(error, res);
 	}
 };
 
