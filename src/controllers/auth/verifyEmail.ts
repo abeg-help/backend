@@ -1,13 +1,12 @@
 import { getFromCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+// import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
-import { UserModel } from '@/models';
-import { Request, Response } from 'express';
+// import { UserModel } from '@/models';
+import { Request } from 'express';
 
-export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-	const { token } = req.query;
-	const { userId } = req.params;
+export const verifyEmail = catchAsync(async (req: Request) => {
+	const { token, userId } = req.body;
 	if (!userId) {
 		throw new AppError('Invalid user ID!', 401);
 	}
@@ -15,7 +14,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Invalid token', 401);
 	}
 
-	const user = await UserModel.findById(userId);
+	const user = await getFromCache(userId);
 
 	if (!user) {
 		throw new AppError('User not found', 404);
@@ -26,14 +25,4 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 	if (!validToken) {
 		throw new AppError('Invalid/expired token', 404);
 	}
-
-	user.isEmailVerified = true;
-	await user.save();
-
-	AppResponse(
-		res,
-		200,
-		user.toJSON(['refreshToken', 'loginRetries', 'lastLogin', 'password', '__v', 'createdAt', 'updatedAt']),
-		'Account successfully verified'
-	);
 });
