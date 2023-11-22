@@ -4,10 +4,10 @@ import type { CookieOptions, Response } from 'express';
 import Redis from 'ioredis';
 import { ENVIRONMENT } from '../config';
 
-if (!process.env.CACHE_REDIS_URL) {
+if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
 }
-const redis = new Redis(process.env.CACHE_REDIS_URL!);
+const redis = new Redis(ENVIRONMENT.CACHE_REDIS.URL!);
 
 const generateRandomString = () => {
 	return randomBytes(32).toString('hex');

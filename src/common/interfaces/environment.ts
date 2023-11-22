@@ -13,6 +13,9 @@ export interface IEnvironment {
 		PORT: number;
 		PASSWORD: string;
 	};
+	CACHE_REDIS: {
+		URL: string;
+	};
 	EMAIL: {
 		API_KEY: string;
 	};
@@ -24,4 +27,5 @@ export interface IEnvironment {
 		ACCESS: string;
 		REFRESH: string;
 	};
+	FRONTEND_URL: string;
 }
