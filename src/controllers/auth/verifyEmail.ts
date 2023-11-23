@@ -29,7 +29,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Invalid token', 400);
 	}
 
-	const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId }, { isEmail: true }, { new: true });
+	const updatedUser = await UserModel.findByIdAndUpdate(userId, { isEmail: true }, { new: true });
 
 	if (!updatedUser) {
 		throw new AppError('Invalid/expired token', 404);
