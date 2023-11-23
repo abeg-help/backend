@@ -1,4 +1,4 @@
-import { compareData, getFromCache, setCache } from '@/common/utils';
+import { decryptData, getFromCache, setCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -7,11 +7,8 @@ import { Request, Response } from 'express';
 
 export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 	const { token, userId } = req.body;
-	if (!userId) {
-		throw new AppError('Invalid user ID!', 401);
-	}
-	if (!token) {
-		throw new AppError('Invalid token', 401);
+	if (!token || !userId) {
+		throw new AppError('All fields are required!', 400);
 	}
 
 	const user = await getFromCache(userId);
@@ -23,12 +20,13 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 	const validToken = await getFromCache(`verification:${userId}`);
 
 	if (!validToken) {
-		throw new AppError('Invalid/expired token', 404);
+		throw new AppError('Invalid/expired token', 400);
 	}
 
-	const validate = compareData(validToken, token);
-	if (!validate) {
-		throw new AppError('Invalid token!', 401);
+	const decodedToken = await decryptData(token);
+
+	if (!decodedToken.token || decodedToken.token !== validToken) {
+		throw new AppError('Invalid token', 400);
 	}
 
 	const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId }, { isEmail: true }, { new: true });

@@ -31,10 +31,6 @@ const decryptData = async (token: string) => {
 	return await verifyAsync(token, ENVIRONMENT.JWT.ACCESS_KEY!);
 };
 
-const compareData = (data: string, hash: string) => {
-	return bcrypt.compareSync(data, hash);
-};
-
 const setCookie = (res: Response, name: string, value: string | number, options: CookieOptions = {}) => {
 	res.cookie(name, value, {
 		httpOnly: true,
@@ -84,4 +80,4 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-export { generateRandomString, getFromCache, hashData, setCache, setCookie, compareData, hashPassword, decryptData };
+export { generateRandomString, getFromCache, hashData, setCache, setCookie, hashPassword, decryptData };

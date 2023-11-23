@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/signup', signUp);
 router.post('/signin', signIn);
-router.get('/verify-email/:userId?', verifyEmail);
+router.post('/verify-email', verifyEmail);
 router.post('/reset-password', resetPassword);
 
 router.use(protect); // Protect all routes after this middleware

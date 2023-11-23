@@ -55,6 +55,7 @@ export const mainSchema = z
 		}),
 		confirmPassword: z.string().min(8, 'Password confirmation is required!'),
 		token: z.string(),
+		userId: z.string(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',
