@@ -21,7 +21,6 @@ const uploadSingleFile = async (file: IAwsUploadFile): Promise<string> => {
 				Key: fileName,
 				Body: file.buffer,
 				ContentType: file.mimetype,
-				// ACL: 'public-read',
 			},
 			(error) => {
 				if (error) {
