@@ -1,11 +1,11 @@
-import { getFromCache } from '@/common/utils';
+import { compareData, getFromCache, setCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-// import { AppResponse } from '@/common/utils/appResponse';
+import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
-// import { UserModel } from '@/models';
-import { Request } from 'express';
+import { UserModel } from '@/models';
+import { Request, Response } from 'express';
 
-export const verifyEmail = catchAsync(async (req: Request) => {
+export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 	const { token, userId } = req.body;
 	if (!userId) {
 		throw new AppError('Invalid user ID!', 401);
@@ -25,4 +25,19 @@ export const verifyEmail = catchAsync(async (req: Request) => {
 	if (!validToken) {
 		throw new AppError('Invalid/expired token', 404);
 	}
+
+	const validate = compareData(validToken, token);
+	if (!validate) {
+		throw new AppError('Invalid token!', 401);
+	}
+
+	const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId }, { isEmail: true }, { new: true });
+
+	if (!updatedUser) {
+		throw new AppError('Invalid/expired token', 404);
+	}
+
+	await setCache(updatedUser._id.toString(), updatedUser.toJSON(['password']));
+
+	AppResponse(res, 200, {}, 'Account successfully verified!');
 });

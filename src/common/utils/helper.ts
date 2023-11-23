@@ -17,6 +17,10 @@ const hashData = (data: string) => {
 	return bcrypt.hashSync(data, 10);
 };
 
+const compareData = (data: string, hash: string) => {
+	return bcrypt.compareSync(data, hash);
+};
+
 const setCookie = (res: Response, name: string, value: string | number, options: CookieOptions = {}) => {
 	res.cookie(name, value, {
 		httpOnly: true,
@@ -66,4 +70,4 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-export { generateRandomString, getFromCache, hashData, setCache, setCookie };
+export { generateRandomString, getFromCache, hashData, setCache, setCookie, compareData };
