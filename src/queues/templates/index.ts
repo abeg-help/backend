@@ -1,3 +1,3 @@
 export * from './baseTemplate';
-export * from './passwordResetComplete';
+export * from './resetPassword';
 export * from './welcomeEmail';

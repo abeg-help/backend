@@ -1,5 +1,5 @@
 import { ENVIRONMENT } from '@/common/config';
-import { Gender, IDType, Role } from '@/common/constants';
+import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -55,8 +55,10 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: Boolean,
 			default: false,
 		},
-		providers: {
-			type: [String], /// refactor later
+		provider: {
+			type: String,
+			enum: Object.values(Provider),
+			default: Provider.Local,
 			select: false,
 		},
 		passwordResetToken: {
@@ -127,6 +129,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 	},
 	{
 		timestamps: true,
+		versionKey: false,
 	}
 );
 
@@ -152,10 +155,6 @@ userSchema.pre('save', async function (next) {
 			this.isEmailVerified,
 		];
 		this.isProfileComplete = profiles.every((profile) => Boolean(profile));
-	}
-
-	if (this.password && this.isModified('password')) {
-		this.password = await bcrypt.hash(this.password, 12);
 	}
 
 	next();

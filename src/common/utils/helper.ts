@@ -1,8 +1,11 @@
-import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
 import type { CookieOptions, Response } from 'express';
 import Redis from 'ioredis';
 import { ENVIRONMENT } from '../config';
+import { IHashData } from '../interfaces/helper';
+import jwt, { SignOptions } from 'jsonwebtoken';
+import { promisify } from 'util';
+import bcrypt from 'bcryptjs';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
@@ -13,8 +16,19 @@ const generateRandomString = () => {
 	return randomBytes(32).toString('hex');
 };
 
-const hashData = (data: string) => {
-	return bcrypt.hashSync(data, 10);
+const hashPassword = async (password: string) => {
+	return await bcrypt.hash(password, 12);
+};
+
+const hashData = (data: IHashData, options?: SignOptions) => {
+	return jwt.sign({ ...data }, ENVIRONMENT.JWT.ACCESS_KEY, {
+		expiresIn: options?.expiresIn || '15m',
+	});
+};
+
+const decryptData = async (token: string) => {
+	const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
+	return await verifyAsync(token, ENVIRONMENT.JWT.ACCESS_KEY!);
 };
 
 const compareData = (data: string, hash: string) => {
@@ -70,4 +84,4 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-export { generateRandomString, getFromCache, hashData, setCache, setCookie, compareData };
+export { generateRandomString, getFromCache, hashData, setCache, setCookie, compareData, hashPassword, decryptData };

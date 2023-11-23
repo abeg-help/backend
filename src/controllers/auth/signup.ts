@@ -1,6 +1,6 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { generateRandomString, hashData, setCache, setCookie } from '@/common/utils';
+import { generateRandomString, hashData, hashPassword, setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -10,10 +10,13 @@ import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
 	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
+	console.log(req.body);
 
 	if (!email || !firstName || !lastName || !phoneNumber || !password || !gender) {
 		throw new AppError('Incomplete signup data', 400);
 	}
+
+	console.log('test');
 
 	const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
 	if (existingUser) {
@@ -24,14 +27,16 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		}
 	}
 
+	const hashedPassword = await hashPassword(password);
+
 	const user = await User.create({
 		email,
 		firstName,
 		lastName,
 		phoneNumber,
-		password,
+		password: hashedPassword,
 		gender,
-		providers: Provider.Local,
+		provider: Provider.Local,
 	});
 
 	const accessToken = await user.generateAccessToken();
@@ -47,7 +52,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 
 	// add welcome email to queue for user to verify account
 	const tokenString = await generateRandomString();
-	const emailVerificationToken = await hashData(tokenString);
+	const emailVerificationToken = await hashData({ token: tokenString });
 
 	addEmailToQueue({
 		type: 'welcomeEmail',
@@ -67,16 +72,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	AppResponse(
 		res,
 		201,
-		user.toJSON([
-			'refreshToken',
-			'loginRetries',
-			'isEmailVerified',
-			'lastLogin',
-			'password',
-			'__v',
-			'createdAt',
-			'updatedAt',
-		]),
+		user.toJSON(['refreshToken', 'loginRetries', 'isEmailVerified', 'lastLogin', 'password', 'createdAt', 'updatedAt']),
 		'Account created successfully'
 	);
 });
