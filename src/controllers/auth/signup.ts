@@ -79,3 +79,36 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		'Account created successfully'
 	);
 });
+export const editProfile = catchAsync(async (req: Request, res: Response) => {
+	const { email, firstName, lastName, phoneNumber, photo } = req.body;
+
+	if (!email || !firstName || !lastName || !phoneNumber) {
+		throw new AppError('Incomplete signup data', 400);
+	}
+
+	const user = await User.findOne({ email });
+	if (!user) {
+		throw new AppError('User not found', 404);
+	}
+
+	const twoWeeksAgo = new Date(Date.now() - 2 * 7 * 24 * 60 * 60 * 1000);
+	if (user.emailUpdated > twoWeeksAgo) {
+		throw new AppError('Email was updated in the last 2 weeks', 400);
+	}
+
+	user.email = email;
+	user.firstName = firstName;
+	user.lastName = lastName;
+	user.phoneNumber = phoneNumber;
+	user.photo = photo;
+	user.emailUpdated = new Date();
+
+	await user.save();
+
+	AppResponse(
+		res,
+		200,
+		user.toJSON(['isEmailVerified', 'isProfileComplete', 'lastLogin', '__v', 'createdAt', 'updatedAt']),
+		'Profile updated successfully'
+	);
+});

@@ -6,12 +6,13 @@ interface IUser extends Document {
 	firstName: string;
 	lastName: string;
 	email: string;
+	emailUpdated: Date;
 	password: string;
 	refreshToken: string;
 	photo: string;
 	role: Role;
 	isProfileComplete: boolean;
-	providers: Provider[];
+	providers: Provider;
 	phoneNumber: string;
 	verificationToken: string;
 	passwordResetToken: string;

@@ -1,5 +1,5 @@
 import { ENVIRONMENT } from '@/common/config';
-import { Gender, IDType, Role } from '@/common/constants';
+import { Gender, IDType, Role, Provider } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			unique: true,
 			lowercase: true,
 			trim: true,
+		},
+		emailUpdated: {
+			type: Date,
+			default: Date.now,
 		},
 		password: {
 			type: String,
@@ -56,7 +60,9 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			default: false,
 		},
 		providers: {
-			type: [String], /// refactor later
+			type: String, /// refactor later
+			enum: Object.values(Provider),
+			default: Provider.Local,
 			select: false,
 		},
 		passwordResetToken: {
@@ -137,7 +143,7 @@ userSchema.pre(/^find/, function (this: Model<IUser>, next) {
 });
 
 // Hash password before saving to the database
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (this: HydratedDocument<IUser>, next) {
 	if (!this.isProfileComplete) {
 		const profiles = [
 			this.firstName,
