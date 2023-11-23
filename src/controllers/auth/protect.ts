@@ -78,7 +78,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
 			// verify the refresh token and generate a new access token
 			try {
-				const verifyAsync = promisify<string, string>(jwt.verify);
+				const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
 				const decodeRefreshToken = await verifyAsync(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
 
 				const currentUser: IUser = await handleUserVerification(decodeRefreshToken);

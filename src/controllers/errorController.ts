@@ -77,7 +77,7 @@ const errorHandler = (err, req, res, next) => {
 		logger.error(`${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 		sendErrorDev(err, res);
 	} else {
-		let error = { ...err };
+		let error = err;
 		if (err instanceof MongooseError.CastError) error = handleMongooseCastError(err);
 		else if (err instanceof MongooseError.ValidationError) error = handleMongooseValidationError(err);
 		if ('timeout' in err && err.timeout) error = handleTimeoutError();

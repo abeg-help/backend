@@ -1,6 +1,6 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { generateRandomString, hashData, setCache, setCookie } from '@/common/utils';
+import { generateRandomString, hashData, hashPassword, setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -27,12 +27,14 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		}
 	}
 
+	const hashedPassword = await hashPassword(password);
+
 	const user = await User.create({
 		email,
 		firstName,
 		lastName,
 		phoneNumber,
-		password,
+		password: hashedPassword,
 		gender,
 		providers: Provider.Local,
 	});

@@ -1,54 +1,67 @@
-// import { ENVIRONMENT } from '@/common/config';
-// import { generateRandomString, hashData } from '@/common/utils';
+import { decryptData, hashPassword } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models/userModel';
 import { Request, Response } from 'express';
-// import { DateTime } from 'luxon';
-// import { addEmailToQueue } from '../../queues/emailQueue';
+import { DateTime } from 'luxon';
+import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const resetPassword = catchAsync(async (req: Request, res: Response) => {
-	const { email } = req.body;
+	const { token, password, confirmPassword } = req.body;
 
-	if (!email) {
-		throw new AppError('Email is required', 400);
+	if (!token || !password || !confirmPassword) {
+		throw new AppError('All fields are required', 400);
 	}
 
-	const user = await User.findOne({ email });
+	if (password !== confirmPassword) {
+		throw new AppError('Passwords do not match', 400);
+	}
+
+	const decodedToken = await decryptData(token);
+
+	if (!decodedToken.token) {
+		throw new AppError('Invalid token', 400);
+	}
+
+	const user = await User.findOne({
+		passwordResetToken: decodedToken.token,
+		passwordResetExpires: {
+			$gt: DateTime.now().toJSDate(),
+		},
+		isSuspended: false,
+	});
 
 	if (!user) {
-		throw new AppError('No user found with provided email', 404);
+		throw new AppError('Password reset token is invalid or has expired', 400);
 	}
 
-	if (user.passwordResetRetries >= 3) {
-		await User.findByIdAndUpdate(user._id, {
-			suspended: true,
-		});
-		throw new AppError('Password reset retries exceeded! and account suspended', 401);
-	}
+	const hashedPassword = await hashPassword(password);
 
-	// const passwordResetToken = hashData(generateRandomString());
-	// const passwordResetUrl = `${ENVIRONMENT.FRONTEND_URL}/reset-password?token=${passwordResetToken}`;
+	await User.findByIdAndUpdate(
+		user._id,
+		{
+			password: hashedPassword,
+			passwordResetRetries: 0,
+			passwordChangedAt: DateTime.now().toJSDate(),
+			$unset: {
+				passwordResetToken: 1,
+				passwordResetExpires: 1,
+			},
+		},
+		{
+			runValidators: true,
+		}
+	);
 
-	// await User.findByIdAndUpdate(user._id, {
-	// 	passwordResetToken,
-	// 	passwordResetExpires: DateTime.now().plus({ minutes: 15 }).toJSDate(),
-	// 	passwordResetRetries: {
-	// 		$inc: 1,
-	// 	},
-	// });
+	// send password reset complete email
+	addEmailToQueue({
+		type: 'resetPassword',
+		data: {
+			to: user.email,
+			priority: 'high',
+		},
+	});
 
-	// // add email to queue
-	// addEmailToQueue({
-	// 	type: 'resetPassword',
-	// 	data: {
-	// 		to: email,
-	// 		priority: 'high',
-	// 		name: user.firstName,
-	// 		token: passwordResetUrl,
-	// 	},
-	// });
-
-	return AppResponse(res, 200, null, `Password reset link sent to ${email}`);
+	return AppResponse(res, 200, null, 'Password reset successfully');
 });

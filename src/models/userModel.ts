@@ -154,10 +154,6 @@ userSchema.pre('save', async function (next) {
 		this.isProfileComplete = profiles.every((profile) => Boolean(profile));
 	}
 
-	if (this.password && this.isModified('password')) {
-		this.password = await bcrypt.hash(this.password, 12);
-	}
-
 	next();
 });
 
