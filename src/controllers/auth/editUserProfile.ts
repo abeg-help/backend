@@ -26,6 +26,6 @@ export const editUserProfile = catchAsync(async (req: CustomRequest, res: Respon
 		runValidators: true,
 	});
 
-	await setCache(`Updated User: ${updatedUser?._id}`, 'supposed to be access token', 3600);
+	await setCache(`Updated User: ${updatedUser?._id.toString()}`, 'supposed to be access token', 3600);
 	AppResponse(res, 200, updatedUser, 'Profile Successfully Updated');
 });
