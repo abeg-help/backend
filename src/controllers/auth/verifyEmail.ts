@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 	const { token, userId } = req.body;
 	if (!token || !userId) {
-		throw new AppError('Token and Userid are required!', 400);
+		throw new AppError('token and userId are required!', 400);
 	}
 
 	const validToken = await getFromCache(`verification:${userId}`);
@@ -29,7 +29,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Verification failed!', 400);
 	}
 
-	await setCache(updatedUser._id.toString(), { ...toJSON(updatedUser, ['password']) });
+	await setCache(updatedUser._id.toString(), toJSON(updatedUser, ['password']));
 
 	AppResponse(res, 200, {}, 'Account successfully verified!');
 });
