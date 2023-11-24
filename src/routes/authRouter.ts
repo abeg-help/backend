@@ -1,4 +1,4 @@
-import { protect, forgotPassword, resetPassword, session, signIn, signUp } from '@/controllers';
+import { protect, forgotPassword, resetPassword, session, signIn, signUp, signOut } from '@/controllers';
 import { Router } from 'express';
 
 const router = Router();
@@ -10,5 +10,6 @@ router.post('/password/reset', resetPassword);
 
 router.use(protect); // Protect all routes after this middleware
 router.get('/session', session);
+router.get('/signout', signOut);
 
 export { router as authRouter };
