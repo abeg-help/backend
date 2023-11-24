@@ -1,4 +1,4 @@
-import { decryptData, getFromCache, setCache } from '@/common/utils';
+import { decodeData, getFromCache, setCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -23,7 +23,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Invalid/expired token', 400);
 	}
 
-	const decodedToken = await decryptData(token);
+	const decodedToken = await decodeData(token);
 
 	if (!decodedToken.token || decodedToken.token !== validToken) {
 		throw new AppError('Invalid token', 400);

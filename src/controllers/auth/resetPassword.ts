@@ -1,4 +1,4 @@
-import { decryptData, hashPassword } from '@/common/utils';
+import { decodeData, hashPassword } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -18,7 +18,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Passwords do not match', 400);
 	}
 
-	const decodedToken = await decryptData(token);
+	const decodedToken = await decodeData(token);
 
 	if (!decodedToken.token) {
 		throw new AppError('Invalid token', 400);

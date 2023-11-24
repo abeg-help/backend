@@ -1,8 +1,7 @@
 import { ENVIRONMENT } from '@/common/config';
-import { JWTExpiresIn } from '@/common/constants';
 import type { CustomRequest } from '@/common/interfaces';
 import { IUser } from '@/common/interfaces';
-import { getFromCache, setCache, setCookie } from '@/common/utils';
+import { decodeData, getFromCache, hashData, setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
@@ -10,7 +9,6 @@ import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { DateTime } from 'luxon';
 import type { Require_id } from 'mongoose';
-import { promisify } from 'util';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	// get the cookies from the request headers
@@ -19,7 +17,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		abegRefreshToken: string;
 	};
 
-	if (!abegAccessToken || !abegRefreshToken) {
+	if (!abegRefreshToken) {
 		throw new AppError('Unauthorized', 401);
 	}
 
@@ -28,11 +26,12 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 	const handleUserVerification = async (decoded) => {
 		// fetch user from redis cache or db
 		const cachedUser = await getFromCache<Require_id<IUser>>(decoded.id);
+
 		const user = cachedUser
 			? cachedUser
-			: ((await User.findOne({ _id: decoded.id })
-					.select('refreshToken loginRetries isSuspended isEmailVerified lastLogin')
-					.lean()) as Require_id<IUser>);
+			: ((await User.findOne({ _id: decoded.id }).select(
+					'refreshToken loginRetries isSuspended isEmailVerified lastLogin'
+			  )) as Require_id<IUser>);
 
 		if (!cachedUser && user) {
 			await setCache(decoded.id, user);
@@ -53,10 +52,10 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		if (!user.isEmailVerified) {
 			throw new AppError('Your email is yet to be verified', 422);
 		}
-
 		// check if user has changed password after the token was issued
 		// if so, invalidate the token
 		if (
+			user.passwordChangedAt &&
 			DateTime.fromISO(user.passwordChangedAt.toISOString()).toMillis() > DateTime.fromMillis(decoded.iat).toMillis()
 		) {
 			throw new AppError('Password changed since last login. Please log in again!', 401);
@@ -68,37 +67,43 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		return user;
 	};
 
+	const handleTokenRefresh = async () => {
+		try {
+			const decodeRefreshToken = await decodeData(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
+			const currentUser = await handleUserVerification(decodeRefreshToken);
+
+			// generate access and refresh tokens and set cookies
+			const accessToken = await hashData(
+				{ id: currentUser._id.toString() },
+				{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS }
+			);
+			setCookie(res, 'abegAccessToken', accessToken, {
+				maxAge: 15 * 60 * 1000, // 15 minutes
+			});
+
+			(req as CustomRequest).user = currentUser;
+		} catch (error) {
+			throw new AppError('Session expired, please log in again', 401);
+		}
+	};
+
 	try {
-		const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
-		const decodeAccessToken = verifyAsync(abegAccessToken, ENVIRONMENT.JWT.ACCESS_KEY!);
-		const currentUser = await handleUserVerification(decodeAccessToken);
-
-		// attach the user to the request object
-		(req as CustomRequest).user = currentUser;
-	} catch (error) {
-		if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
-			// verify the refresh token and generate a new access token
-			try {
-				const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
-				const decodeRefreshToken = await verifyAsync(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
-
-				const currentUser = await handleUserVerification(decodeRefreshToken);
-
-				const accessToken = jwt.sign({ id: currentUser._id.toString() }, ENVIRONMENT.JWT.ACCESS_KEY, {
-					expiresIn: JWTExpiresIn.Access,
-				});
-
-				setCookie(res, 'abegAccessToken', accessToken, {
-					maxAge: JWTExpiresIn.Access / 1000,
-				});
-
-				(req as CustomRequest).user = currentUser;
-			} catch (error) {
-				next(new AppError('Session expired, please log in again', 401));
-			}
+		if (!abegAccessToken) {
+			// if access token is not present, verify the refresh token and generate a new access token
+			await handleTokenRefresh();
 		} else {
-			// clear session cookies and remove refresh token from db and cache
-			next(new AppError('Invalid token, please log in again', 401));
+			const decodeAccessToken = await decodeData(abegAccessToken, ENVIRONMENT.JWT.ACCESS_KEY!);
+			const currentUser = await handleUserVerification(decodeAccessToken);
+
+			// attach the user to the request object
+			(req as CustomRequest).user = currentUser;
+		}
+	} catch (error) {
+		if ((error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) && abegAccessToken) {
+			// verify the refresh token and generate a new access token
+			await handleTokenRefresh();
+		} else {
+			throw new AppError('An error occurred, please log in again', 401);
 		}
 	}
 	next();

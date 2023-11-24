@@ -1,8 +1,6 @@
-import { ENVIRONMENT } from '@/common/config';
 import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
-import jwt, { SignOptions } from 'jsonwebtoken';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
@@ -156,7 +154,6 @@ userSchema.pre('save', async function (next) {
 		];
 		this.isProfileComplete = profiles.every((profile) => Boolean(profile));
 	}
-
 	next();
 });
 
@@ -167,44 +164,6 @@ userSchema.method('verifyPassword', async function (this: HydratedDocument<IUser
 	}
 	const isValid = await bcrypt.compare(enteredPassword, this.password);
 	return isValid;
-});
-
-userSchema.method('toJSON', function (this: HydratedDocument<IUser>, fields?: Array<keyof IUser>) {
-	const user = this.toObject();
-	if (fields && fields.length === 0) {
-		return user;
-	}
-
-	if (fields && fields.length > 0) {
-		for (const field of fields) {
-			if (field in user) {
-				delete user[field];
-			}
-		}
-		return user;
-	}
-
-	const { _id, firstName, lastName, email, photo } = user;
-	return { _id, firstName, lastName, email, photo };
-});
-
-userSchema.method('generateAccessToken', function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
-	const accessToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.ACCESS_KEY, {
-		...options,
-		expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS,
-	});
-	return accessToken;
-});
-
-userSchema.method('generateRefreshToken', async function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
-	const refreshToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.REFRESH_KEY, {
-		...options,
-		expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH,
-	});
-	this.refreshToken = refreshToken;
-	// to enable refresh token is saved in the database
-	await this.save();
-	return refreshToken;
 });
 
 const UserModel = mongoose.model<IUser, UserModel>('User', userSchema);

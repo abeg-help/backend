@@ -1,11 +1,12 @@
+import { ENVIRONMENT } from '@/common/config';
 import { generateRandomString, hashData } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models/userModel';
+import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import { addEmailToQueue } from '@/queues/emailQueue';
 
 export const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 	const { email } = req.body;
@@ -37,7 +38,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 
 	console.log('hashedPasswordResetToken', hashedPasswordResetToken);
 
-	const passwordResetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${hashedPasswordResetToken}`;
+	const passwordResetUrl = `${ENVIRONMENT.FRONTEND_URL}/reset-password?token=${hashedPasswordResetToken}`;
 
 	await User.findByIdAndUpdate(user._id, {
 		passwordResetToken: passwordResetToken,
