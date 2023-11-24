@@ -17,6 +17,7 @@ export const baseSchema = z.object({
 	gender: z.enum(['male', 'female', 'other', 'none']),
 	confirmPassword: z.string(),
 	token: z.string(),
+	userId: z.string(),
 });
 
 export const mainSchema = z
