@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { setCache } from '@/common/utils';
+import { setCache, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
 import { CustomRequest, IUser } from '@/common/interfaces';
@@ -26,6 +26,10 @@ export const editUserProfile = catchAsync(async (req: CustomRequest, res: Respon
 		runValidators: true,
 	});
 
-	await setCache(`Updated User: ${updatedUser?._id.toString()}`, 'supposed to be access token', 3600);
+	if (!updatedUser) {
+		//  no user is found to update
+		return AppResponse(res, 404, null, 'User not found for update');
+	}
+	await setCache(`Updated User: ${updatedUser?._id.toString()}`, { ...toJSON(updatedUser, ['password']) }, 3600);
 	AppResponse(res, 200, updatedUser, 'Profile Successfully Updated');
 });
