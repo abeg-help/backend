@@ -13,12 +13,10 @@ export const signOut = catchAsync(async (req: CustomRequest, res: Response) => {
 		throw new AppError('You are not logged in', 404);
 	}
 
-	const userId = user._id.toString();
-
-	await removeFromCache(userId);
+	await removeFromCache(user._id.toString());
 
 	//$unset the refreshToken from the mongodb
-	await User.findByIdAndUpdate({ _id: userId }, { $unset: { refreshToken: 1 } });
+	await User.findByIdAndUpdate({ _id: user._id.toString() }, { $unset: { refreshToken: 1 } });
 
 	//clearing the cookies set on the frontend by setting a new cookie with empty values and an expiry time in the past
 	setCookie(res, 'abegAccessToken', 'expired', {
