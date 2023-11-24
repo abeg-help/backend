@@ -26,7 +26,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 	const updatedUser = await UserModel.findByIdAndUpdate(userId, { isEmailVerified: true }, { new: true });
 
 	if (!updatedUser) {
-		throw new AppError('Authentication error', 400);
+		throw new AppError('Verification failed!', 400);
 	}
 
 	await setCache(updatedUser._id.toString(), updatedUser.toJSON(['password']));
