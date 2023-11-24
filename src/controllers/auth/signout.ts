@@ -20,7 +20,7 @@ export const signOut = catchAsync(async (req: CustomRequest, res: Response) => {
 	//$unset the refreshToken from the mongodb
 	await User.findByIdAndUpdate({ _id: userId }, { $unset: { refreshToken: 1 } });
 
-	//you will clear the cookies set on the frontend by setting a new cookie with empty values and an expiry time in the past
+	//clearing the cookies set on the frontend by setting a new cookie with empty values and an expiry time in the past
 	setCookie(res, 'abegAccessToken', 'expired', {
 		maxAge: -1,
 	});
