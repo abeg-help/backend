@@ -15,7 +15,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 
 	const cachedUser = await getFromCache(userId);
 
-	const user = cachedUser ? cachedUser : ((await UserModel.findById(userId)) as Require_id<IUser>);
+	const user = cachedUser ? cachedUser : ((await UserModel.findOne({ _id: userId })) as Require_id<IUser>);
 
 	if (!user) {
 		throw new AppError('User not found', 404);
