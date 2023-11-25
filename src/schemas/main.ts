@@ -17,6 +17,7 @@ export const baseSchema = z.object({
 	gender: z.enum(['male', 'female', 'other', 'none']),
 	confirmPassword: z.string(),
 	token: z.string(),
+	userId: z.string(),
 });
 
 export const mainSchema = z
@@ -55,6 +56,7 @@ export const mainSchema = z
 		}),
 		confirmPassword: z.string().min(8, 'Password confirmation is required!'),
 		token: z.string(),
+		userId: z.string(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',
