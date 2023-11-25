@@ -1,5 +1,5 @@
 interface IAwsUploadFile {
-	originalname: string;
+	fileName: string;
 	mimetype: string;
 	buffer: Buffer;
 }

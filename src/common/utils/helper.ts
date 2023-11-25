@@ -80,4 +80,18 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-export { generateRandomString, getFromCache, hashData, setCache, setCookie, decryptData, hashPassword };
+const isValidFileNameAwsUpload = (fileName: string) => {
+	const regex = /^[a-zA-Z0-9_\-/]+\/[a-zA-Z0-9_-]+(?:\.(jpg|png|jpeg))$/;
+	return regex.test(fileName);
+};
+
+export {
+	generateRandomString,
+	getFromCache,
+	hashData,
+	setCache,
+	setCookie,
+	decryptData,
+	hashPassword,
+	isValidFileNameAwsUpload,
+};
