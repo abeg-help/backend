@@ -16,10 +16,15 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Clean Docker Environment
+        run: |
+          docker rm -f $(docker ps -a -q)
+          docker rmi -f $(docker images -q)
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Specify the version you need
+          node-version: '14'
 
       - name: Cache Node.js modules
         uses: actions/cache@v2
