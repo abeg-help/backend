@@ -45,3 +45,7 @@ npm-debug.log*
 
 # Yarn
 yarn-error.log*
+
+
+.env
+package-lock.json

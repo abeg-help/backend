@@ -187,9 +187,8 @@ app.get('*', (req: Request, res: Response) =>
  */
 
 const server = app.listen(port, async () => {
-	connectDb();
+	await connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
-
 	// start the email worker and queues
 	(async () => {
 		await emailQueue.waitUntilReady();
@@ -208,11 +207,11 @@ app.use(errorHandler);
  * unhandledRejection  handler
  */
 
-process.on('unhandledRejection', (error: Error) => {
+process.on('unhandledRejection', async (error: Error) => {
 	console.log('UNHANDLED REJECTION! 💥 Server Shutting down...');
 	console.log(error.name, error.message);
 	logger.error('UNHANDLED REJECTION! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
-	stopQueue();
+	await stopQueue();
 	server.close(() => {
 		process.exit(1);
 	});

@@ -101,12 +101,7 @@ emailWorker.on('error', (err) => {
 const stopQueue = async () => {
 	await emailWorker.close();
 	await emailQueue.close();
+	console.info('Email queue closed!');
 };
-
-process.on('SIGTERM', async () => {
-	await stopQueue();
-	console.info('SIGTERM signal received: Email queue closed!');
-	logger.info('SIGTERM signal received: Email queue closed');
-});
 
 export { addEmailToQueue, emailQueue, emailQueueEvent, emailWorker, stopQueue };
