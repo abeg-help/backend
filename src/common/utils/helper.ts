@@ -117,6 +117,11 @@ const removeFromCache = async (key: string) => {
 	return data;
 };
 
+const isValidFileNameAwsUpload = (fileName: string) => {
+	const regex = /^[a-zA-Z0-9_\-/]+\/[a-zA-Z0-9_-]+(?:\.(jpg|png|jpeg))$/;
+	return regex.test(fileName);
+};
+
 export {
 	decodeData,
 	generateRandomString,
@@ -127,4 +132,5 @@ export {
 	setCookie,
 	removeFromCache,
 	toJSON,
+	isValidFileNameAwsUpload,
 };

@@ -4,6 +4,7 @@ import { IUser } from './user';
 
 interface CustomRequest extends Request {
 	user?: Require_id<IUser>;
+	file?: Express.Multer.File;
 }
 
 export { CustomRequest };
