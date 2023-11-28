@@ -1,4 +1,4 @@
-import { forgotPassword, protect, resetPassword, session, signIn, signUp, verifyEmail } from '@/controllers';
+import { forgotPassword, protect, resetPassword, session, signIn, signUp, verifyEmail, signOut } from '@/controllers';
 import { Router } from 'express';
 
 const router = Router();
@@ -11,5 +11,6 @@ router.post('/verify-email', verifyEmail);
 
 router.use(protect); // Protect all routes after this middleware
 router.get('/session', session);
+router.get('/signout', signOut);
 
 export { router as authRouter };

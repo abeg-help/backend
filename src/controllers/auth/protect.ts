@@ -30,7 +30,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 		const user = cachedUser
 			? cachedUser
 			: ((await User.findOne({ _id: decoded.id }).select(
-					'refreshToken loginRetries isSuspended isEmailVerified lastLogin'
+					'refreshToken loginRetries isSuspended lastLogin'
 			  )) as Require_id<IUser>);
 
 		if (!cachedUser && user) {

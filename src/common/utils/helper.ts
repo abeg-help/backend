@@ -104,19 +104,27 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-const isValidFileNameAwsUpload = (fileName: string) => {
-	const regex = /^[a-zA-Z0-9_\-/]+\/[a-zA-Z0-9_-]+(?:\.(jpg|png|jpeg))$/;
-	return regex.test(fileName);
+const removeFromCache = async (key: string) => {
+	if (!key) {
+		throw new Error('Invalid key provided');
+	}
+
+	const data = await redis.del(key);
+
+	if (!data) {
+		return null;
+	}
+	return data;
 };
 
 export {
+	decodeData,
 	generateRandomString,
 	getFromCache,
 	hashData,
+	hashPassword,
 	setCache,
 	setCookie,
-	hashPassword,
-	isValidFileNameAwsUpload,
-	decodeData,
+	removeFromCache,
 	toJSON,
 };
