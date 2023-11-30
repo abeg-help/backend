@@ -1,12 +1,11 @@
-import { catchAsync } from '@/middlewares';
-import { Response } from 'express';
-import { setCookie, removeFromCache } from '@/common/utils';
-import { UserModel as User } from '@/models';
-import { AppResponse } from '@/common/utils/appResponse';
+import { removeFromCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-import type { CustomRequest } from '@/common/interfaces';
+import { AppResponse } from '@/common/utils/appResponse';
+import { catchAsync } from '@/middlewares';
+import { UserModel as User } from '@/models';
+import { Request, Response } from 'express';
 
-export const signOut = catchAsync(async (req: CustomRequest, res: Response) => {
+export const signOut = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;
 
 	if (!user) {

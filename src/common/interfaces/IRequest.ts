@@ -1,9 +1,10 @@
-import { Request } from 'express';
 import { Require_id } from 'mongoose';
+import { Server } from 'socket.io';
 import { IUser } from './user';
 
-interface CustomRequest extends Request {
-	user?: Require_id<IUser>;
+declare module 'express-serve-static-core' {
+	interface Request {
+		user?: Require_id<IUser>;
+		io: Server;
+	}
 }
-
-export { CustomRequest };
