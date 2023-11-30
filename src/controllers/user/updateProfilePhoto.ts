@@ -37,10 +37,7 @@ export const updateProfilePhoto = catchAsync(async (req: Request, res: Response)
 
 	if (userFromCache) {
 		// update cache
-		await setCache(updatedUser._id.toString()!, {
-			...toJSON(userFromCache, []),
-			photo: updatedUser.photo,
-		});
+		await setCache(updatedUser._id.toString()!, toJSON({ ...userFromCache, photo: updatedUser.photo }, []));
 	}
 
 	return AppResponse(res, 200, updatedUser, 'Profile photo updated successfully');
