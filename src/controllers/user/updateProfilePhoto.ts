@@ -5,6 +5,7 @@ import AppError from '@/common/utils/appError';
 import { AppResponse, getFromCache, setCache, toJSON, uploadSingleFile } from '@/common/utils';
 import { DateTime } from 'luxon';
 import { UserModel } from '@/models';
+import { Require_id } from 'mongoose';
 
 export const updateProfilePhoto = catchAsync(async (req: CustomRequest, res: Response) => {
 	const { file } = req;
@@ -29,16 +30,16 @@ export const updateProfilePhoto = catchAsync(async (req: CustomRequest, res: Res
 			photo: uploadedFile,
 		},
 		{ new: true }
-	)) as IUser & { _id: string };
+	)) as Require_id<IUser>;
 
 	// delete previous photo from bucket
-	const userFromCache = await getFromCache(updatedUser._id);
+	const userFromCache = await getFromCache<Require_id<IUser>>(updatedUser._id.toString());
 
 	if (userFromCache) {
 		// update cache
 		await setCache(updatedUser._id.toString()!, {
-			...toJSON(updatedUser),
-			refreshToken: Object(userFromCache)?.refreshToken,
+			...toJSON(userFromCache, []),
+			photo: updatedUser.photo,
 		});
 	}
 
