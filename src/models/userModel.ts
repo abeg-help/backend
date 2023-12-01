@@ -124,6 +124,10 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: String,
 			select: false,
 		},
+		accountRestoreToken: {
+			type: String,
+			select: false,
+		},
 	},
 	{
 		timestamps: true,
@@ -133,6 +137,11 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 
 // only pick users that are not deleted or suspended
 userSchema.pre(/^find/, function (this: Model<IUser>, next) {
+	if (Object.keys(this['_conditions']).includes('isDeleted')) {
+		this.find({ isSuspended: { $ne: true } });
+		return next();
+	}
+
 	this.find({ isDeleted: { $ne: true }, isSuspended: { $ne: true } });
 	next();
 });

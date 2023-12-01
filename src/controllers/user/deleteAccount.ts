@@ -13,8 +13,6 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Unauthenticated', 401);
 	}
 
-	await UserModel.deleteOne({ _id: user?._id });
-
 	const accountRestorationToken = generateRandomString();
 	const hashedAccountRestorationToken = hashData(
 		{
@@ -26,14 +24,18 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 		}
 	);
 
+	await UserModel.findByIdAndUpdate(user._id, {
+		isDeleted: true,
+		accountRestoreToken: accountRestorationToken,
+	});
+
 	const accountRestorationUrl = `${ENVIRONMENT.FRONTEND_URL}/account/restore?token=${hashedAccountRestorationToken}`;
 
 	addEmailToQueue({
 		type: 'deleteAccount',
 		data: {
-			to: user?.email,
-			priority: 'high',
-			name: user?.firstName,
+			to: user.email,
+			name: user.firstName,
 			days: '30 days',
 			restoreLink: accountRestorationUrl,
 		},
