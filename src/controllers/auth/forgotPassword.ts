@@ -36,8 +36,6 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 		token: passwordResetToken,
 	});
 
-	console.log('hashedPasswordResetToken', hashedPasswordResetToken);
-
 	const passwordResetUrl = `${ENVIRONMENT.FRONTEND_URL}/reset-password?token=${hashedPasswordResetToken}`;
 
 	await User.findByIdAndUpdate(user._id, {
