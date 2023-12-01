@@ -19,6 +19,7 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 	const hashedAccountRestorationToken = hashData(
 		{
 			token: accountRestorationToken,
+			id: user?._id.toString(),
 		},
 		{
 			expiresIn: '30d',
