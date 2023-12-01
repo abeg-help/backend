@@ -2,10 +2,13 @@ import { ENVIRONMENT } from '@/common/config';
 import { EmailJobData } from '@/common/interfaces/emailQueue';
 import { logger } from '@/common/utils';
 import { Resend } from 'resend';
-import { resetPassword, welcomeEmail } from '../templates';
-import { forgotPassword } from '../templates/forgotPassword';
-import { accountDeletedEmailTemplate } from '../templates/accountDeletedEmail';
-import { accountRestoredEmailTemplate } from '../templates/restoreAccountEmail';
+import {
+	resetPassword,
+	welcomeEmail,
+	forgotPassword,
+	accountDeletedEmailTemplate,
+	accountRestoredEmailTemplate,
+} from '../templates';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
