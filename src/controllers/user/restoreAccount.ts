@@ -3,6 +3,8 @@ import AppError from '../../common/utils/appError';
 import { catchAsync } from '../../middlewares';
 import { Request, Response } from 'express';
 import { UserModel } from '../../models';
+import { addEmailToQueue } from '../../queues/emailQueue';
+import { ENVIRONMENT } from '../../common/config';
 
 export const restoreAccount = catchAsync(async (req: Request, res: Response) => {
 	const { token } = req.query;
@@ -39,6 +41,15 @@ export const restoreAccount = catchAsync(async (req: Request, res: Response) => 
 			},
 		}
 	);
+
+	await addEmailToQueue({
+		type: 'restoreAccount',
+		data: {
+			to: user.email,
+			name: user?.firstName || user?.lastName || 'User',
+			loginLink: `${ENVIRONMENT.FRONTEND_URL}/login`,
+		},
+	});
 
 	return AppResponse(res, 200, {}, 'Account restored successfully, please login');
 });
