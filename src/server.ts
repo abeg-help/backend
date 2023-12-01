@@ -14,6 +14,7 @@ import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import compression from 'compression';
+import cookie from 'cookie';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
@@ -22,18 +23,23 @@ import rateLimit from 'express-rate-limit';
 import helmet, { HelmetOptions } from 'helmet';
 import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
+import http from 'http';
 import morgan from 'morgan';
+import { Server, Socket } from 'socket.io';
 import xss from 'xss-clean';
+import { authenticate } from './common/utils/authenticate';
+import socketController from './controllers/sockets';
+import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 
 /**
  *  uncaughtException handler
  */
-process.on('uncaughtException', (error: Error) => {
+process.on('uncaughtException', async (error: Error) => {
 	console.log('UNCAUGHT EXCEPTION! 💥 Server Shutting down...');
 	console.log(error.name, error.message);
 	logger.error('UNCAUGHT EXCEPTION!! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
-	stopQueue();
+	await stopQueue();
 	process.exit(1);
 });
 
@@ -76,7 +82,8 @@ app.use('/*', limiter);
 //Middleware to allow CORS from frontend
 app.use(
 	cors({
-		origin: ['https://abeghelp.me', 'http://localhost:3000'], // TODO: change this to your frontend url
+		origin: ['https://abeghelp.me', 'http://localhost:3000', 'http://localhost:3001'],
+		methods: ['GET', 'POST'],
 		credentials: true,
 	})
 );
@@ -186,7 +193,61 @@ app.get('*', (req: Request, res: Response) =>
  * Bootstrap server
  */
 
-const server = app.listen(port, async () => {
+// to ensure all the express middlewares are set up before starting the socket server
+// including security headers and other middlewares
+const server = http.createServer(app);
+const io = new Server(server, {
+	cors: {
+		origin: ['https://abeghelp.me', 'http://localhost:3000', 'http://localhost:3001'],
+		methods: ['GET', 'POST'],
+		credentials: true,
+	},
+});
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+	req.io = io;
+	next();
+});
+
+/**
+ * Socket.io
+ */
+
+io.use(
+	catchSocketAsync(async (socket: Socket, next) => {
+		// Parse the cookies from the socket
+		const cookies = cookie.parse(socket.handshake.headers.cookie || '');
+
+		// Check if cookies is defined
+		if (cookies) {
+			// Extract the access and refresh tokens
+			const { abegAccessToken, abegRefreshToken } = cookies;
+
+			// Send the tokens to the authenticate helper function
+			const { currentUser } = await authenticate({ abegAccessToken, abegRefreshToken });
+
+			// Attach the user to the socket object
+			socket.user = currentUser;
+
+			if (next) {
+				next();
+			}
+		} else {
+			console.log('No cookie sent with sockets ' + socket.id);
+			throw new Error('Authentication error');
+		}
+	})
+);
+
+io.on(
+	'connection',
+	catchSocketAsync(async (socket: Socket) => {
+		console.log('User connected ' + socket.id);
+		socketController(socket, io);
+	})
+);
+
+const appServer = server.listen(port, async () => {
 	await connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 	// start the email worker and queues
@@ -212,7 +273,7 @@ process.on('unhandledRejection', async (error: Error) => {
 	console.log(error.name, error.message);
 	logger.error('UNHANDLED REJECTION! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
 	await stopQueue();
-	server.close(() => {
+	appServer.close(() => {
 		process.exit(1);
 	});
 });
