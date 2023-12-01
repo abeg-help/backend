@@ -10,7 +10,6 @@ export const catchSocketAsync = (fn: (socket: Socket, next?: () => void) => Prom
 				socket.emit('error', { message: err.message, status: err.status });
 			} else {
 				console.log(err);
-
 				// If it's not an AppError, emit a generic error message
 				socket.emit('error', { message: 'Something went wrong', status: 500 });
 			}
