@@ -1,12 +1,10 @@
-import { Response } from 'express';
+import { IUser } from '@/common/interfaces';
 import { setCache, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
-import { CustomRequest, IUser } from '@/common/interfaces';
-import { AppResponse } from '@/common/utils/appResponse';
-import AppError from '@/common/utils/appError';
+import { Request, Response } from 'express';
 
-export const editUserProfile = catchAsync(async (req: CustomRequest, res: Response) => {
+export const editUserProfile = catchAsync(async (req: Request, res: Response) => {
 	//collect the details to be updated
 	const { firstName, lastName, phoneNumber, gender } = req.body;
 

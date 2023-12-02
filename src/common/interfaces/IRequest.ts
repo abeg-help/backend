@@ -1,9 +1,12 @@
-import { Request } from 'express';
 import { Require_id } from 'mongoose';
+import Multer from 'multer';
+import { Server } from 'socket.io';
 import { IUser } from './user';
 
-interface CustomRequest extends Request {
-	user?: Require_id<IUser>;
+declare module 'express-serve-static-core' {
+	interface Request {
+		user?: Require_id<IUser>;
+		io: Server;
+		file?: Multer.File;
+	}
 }
-
-export { CustomRequest };

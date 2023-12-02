@@ -48,4 +48,26 @@ const uploadMultipleFiles = (files: IAwsUploadFile[]): Promise<string[]> => {
 	return Promise.all(files.map((file) => uploadSingleFile(file)));
 };
 
-export { uploadSingleFile, uploadMultipleFiles };
+const deleteFile = async (fileName: string): Promise<boolean> => {
+	if (!fileName) {
+		return false;
+	}
+
+	return new Promise((resolve, reject) => {
+		s3.deleteObject(
+			{
+				Bucket: bucketName,
+				Key: fileName,
+			},
+			(error) => {
+				if (error) {
+					reject(new Error(`Error: ${error.message || 'File upload failed'}`));
+				} else {
+					resolve(true);
+				}
+			}
+		);
+	});
+};
+
+export { uploadSingleFile, uploadMultipleFiles, deleteFile };

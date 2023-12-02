@@ -1,13 +1,11 @@
-import { CustomRequest } from '@/common/interfaces';
 import { toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
-export const session = catchAsync(async (req: CustomRequest, res: Response) => {
+export const session = catchAsync(async (req: Request, res: Response) => {
 	const currentUser = req.user;
-	console.log(req.user);
 	if (!currentUser) {
 		throw new AppError('Unauthenticated', 401);
 	}

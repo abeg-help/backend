@@ -1,5 +1,4 @@
 import { ENVIRONMENT } from '@/common/config';
-import type { CustomRequest } from '@/common/interfaces';
 import { IUser } from '@/common/interfaces';
 import { decodeData, getFromCache, hashData, setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
@@ -81,7 +80,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 				maxAge: 15 * 60 * 1000, // 15 minutes
 			});
 
-			(req as CustomRequest).user = currentUser;
+			req.user = currentUser;
 		} catch (error) {
 			throw new AppError('Session expired, please log in again', 401);
 		}
@@ -96,7 +95,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 			const currentUser = await handleUserVerification(decodeAccessToken);
 
 			// attach the user to the request object
-			(req as CustomRequest).user = currentUser;
+			req.user = currentUser;
 		}
 	} catch (error) {
 		if ((error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) && abegAccessToken) {

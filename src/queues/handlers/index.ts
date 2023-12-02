@@ -2,8 +2,13 @@ import { ENVIRONMENT } from '@/common/config';
 import { EmailJobData } from '@/common/interfaces/emailQueue';
 import { logger } from '@/common/utils';
 import { Resend } from 'resend';
-import { resetPassword, welcomeEmail } from '../templates';
-import { forgotPassword } from '../templates/forgotPassword';
+import {
+	resetPassword,
+	welcomeEmail,
+	forgotPassword,
+	accountDeletedEmailTemplate,
+	accountRestoredEmailTemplate,
+} from '../templates';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
@@ -22,6 +27,16 @@ const TEMPLATES = {
 		subject: 'Welcome to AbegHelp',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: welcomeEmail,
+	},
+	deleteAccount: {
+		subject: 'AbegHelp Account Deleted',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: accountDeletedEmailTemplate,
+	},
+	restoreAccount: {
+		subject: 'AbegHelp Account Restored',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: accountRestoredEmailTemplate,
 	},
 };
 

@@ -28,6 +28,7 @@ interface IUser {
 	isMobileVerified: boolean;
 	isEmailVerified: boolean;
 	isDeleted: boolean;
+	accountRestoreToken: string;
 	lastLogin: Date;
 	createdAt: Date;
 	updatedAt: Date;

@@ -21,8 +21,6 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('No user found with provided email', 404);
 	}
 
-	console.log('user', user);
-
 	if (user.passwordResetRetries >= 3) {
 		await User.findByIdAndUpdate(user._id, {
 			isSuspended: true,
@@ -35,8 +33,6 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 	const hashedPasswordResetToken = hashData({
 		token: passwordResetToken,
 	});
-
-	console.log('hashedPasswordResetToken', hashedPasswordResetToken);
 
 	const passwordResetUrl = `${ENVIRONMENT.FRONTEND_URL}/reset-password?token=${hashedPasswordResetToken}`;
 
