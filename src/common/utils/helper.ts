@@ -7,6 +7,10 @@ import { promisify } from 'util';
 import { ENVIRONMENT } from '../config';
 import { IHashData } from '../interfaces/helper';
 import { IUser } from '../interfaces/user';
+import * as OTPAuth from 'otpauth';
+import { encode } from 'hi-base32';
+import qrcode from 'qrcode';
+import { TOTPBaseConfig } from '@/common/constants';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
@@ -122,6 +126,48 @@ const isValidFileNameAwsUpload = (fileName: string) => {
 	return regex.test(fileName);
 };
 
+const generateRandomBase32 = () => {
+	const buffer = randomBytes(15);
+	return encode(buffer).replace(/=/g, '').substring(0, 24);
+};
+
+const generateQrCode = async (data: string | Record<string, string[]>) => {
+	const code = new Promise((resolve, reject) => {
+		qrcode.toDataURL(data, (err, url) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(url);
+			}
+		});
+	});
+	return code;
+};
+
+const generateTimeBased2fa = (secret: string) => {
+	const otp = new OTPAuth.TOTP({
+		...TOTPBaseConfig,
+		secret,
+	});
+
+	return generateQrCode(otp.toString());
+};
+
+const validateTimeBased2fa = (secret: string, token: string, window?: number): boolean => {
+	const otp = new OTPAuth.TOTP({
+		...TOTPBaseConfig,
+		secret,
+	});
+
+	const result = otp.validate({ token, window });
+
+	if (result === null) {
+		return false;
+	}
+
+	return true;
+};
+
 export {
 	decodeData,
 	generateRandomString,
@@ -133,4 +179,7 @@ export {
 	removeFromCache,
 	toJSON,
 	isValidFileNameAwsUpload,
+	generateTimeBased2fa,
+	generateRandomBase32,
+	validateTimeBased2fa,
 };
