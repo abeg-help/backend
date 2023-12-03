@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
+import { randomBytes, randomInt } from 'crypto';
 import type { CookieOptions, Response } from 'express';
 import Redis from 'ioredis';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -168,6 +168,19 @@ const validateTimeBased2fa = (secret: string, token: string, window?: number): b
 	return true;
 };
 
+const generateRandom6DigitKey = () => {
+	let randomNum = randomInt(0, 999999);
+
+	// Ensure the number is within the valid range (000000 to 999999)
+	while (randomNum < 100000) {
+		randomNum = randomInt(0, 999999);
+	}
+	// Convert the random number to a string and pad it with leading zeros if necessary
+	const tokenString = randomNum.toString().padStart(6, '0');
+
+	return tokenString;
+};
+
 export {
 	decodeData,
 	generateRandomString,
@@ -182,4 +195,5 @@ export {
 	generateTimeBased2fa,
 	generateRandomBase32,
 	validateTimeBased2fa,
+	generateRandom6DigitKey,
 };

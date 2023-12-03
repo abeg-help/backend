@@ -3,9 +3,11 @@ import { Request, Response } from 'express';
 import AppError from '@/common/utils/appError';
 import {
 	AppResponse,
+	generateRandom6DigitKey,
 	generateRandomBase32,
 	generateTimeBased2fa,
 	getFromCache,
+	hashData,
 	setCache,
 	toJSON,
 } from '@/common/utils';
@@ -26,10 +28,18 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 
 	const secret = generateRandomBase32();
 	const qrCode = await generateTimeBased2fa(secret);
+	let recoveryCode: string = '';
+
+	for (let i = 0; i < 6; i++) {
+		recoveryCode += i == 5 ? `${generateRandom6DigitKey()}` : `${generateRandom6DigitKey()} `;
+	}
+
+	const hashedRecoveryCode = hashData({ token: recoveryCode }, { expiresIn: 0 });
 
 	await UserModel.findByIdAndUpdate(user?._id, {
 		timeBased2FA: {
 			secret,
+			recoveryCode: hashedRecoveryCode,
 		},
 	});
 
@@ -46,6 +56,7 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 		{
 			secret,
 			qrCode,
+			recoveryCode,
 		},
 		'Created 2FA successfully'
 	);

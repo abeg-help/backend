@@ -39,7 +39,7 @@ export const completeTimeBased2fa = catchAsync(async (req: Request, res: Respons
 
 	if (userFromCache) {
 		// update cache
-		await setCache(user._id.toString()!, toJSON({ ...userFromCache, timeBased2FA: { secret: '', active: true } }, []));
+		await setCache(user._id.toString()!, toJSON({ ...userFromCache, timeBased2FA: { active: true } }, []));
 	}
 
 	return AppResponse(res, 200, null, '2FA enabled successfully');

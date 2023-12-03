@@ -30,8 +30,9 @@ interface IUser {
 	isDeleted: boolean;
 	accountRestoreToken: string;
 	timeBased2FA: {
-		active: boolean;
-		secret: string;
+		active?: boolean;
+		secret?: string;
+		recoveryCode?: string;
 	};
 	lastLogin: Date;
 	createdAt: Date;
