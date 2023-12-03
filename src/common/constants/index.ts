@@ -1,3 +1,5 @@
+import { ENVIRONMENT } from '@/common/config';
+
 export enum Role {
 	SuperUser = 'superuser',
 	User = 'user',
@@ -26,3 +28,10 @@ export enum JWTExpiresIn {
 	Access = 15 * 60 * 1000,
 	Refresh = 24 * 60 * 60 * 1000,
 }
+
+export const TOTPBaseConfig = {
+	issuer: `${ENVIRONMENT.APP.NAME}`,
+	label: `${ENVIRONMENT.APP.NAME}`,
+	algorithm: 'SHA1',
+	digits: 6,
+};

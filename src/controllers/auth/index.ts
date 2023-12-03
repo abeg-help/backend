@@ -7,3 +7,5 @@ export * from './signup';
 export * from './verifyEmail';
 export * from './signout';
 export * from './verifyEmail';
+export * from './setupTimeBased2fa';
+export * from './completeTimeBased2faSetup';

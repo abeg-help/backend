@@ -29,6 +29,11 @@ interface IUser {
 	isEmailVerified: boolean;
 	isDeleted: boolean;
 	accountRestoreToken: string;
+	timeBased2FA: {
+		active?: boolean;
+		secret?: string;
+		recoveryCode?: string;
+	};
 	lastLogin: Date;
 	createdAt: Date;
 	updatedAt: Date;
