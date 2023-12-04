@@ -197,7 +197,8 @@ const sendVerificationEmail = async (user: Require_id<IUser>) => {
 		},
 	});
 
-	return tokenString;
+	// save email token to cache
+	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
 };
 
 export {

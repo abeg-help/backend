@@ -49,10 +49,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	setCookie(res, 'abegRefreshToken', refreshToken, {
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
-	const tokenString = await sendVerificationEmail(user);
-
-	// save email token to cache
-	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
+	await sendVerificationEmail(user);
 
 	// save user to cache without password
 	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
