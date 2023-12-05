@@ -11,7 +11,7 @@ import * as OTPAuth from 'otpauth';
 import qrcode from 'qrcode';
 import { promisify } from 'util';
 import { ENVIRONMENT } from '../config';
-import { IHashData } from '../interfaces/helper';
+import { IGenerate2faRecoveryCode, IHashData } from '../interfaces/helper';
 import { IUser } from '../interfaces/user';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
@@ -201,6 +201,21 @@ const sendVerificationEmail = async (user: Require_id<IUser>) => {
 	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
 };
 
+const generate2faRecoveryCode = (): IGenerate2faRecoveryCode => {
+	let recoveryCode: string = '';
+
+	for (let i = 0; i < 6; i++) {
+		recoveryCode += i == 5 ? `${generateRandom6DigitKey()}` : `${generateRandom6DigitKey()} `;
+	}
+
+	const hashedRecoveryCode = hashData({ token: recoveryCode }, { expiresIn: 0 });
+
+	return {
+		recoveryCode,
+		hashedRecoveryCode,
+	};
+};
+
 export {
 	decodeData,
 	generateRandom6DigitKey,
@@ -217,4 +232,5 @@ export {
 	setCookie,
 	toJSON,
 	validateTimeBased2fa,
+	generate2faRecoveryCode,
 };

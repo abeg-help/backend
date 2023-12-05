@@ -3,4 +3,9 @@ interface IHashData {
 	token?: string;
 }
 
-export { IHashData };
+interface IGenerate2faRecoveryCode {
+	recoveryCode: string;
+	hashedRecoveryCode: string;
+}
+
+export { IHashData, IGenerate2faRecoveryCode };
