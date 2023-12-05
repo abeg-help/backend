@@ -9,6 +9,7 @@ import {
 	accountDeletedEmailTemplate,
 	accountRestoredEmailTemplate,
 } from '../templates';
+import { revoke2FASecretEmailTemplate } from '../templates/revoke2faRecoveryCodeEmail';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
@@ -37,6 +38,11 @@ const TEMPLATES = {
 		subject: 'AbegHelp Account Restored',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: accountRestoredEmailTemplate,
+	},
+	revoke2FASecretCode: {
+		subject: 'Revoke 2FA Secret Code',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: revoke2FASecretEmailTemplate,
 	},
 };
 

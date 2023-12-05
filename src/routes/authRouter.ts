@@ -4,6 +4,7 @@ import {
 	protect,
 	resendVerification,
 	resetPassword,
+	revokeRecoveryCode2fa,
 	session,
 	setupTimeBased2fa,
 	signIn,
@@ -27,5 +28,6 @@ router.get('/session', session);
 router.get('/signout', signOut);
 router.post('/2fa/time/setup', setupTimeBased2fa);
 router.post('/2fa/time/complete', completeTimeBased2fa);
+router.get('/2fa/time/revoke', revokeRecoveryCode2fa);
 
 export { router as authRouter };

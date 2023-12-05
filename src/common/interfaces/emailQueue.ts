@@ -28,9 +28,14 @@ export interface RestoreAccountData extends CommonDataFields {
 	loginLink: string;
 }
 
+export interface Revoke2FASecretCodeData extends CommonDataFields {
+	name: string;
+}
+
 export type EmailJobData =
 	| { type: 'welcomeEmail'; data: WelcomeEmailData }
 	| { type: 'resetPassword'; data: ResetPasswordData }
 	| { type: 'forgotPassword'; data: ForgotPasswordData }
 	| { type: 'deleteAccount'; data: DeleteAccountData }
-	| { type: 'restoreAccount'; data: RestoreAccountData };
+	| { type: 'restoreAccount'; data: RestoreAccountData }
+	| { type: 'revoke2FASecretCode'; data: Revoke2FASecretCodeData };
