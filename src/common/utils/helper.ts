@@ -1,16 +1,18 @@
+import { TOTPBaseConfig } from '@/common/constants';
+import { addEmailToQueue } from '@/queues/emailQueue';
 import bcrypt from 'bcryptjs';
 import { randomBytes, randomInt } from 'crypto';
 import type { CookieOptions, Response } from 'express';
+import { encode } from 'hi-base32';
 import Redis from 'ioredis';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { Require_id } from 'mongoose';
+import * as OTPAuth from 'otpauth';
+import qrcode from 'qrcode';
 import { promisify } from 'util';
 import { ENVIRONMENT } from '../config';
 import { IHashData } from '../interfaces/helper';
 import { IUser } from '../interfaces/user';
-import * as OTPAuth from 'otpauth';
-import { encode } from 'hi-base32';
-import qrcode from 'qrcode';
-import { TOTPBaseConfig } from '@/common/constants';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
@@ -181,19 +183,38 @@ const generateRandom6DigitKey = () => {
 	return tokenString;
 };
 
+const sendVerificationEmail = async (user: Require_id<IUser>) => {
+	// add welcome email to queue for user to verify account
+	const tokenString = await generateRandomString();
+	const emailVerificationToken = await hashData({ token: tokenString });
+
+	addEmailToQueue({
+		type: 'welcomeEmail',
+		data: {
+			to: user.email,
+			name: user.firstName,
+			verificationLink: `${ENVIRONMENT.FRONTEND_URL}/verify-email/${user._id}?token=${emailVerificationToken}`,
+		},
+	});
+
+	// save email token to cache
+	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
+};
+
 export {
 	decodeData,
+	generateRandom6DigitKey,
+	generateRandomBase32,
 	generateRandomString,
+	generateTimeBased2fa,
 	getFromCache,
 	hashData,
 	hashPassword,
+	isValidFileNameAwsUpload,
+	removeFromCache,
+	sendVerificationEmail,
 	setCache,
 	setCookie,
-	removeFromCache,
 	toJSON,
-	isValidFileNameAwsUpload,
-	generateTimeBased2fa,
-	generateRandomBase32,
 	validateTimeBased2fa,
-	generateRandom6DigitKey,
 };

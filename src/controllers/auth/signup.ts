@@ -1,11 +1,10 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { generateRandomString, hashData, hashPassword, setCache, setCookie, toJSON } from '@/common/utils';
+import { hashData, hashPassword, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
-import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
@@ -50,22 +49,10 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	setCookie(res, 'abegRefreshToken', refreshToken, {
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
+	await sendVerificationEmail(user);
 
-	// add welcome email to queue for user to verify account
-	const tokenString = await generateRandomString();
-	const emailVerificationToken = await hashData({ token: tokenString });
-
-	addEmailToQueue({
-		type: 'welcomeEmail',
-		data: {
-			to: email,
-			name: user.firstName,
-			verificationLink: `${ENVIRONMENT.FRONTEND_URL}/verify-email/${user._id}?token=${emailVerificationToken}`,
-		},
-	});
-
-	// save email token to cache
-	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
+	// delete user from collection
+	await User.findByIdAndDelete(user._id);
 
 	// save user to cache without password
 	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });

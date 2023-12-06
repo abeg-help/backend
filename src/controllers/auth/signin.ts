@@ -1,6 +1,6 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { hashData, setCache, setCookie, toJSON } from '@/common/utils';
+import { hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -40,6 +40,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	}
 
 	if (!user.isEmailVerified) {
+		await sendVerificationEmail(user);
 		throw new AppError('Your email is yet to be verified', 401);
 	}
 

@@ -1,14 +1,15 @@
 import {
+	completeTimeBased2fa,
 	forgotPassword,
 	protect,
+	resendVerification,
 	resetPassword,
 	session,
+	setupTimeBased2fa,
 	signIn,
+	signOut,
 	signUp,
 	verifyEmail,
-	signOut,
-	setupTimeBased2fa,
-	completeTimeBased2fa,
 } from '@/controllers';
 import { Router } from 'express';
 
@@ -19,6 +20,7 @@ router.post('/signin', signIn);
 router.post('/password/forgot', forgotPassword);
 router.post('/password/reset', resetPassword);
 router.post('/verify-email', verifyEmail);
+router.post('/resend-verification', resendVerification);
 
 router.use(protect); // Protect all routes after this middleware
 router.get('/session', session);
