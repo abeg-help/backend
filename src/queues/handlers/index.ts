@@ -8,6 +8,7 @@ import {
 	forgotPassword,
 	accountDeletedEmailTemplate,
 	accountRestoredEmailTemplate,
+	emailBackupOTP,
 } from '../templates';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
@@ -37,6 +38,11 @@ const TEMPLATES = {
 		subject: 'AbegHelp Account Restored',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: accountRestoredEmailTemplate,
+	},
+	emailOTP: {
+		subject: 'AbegHelp Account Restored',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: emailBackupOTP,
 	},
 };
 

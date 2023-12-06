@@ -136,6 +136,11 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 				select: false,
 			},
 		},
+		emailBackupToken: {
+			token: { type: String },
+			used: false,
+			select: false,
+		},
 	},
 	{
 		timestamps: true,
