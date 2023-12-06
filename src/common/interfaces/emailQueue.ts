@@ -27,10 +27,15 @@ export interface RestoreAccountData extends CommonDataFields {
 	name: string;
 	loginLink: string;
 }
+export interface FallbackOTPEmailData extends CommonDataFields {
+	name: string;
+	token: string;
+}
 
 export type EmailJobData =
 	| { type: 'welcomeEmail'; data: WelcomeEmailData }
 	| { type: 'resetPassword'; data: ResetPasswordData }
 	| { type: 'forgotPassword'; data: ForgotPasswordData }
 	| { type: 'deleteAccount'; data: DeleteAccountData }
-	| { type: 'restoreAccount'; data: RestoreAccountData };
+	| { type: 'restoreAccount'; data: RestoreAccountData }
+	| { type: 'fallbackOTP'; data: FallbackOTPEmailData };

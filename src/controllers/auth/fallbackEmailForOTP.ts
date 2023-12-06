@@ -3,6 +3,7 @@ import { AppResponse, generateRandom6DigitKey, getFromCache, setCache } from '@/
 import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
+import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 import { Require_id } from 'mongoose';
 export const fallbackEmailForOTP = catchAsync(async (req: Request, res: Response) => {
@@ -23,6 +24,14 @@ export const fallbackEmailForOTP = catchAsync(async (req: Request, res: Response
 		throw new AppError('Backup token is already used', 401);
 	}
 	const token = generateRandom6DigitKey();
+	addEmailToQueue({
+		type: 'fallbackOTP',
+		data: {
+			to: user.email,
+			name: user.firstName,
+			token,
+		},
+	});
 	const updatedUser = await UserModel.findOneAndUpdate({ _id: user._id }, { emailBackupToken: { token: token } });
 	if (updatedUser) {
 		await setCache(user._id.toString()!, updatedUser);

@@ -39,7 +39,7 @@ const TEMPLATES = {
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: accountRestoredEmailTemplate,
 	},
-	emailOTP: {
+	fallbackOTP: {
 		subject: 'AbegHelp Account Restored',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: emailBackupOTP,
