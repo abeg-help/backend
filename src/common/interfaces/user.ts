@@ -34,6 +34,7 @@ interface IUser {
 		secret?: string;
 		recoveryCode?: string;
 	};
+	isTermAndConditionAccepted: boolean;
 	lastLogin: Date;
 	createdAt: Date;
 	updatedAt: Date;

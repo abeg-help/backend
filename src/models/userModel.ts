@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		phoneNumber: {
 			type: String,
 			unique: true,
-			required: [true, 'Phone number is required'],
 		},
 		photo: {
 			type: String,
@@ -88,7 +87,6 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		gender: {
 			type: String,
 			enum: Object.values(Gender),
-			required: [true, 'Gender is required'],
 		},
 		verificationMethod: {
 			type: String,
@@ -135,6 +133,11 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 				type: String,
 				select: false,
 			},
+		},
+		isTermAndConditionAccepted: {
+			type: Boolean,
+			default: false,
+			required: [true, 'Term and condition is required'],
 		},
 	},
 	{

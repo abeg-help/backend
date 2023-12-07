@@ -8,19 +8,23 @@ import { UserModel as User } from '@/models';
 import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
-	const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
+	const { email, firstName, lastName, password, confirmPassword, isTermAndConditionAccepted } = req.body;
 
-	if (!email || !firstName || !lastName || !phoneNumber || !password || !gender) {
+	if (!email || !firstName || !lastName || !password || !confirmPassword) {
 		throw new AppError('Incomplete signup data', 400);
 	}
 
-	const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+	if (!isTermAndConditionAccepted) {
+		throw new AppError('Kindly accept terms and conditions to sign up', 400);
+	}
+
+	if (password !== confirmPassword) {
+		throw new AppError('Password and confirm password do not match', 400);
+	}
+
+	const existingUser = await User.findOne({ email });
 	if (existingUser) {
-		if (existingUser.email === email && existingUser.phoneNumber === phoneNumber) {
-			throw new AppError('Email and phone number has already been used', 409);
-		} else {
-			throw new AppError(`${existingUser.email === email ? 'Email' : 'Phone number'} has already been used`, 409);
-		}
+		throw new AppError(`User with email already exists`, 409);
 	}
 
 	const hashedPassword = await hashPassword(password);
@@ -29,10 +33,9 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		email,
 		firstName,
 		lastName,
-		phoneNumber,
 		password: hashedPassword,
-		gender,
 		provider: Provider.Local,
+		isTermAndConditionAccepted,
 	});
 
 	// generate access and refresh tokens and set cookies
