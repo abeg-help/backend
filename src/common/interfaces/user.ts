@@ -34,10 +34,6 @@ interface IUser {
 		secret?: string;
 		recoveryCode?: string;
 	};
-	emailBackupToken: {
-		token?: string;
-		used: boolean;
-	};
 	lastLogin: Date;
 	createdAt: Date;
 	updatedAt: Date;

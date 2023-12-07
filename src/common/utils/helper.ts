@@ -188,7 +188,7 @@ const sendVerificationEmail = async (user: Require_id<IUser>) => {
 	const tokenString = await generateRandomString();
 	const emailVerificationToken = await hashData({ token: tokenString });
 
-	addEmailToQueue({
+	await addEmailToQueue({
 		type: 'welcomeEmail',
 		data: {
 			to: user.email,

@@ -1,5 +1,6 @@
 import {
 	completeTimeBased2fa,
+	fallbackEmailForOTP,
 	forgotPassword,
 	protect,
 	resendVerification,
@@ -27,6 +28,6 @@ router.get('/session', session);
 router.get('/signout', signOut);
 router.post('/2fa/time/setup', setupTimeBased2fa);
 router.post('/2fa/time/complete', completeTimeBased2fa);
-router.post('/');
+router.post('/2fa/email-fallback', fallbackEmailForOTP);
 
 export { router as authRouter };

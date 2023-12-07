@@ -29,7 +29,7 @@ import xss from 'xss-clean';
 import socketController from './controllers/sockets';
 import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-
+import '@/common/interfaces/IRequest';
 /**
  *  uncaughtException handler
  */
