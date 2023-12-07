@@ -27,5 +27,6 @@ router.get('/session', session);
 router.get('/signout', signOut);
 router.post('/2fa/time/setup', setupTimeBased2fa);
 router.post('/2fa/time/complete', completeTimeBased2fa);
+router.post('/');
 
 export { router as authRouter };
