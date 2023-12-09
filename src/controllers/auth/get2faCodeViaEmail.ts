@@ -1,28 +1,41 @@
-import { AppResponse, generateRandom6DigitKey, setCache } from '@/common/utils';
+import { AppResponse, generateRandom6DigitKey, hashData, setCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
+import { UserModel } from '../../models';
 
-export const fallbackEmailForOTP = catchAsync(async (req: Request, res: Response) => {
-	const user = req.user;
-	if (!user?._id) {
-		throw new AppError('id is required', 401);
+export const get2faCodeViaEmail = catchAsync(async (req: Request, res: Response) => {
+	const { email } = req.body;
+
+	if (!email) {
+		throw new AppError('Email is required', 400);
 	}
 
-	if (!user.timeBased2FA.active) {
-		throw new AppError('User not enrolled for 2FA', 401);
+	const user = await UserModel.findOne({ email });
+
+	if (!user) {
+		throw new AppError('No user found with provided email', 404);
+	}
+
+	if (!user.timeBased2FA.receiveCodeViaEmail) {
+		throw new AppError('Your account is not configured to receive 2FA code via email', 400);
 	}
 
 	const token = generateRandom6DigitKey();
+	const hashedToken = hashData({ token }, { expiresIn: '5m' });
+
 	await addEmailToQueue({
-		type: 'fallbackOTP',
+		type: 'get2faCodeViaEmail',
 		data: {
 			to: user.email,
 			name: user.firstName,
-			token,
+			twoFactorCode: token,
+			expiryTime: '5',
+			priority: 'high',
 		},
 	});
-	await setCache(`2FAEmailCode:${user._id.toString()}`, token, 900);
-	return AppResponse(res, 200, {}, 'OTP code sent to email successfully');
+
+	await setCache(`2FAEmailCode:${user._id.toString()}`, { token: hashedToken }, 300);
+	return AppResponse(res, 200, null, 'OTP code sent to email successfully');
 });

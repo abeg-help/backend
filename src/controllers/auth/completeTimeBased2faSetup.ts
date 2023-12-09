@@ -36,14 +36,20 @@ export const completeTimeBased2fa = catchAsync(async (req: Request, res: Respons
 
 	await UserModel.findByIdAndUpdate(user?._id, {
 		'timeBased2FA.active': true,
-		receiveCodeViaEmail: receiveCodeViaEmail ? receiveCodeViaEmail : false,
+		'timeBased2FA.receiveCodeViaEmail': receiveCodeViaEmail ?? false,
 	});
 
 	const userFromCache = await getFromCache<Require_id<IUser>>(user._id.toString());
 
 	if (userFromCache) {
 		// update cache
-		await setCache(user._id.toString()!, toJSON({ ...userFromCache, timeBased2FA: { active: true } }, []));
+		await setCache(
+			user._id.toString()!,
+			toJSON(
+				{ ...userFromCache, timeBased2FA: { active: true, receiveCodeViaEmail: receiveCodeViaEmail ?? false } },
+				[]
+			)
+		);
 	}
 
 	return AppResponse(res, 200, null, '2FA enabled successfully');

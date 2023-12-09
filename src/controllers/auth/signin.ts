@@ -82,6 +82,6 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 		});
 
 		await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
-		AppResponse(res, 200, toJSON(user), 'Sign in successful');
+		return AppResponse(res, 200, toJSON(user), 'Sign in successful');
 	}
 });

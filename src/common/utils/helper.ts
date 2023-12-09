@@ -51,9 +51,11 @@ const hashPassword = async (password: string) => {
 };
 
 const hashData = (data: IHashData, options?: SignOptions, secret?: string) => {
-	return jwt.sign({ ...data }, secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY, {
-		expiresIn: options?.expiresIn || '15m',
-	});
+	return jwt.sign(
+		{ ...data },
+		secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY,
+		...[options?.expiresIn ? { expiresIn: options?.expiresIn } : {}]
+	);
 };
 
 const decodeData = async (token: string, secret?: string) => {

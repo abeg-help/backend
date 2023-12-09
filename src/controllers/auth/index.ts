@@ -9,5 +9,5 @@ export * from './signin';
 export * from './signout';
 export * from './signup';
 export * from './verifyEmail';
-export * from './fallbackEmailForOTP';
+export * from './get2faCodeViaEmail';
 export * from './verifyTimeBased2fa';

@@ -32,10 +32,17 @@ export interface FallbackOTPEmailData extends CommonDataFields {
 	token: string;
 }
 
+export interface Get2faCodeViaEmailData extends CommonDataFields {
+	name: string;
+	twoFactorCode: string;
+	expiryTime: string;
+}
+
 export type EmailJobData =
 	| { type: 'welcomeEmail'; data: WelcomeEmailData }
 	| { type: 'resetPassword'; data: ResetPasswordData }
 	| { type: 'forgotPassword'; data: ForgotPasswordData }
 	| { type: 'deleteAccount'; data: DeleteAccountData }
 	| { type: 'restoreAccount'; data: RestoreAccountData }
-	| { type: 'fallbackOTP'; data: FallbackOTPEmailData };
+	| { type: 'fallbackOTP'; data: FallbackOTPEmailData }
+	| { type: 'get2faCodeViaEmail'; data: Get2faCodeViaEmailData };
