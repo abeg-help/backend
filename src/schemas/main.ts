@@ -1,5 +1,6 @@
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import { z } from 'zod';
+import { VerifyTimeBased2faTypeEnum } from '../common/constants';
 
 const verifyPhoneNumber = (value: string) => {
 	const phoneUtil = PhoneNumberUtil.getInstance();
@@ -19,6 +20,12 @@ export const baseSchema = z.object({
 	token: z.string(),
 	userId: z.string(),
 	isTermAndConditionAccepted: z.boolean(),
+	receiveCodeViaEmail: z.boolean(),
+	twoFactorVerificationType: z.enum([
+		VerifyTimeBased2faTypeEnum.CODE,
+		VerifyTimeBased2faTypeEnum.EMAIL_CODE,
+		VerifyTimeBased2faTypeEnum.DISABLE_2FA,
+	]),
 });
 
 export const mainSchema = z
@@ -59,6 +66,14 @@ export const mainSchema = z
 		token: z.string(),
 		userId: z.string(),
 		isTermAndConditionAccepted: z.boolean(),
+		receiveCodeViaEmail: z.boolean(),
+		twoFactorVerificationType: z
+			.enum([
+				VerifyTimeBased2faTypeEnum.CODE,
+				VerifyTimeBased2faTypeEnum.EMAIL_CODE,
+				VerifyTimeBased2faTypeEnum.DISABLE_2FA,
+			])
+			.default(VerifyTimeBased2faTypeEnum.CODE),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',

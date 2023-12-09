@@ -8,18 +8,14 @@ import { UserModel as User } from '@/models';
 import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
-	const { email, firstName, lastName, password, confirmPassword, isTermAndConditionAccepted } = req.body;
+	const { email, firstName, lastName, password, isTermAndConditionAccepted } = req.body;
 
-	if (!email || !firstName || !lastName || !password || !confirmPassword) {
+	if (!email || !firstName || !lastName || !password) {
 		throw new AppError('Incomplete signup data', 400);
 	}
 
 	if (!isTermAndConditionAccepted) {
 		throw new AppError('Kindly accept terms and conditions to sign up', 400);
-	}
-
-	if (password !== confirmPassword) {
-		throw new AppError('Password and confirm password do not match', 400);
 	}
 
 	const existingUser = await User.findOne({ email });
@@ -38,6 +34,8 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		isTermAndConditionAccepted,
 	});
 
+	console.log('user', user);
+
 	// generate access and refresh tokens and set cookies
 	const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
 	setCookie(res, 'abegAccessToken', accessToken, {
@@ -55,7 +53,8 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	await sendVerificationEmail(user);
 
 	// delete user from collection
-	await User.findByIdAndDelete(user._id);
+	// TODO:review this
+	// await User.findByIdAndDelete(user._id);
 
 	// save user to cache without password
 	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });

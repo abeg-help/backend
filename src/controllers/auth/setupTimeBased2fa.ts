@@ -35,10 +35,11 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 	}
 
 	const hashedRecoveryCode = hashData({ token: recoveryCode }, { expiresIn: 0 });
+	const hashedSecret = hashData({ token: secret }, { expiresIn: 0 });
 
 	await UserModel.findByIdAndUpdate(user?._id, {
 		timeBased2FA: {
-			secret,
+			secret: hashedSecret,
 			recoveryCode: hashedRecoveryCode,
 		},
 	});
@@ -47,7 +48,10 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 
 	if (userFromCache) {
 		// update cache
-		await setCache(user._id.toString()!, toJSON({ ...userFromCache, timeBased2FA: { secret, active: false } }, []));
+		await setCache(
+			user._id.toString()!,
+			toJSON({ ...userFromCache, timeBased2FA: { secret: hashedSecret, active: false } }, [])
+		);
 	}
 
 	return AppResponse(

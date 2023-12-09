@@ -35,3 +35,9 @@ export const TOTPBaseConfig = {
 	algorithm: 'SHA1',
 	digits: 6,
 };
+
+export enum VerifyTimeBased2faTypeEnum {
+	CODE = 'CODE',
+	EMAIL_CODE = 'EMAIL_CODE',
+	DISABLE_2FA = 'DISABLE_2FA',
+}

@@ -1,6 +1,6 @@
 import { Require_id } from 'mongoose';
 import { IUser } from '../../common/interfaces';
-import { validateTimeBased2fa, AppResponse, getFromCache, setCache, toJSON } from '../../common/utils';
+import { validateTimeBased2fa, AppResponse, getFromCache, setCache, toJSON, decodeData } from '../../common/utils';
 import AppError from '../../common/utils/appError';
 import { catchAsync } from '../../middlewares';
 import { UserModel } from '../../models';
@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 
 export const completeTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;
-	const { token } = req.body;
+	const { token, receiveCodeViaEmail } = req.body;
 
 	if (!token) {
 		throw new AppError('Token is required', 400);
@@ -22,7 +22,13 @@ export const completeTimeBased2fa = catchAsync(async (req: Request, res: Respons
 		throw new AppError('2FA is not active', 400);
 	}
 
-	const isTokenValid = validateTimeBased2fa(user.timeBased2FA.secret, token, 1);
+	const decryptedSecret = await decodeData(user.timeBased2FA.secret);
+
+	if (!decryptedSecret.token) {
+		throw new AppError('Unable to complete 2FA, please try again', 400);
+	}
+
+	const isTokenValid = validateTimeBased2fa(decryptedSecret.token, token, 1);
 
 	if (!isTokenValid) {
 		throw new AppError('Invalid token', 400);
@@ -30,9 +36,7 @@ export const completeTimeBased2fa = catchAsync(async (req: Request, res: Respons
 
 	await UserModel.findByIdAndUpdate(user?._id, {
 		'timeBased2FA.active': true,
-		$unset: {
-			'timeBased2FA.secret': 1,
-		},
+		receiveCodeViaEmail: receiveCodeViaEmail ? receiveCodeViaEmail : false,
 	});
 
 	const userFromCache = await getFromCache<Require_id<IUser>>(user._id.toString());

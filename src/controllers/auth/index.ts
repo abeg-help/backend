@@ -10,3 +10,4 @@ export * from './signout';
 export * from './signup';
 export * from './verifyEmail';
 export * from './fallbackEmailForOTP';
+export * from './verifyTimeBased2fa';

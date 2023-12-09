@@ -128,10 +128,17 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		},
 		timeBased2FA: {
 			active: Boolean,
-			secret: String,
+			secret: {
+				type: String,
+				select: false,
+			},
 			recoveryCode: {
 				type: String,
 				select: false,
+			},
+			receiveCodeViaEmail: {
+				type: Boolean,
+				select: true,
 			},
 		},
 		isTermAndConditionAccepted: {

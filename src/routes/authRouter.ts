@@ -11,6 +11,7 @@ import {
 	signOut,
 	signUp,
 	verifyEmail,
+	verifyTimeBased2fa,
 } from '@/controllers';
 import { Router } from 'express';
 
@@ -29,5 +30,6 @@ router.get('/signout', signOut);
 router.post('/2fa/time/setup', setupTimeBased2fa);
 router.post('/2fa/time/complete', completeTimeBased2fa);
 router.post('/2fa/email-fallback', fallbackEmailForOTP);
+router.post('/2fa/time/verify', verifyTimeBased2fa);
 
 export { router as authRouter };

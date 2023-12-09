@@ -33,6 +33,7 @@ interface IUser {
 		active?: boolean;
 		secret?: string;
 		recoveryCode?: string;
+		receiveCodeViaEmai?: boolean;
 	};
 	isTermAndConditionAccepted: boolean;
 	lastLogin: Date;
