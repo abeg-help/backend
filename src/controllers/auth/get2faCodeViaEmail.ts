@@ -3,6 +3,7 @@ import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
+
 export const fallbackEmailForOTP = catchAsync(async (req: Request, res: Response) => {
 	const user = req.user;
 	if (!user?._id) {
