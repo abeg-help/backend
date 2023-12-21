@@ -12,7 +12,7 @@ import {
 	verifyEmail,
 	verifyTimeBased2fa,
 } from '@/controllers';
-import { Protect } from '@/middlewares/protect';
+import { Protect } from '@/queues/middlewares/protect';
 import { Router } from 'express';
 
 const router = Router();

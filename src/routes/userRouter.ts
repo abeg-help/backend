@@ -2,7 +2,7 @@ import { multerUpload } from '@/common/config/multer';
 import { editUserProfile } from '@/controllers/user/editUserProfile';
 import { deleteAccount, restoreAccount, updateProfilePhoto } from '@/controllers/user';
 import express from 'express';
-import { Protect } from '@/middlewares/protect';
+import { Protect } from '@/queues/middlewares/protect';
 const router = express.Router();
 
 router.post('/restore', restoreAccount);

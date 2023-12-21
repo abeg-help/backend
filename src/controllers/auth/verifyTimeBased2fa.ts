@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import {
 	AppResponse,
 	decodeData,

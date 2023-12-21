@@ -1,7 +1,7 @@
 import { decodeData, setCache, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { UserModel } from '@/models';
 import { Request, Response } from 'express';
 

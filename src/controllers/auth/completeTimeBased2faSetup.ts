@@ -2,7 +2,7 @@ import { Require_id } from 'mongoose';
 import { IUser } from '../../common/interfaces';
 import { validateTimeBased2fa, AppResponse, getFromCache, setCache, toJSON, decodeData } from '../../common/utils';
 import AppError from '../../common/utils/appError';
-import { catchAsync } from '../../middlewares';
+import { catchAsync } from '../../queues/middlewares';
 import { UserModel } from '../../models';
 import { Request, Response } from 'express';
 

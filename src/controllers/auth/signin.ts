@@ -3,7 +3,7 @@ import { Provider } from '@/common/constants';
 import { hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { UserModel as User } from '@/models/userModel';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';

@@ -1,6 +1,6 @@
 import { AppResponse, generateRandom6DigitKey, hashData, setCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 import { UserModel } from '../../models';

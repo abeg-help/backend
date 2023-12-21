@@ -1,7 +1,7 @@
 import { IUser } from '@/common/interfaces';
 import { AppResponse, getFromCache, setCache, toJSON, uploadSingleFile } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { UserModel } from '@/models';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';

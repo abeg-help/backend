@@ -1,4 +1,4 @@
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { Request, Response } from 'express';
 import AppError from '@/common/utils/appError';
 import {

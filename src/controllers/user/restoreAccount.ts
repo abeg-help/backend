@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AppResponse, decodeData } from '../../common/utils';
 import AppError from '../../common/utils/appError';
-import { catchAsync } from '../../middlewares';
+import { catchAsync } from '../../queues/middlewares';
 import { UserModel } from '../../models';
 import { addEmailToQueue } from '../../queues/emailQueue';
 

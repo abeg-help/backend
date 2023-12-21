@@ -1,6 +1,6 @@
 import { setCookie } from '@/common/utils';
 import { authenticate } from '@/common/utils/authenticate';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import type { NextFunction, Request, Response } from 'express';
 
 export const Protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

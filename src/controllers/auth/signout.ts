@@ -1,7 +1,7 @@
 import { removeFromCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { UserModel as User } from '@/models';
 import { Request, Response } from 'express';
 

@@ -1,7 +1,7 @@
 import { toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
-import { catchAsync } from '@/middlewares';
+import { catchAsync } from '@/queues/middlewares';
 import { Request, Response } from 'express';
 
 export const session = catchAsync(async (req: Request, res: Response) => {
