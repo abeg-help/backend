@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { ENVIRONMENT } from './environment';
-
 import { ConnectOptions } from 'mongoose';
 
 interface CustomConnectOptions extends ConnectOptions {

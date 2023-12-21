@@ -3,7 +3,7 @@ import { authenticate } from '@/common/utils/authenticate';
 import { catchAsync } from '@/middlewares';
 import type { NextFunction, Request, Response } from 'express';
 
-export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const Protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	// get the cookies from the request headers
 	const { abegAccessToken, abegRefreshToken } = req.cookies;
 

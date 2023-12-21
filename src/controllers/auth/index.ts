@@ -1,6 +1,5 @@
 export * from './completeTimeBased2faSetup';
 export * from './forgotPassword';
-export * from './protect';
 export * from './resendVerification';
 export * from './resetPassword';
 export * from './session';

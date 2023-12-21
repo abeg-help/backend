@@ -6,7 +6,7 @@ dotenv.config();
 
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import { logger, stream } from '@/common/utils/logger';
-import errorHandler from '@/controllers/errorController';
+import errorHandler from '@/common/utils/errorController';
 import { validateDataWithZod } from '@/middlewares';
 import { timeoutMiddleware } from '@/middlewares/timeout';
 import { authRouter, userRouter } from '@/routes';

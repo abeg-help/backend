@@ -61,7 +61,7 @@ const hashData = (data: IHashData, options?: SignOptions, secret?: string) => {
 
 const decodeData = async (token: string, secret?: string) => {
 	const verifyAsync: (arg1: string, arg2: string) => jwt.JwtPayload = promisify(jwt.verify);
-	return await verifyAsync(token, secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY!);
+	return verifyAsync(token, secret ? secret : ENVIRONMENT.JWT.ACCESS_KEY!);
 };
 
 const setCookie = (res: Response, name: string, value: string | number, options: CookieOptions = {}) => {

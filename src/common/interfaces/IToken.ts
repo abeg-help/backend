@@ -3,5 +3,4 @@ interface IToken {
 	token: string;
 	createdAt: Date;
 }
-
 export { IToken };

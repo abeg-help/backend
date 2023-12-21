@@ -32,7 +32,6 @@ const validateDataWithZod = catchAsync(async (req: Request, res: Response, next:
 			details: errorDetails,
 		};
 		console.log('here');
-		// return res.status(422).json(errorResponse);
 		throw new AppError('Validation failed', 422, errorResponse);
 	}
 
@@ -61,13 +60,6 @@ const validateDataWithZod = catchAsync(async (req: Request, res: Response, next:
 			}
 			errorDetails[fieldName].push(error.message);
 		}
-
-		// return res.status(422).json({
-		// 	status: 'error',
-		// 	error: 'Validation error',
-		// 	details: errorDetails,
-		// });
-
 		throw new AppError('Validation failed', 422, errorDetails);
 	} else {
 		req.body = mainResult.data as MyDataShape;

@@ -68,7 +68,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		maxAge: 15 * 60 * 1000, // 15 minutes
 	});
 
-	const refreshToken = await hashData(
+	const refreshToken = hashData(
 		{ id: user._id.toString() },
 		{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH },
 		ENVIRONMENT.JWT.REFRESH_KEY

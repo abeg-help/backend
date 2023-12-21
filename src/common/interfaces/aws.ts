@@ -3,5 +3,4 @@ interface IAwsUploadFile {
 	mimetype: string;
 	buffer: Buffer;
 }
-
 export { IAwsUploadFile };

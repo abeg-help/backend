@@ -49,5 +49,4 @@ interface UserMethods extends Omit<IUser, 'toJSON'> {
 }
 
 type UserModel = Model<UserMethods>;
-
 export { IUser, UserMethods, UserModel };

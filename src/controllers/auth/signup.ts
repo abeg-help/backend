@@ -35,12 +35,12 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	// generate access and refresh tokens and set cookies
-	const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
+	const accessToken = hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
 	setCookie(res, 'abegAccessToken', accessToken, {
 		maxAge: 15 * 60 * 1000, // 15 minutes
 	});
 
-	const refreshToken = await hashData(
+	const refreshToken = hashData(
 		{ id: user._id.toString() },
 		{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH },
 		ENVIRONMENT.JWT.REFRESH_KEY
