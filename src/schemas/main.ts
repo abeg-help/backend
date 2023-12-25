@@ -1,6 +1,6 @@
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import { z } from 'zod';
-import { VerifyTimeBased2faTypeEnum } from '../common/constants';
+import { VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '../common/constants';
 
 const verifyPhoneNumber = (value: string) => {
 	const phoneUtil = PhoneNumberUtil.getInstance();
@@ -21,6 +21,7 @@ export const baseSchema = z.object({
 	userId: z.string(),
 	isTermAndConditionAccepted: z.boolean(),
 	receiveCodeViaEmail: z.boolean(),
+	twoFactorType: z.enum([twoFactorTypeEnum.APP, twoFactorTypeEnum.EMAIL]),
 	twoFactorVerificationType: z.enum([
 		VerifyTimeBased2faTypeEnum.CODE,
 		VerifyTimeBased2faTypeEnum.EMAIL_CODE,
@@ -67,6 +68,7 @@ export const mainSchema = z
 		userId: z.string(),
 		isTermAndConditionAccepted: z.boolean(),
 		receiveCodeViaEmail: z.boolean(),
+		twoFactorType: z.enum([twoFactorTypeEnum.APP, twoFactorTypeEnum.EMAIL]),
 		twoFactorVerificationType: z
 			.enum([
 				VerifyTimeBased2faTypeEnum.CODE,

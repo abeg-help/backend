@@ -41,3 +41,8 @@ export enum VerifyTimeBased2faTypeEnum {
 	EMAIL_CODE = 'EMAIL_CODE',
 	DISABLE_2FA = 'DISABLE_2FA',
 }
+
+export enum twoFactorTypeEnum {
+	EMAIL = 'EMAIL',
+	APP = 'APP',
+}

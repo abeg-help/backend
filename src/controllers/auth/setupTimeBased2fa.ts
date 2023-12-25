@@ -14,9 +14,16 @@ import {
 import { UserModel } from '@/models';
 import { Require_id } from 'mongoose';
 import { IUser } from '../../common/interfaces';
+import { twoFactorTypeEnum } from '../../common/constants';
+import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;
+	const { twoFactorType } = req.body;
+
+	if (!twoFactorType) {
+		throw new AppError('Invalid Request', 400);
+	}
 
 	if (!user) {
 		throw new AppError('Unauthorized', 401);
@@ -26,21 +33,33 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 		throw new AppError('2FA is already active', 400);
 	}
 
-	const secret = generateRandomBase32();
-	const qrCode = await generateTimeBased2fa(secret);
-	let recoveryCode: string = '';
+	if (twoFactorType === twoFactorTypeEnum.EMAIL) {
+		const token = generateRandom6DigitKey();
+		const hashedToken = hashData({ token }, { expiresIn: '5m' });
 
-	for (let i = 0; i < 6; i++) {
-		recoveryCode += i == 5 ? `${generateRandom6DigitKey()}` : `${generateRandom6DigitKey()} `;
+		await addEmailToQueue({
+			type: 'get2faCodeViaEmail',
+			data: {
+				to: user.email,
+				name: user.firstName,
+				twoFactorCode: token,
+				expiryTime: '5',
+				priority: 'high',
+			},
+		});
+
+		await setCache(`2FAEmailCode:${user._id.toString()}`, { token: hashedToken }, 300);
+
+		return AppResponse(res, 200, null, 'OTP code sent to email successfully');
 	}
 
-	const hashedRecoveryCode = hashData({ token: recoveryCode }, { expiresIn: 0 });
+	const secret = generateRandomBase32();
+	const qrCode = await generateTimeBased2fa(secret);
 	const hashedSecret = hashData({ token: secret }, { expiresIn: 0 });
 
 	await UserModel.findByIdAndUpdate(user?._id, {
 		timeBased2FA: {
 			secret: hashedSecret,
-			recoveryCode: hashedRecoveryCode,
 		},
 	});
 
@@ -60,7 +79,6 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 		{
 			secret,
 			qrCode,
-			recoveryCode,
 		},
 		'Created 2FA successfully'
 	);

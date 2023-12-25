@@ -1,6 +1,5 @@
-import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { hashData, hashPassword, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
+import { hashPassword, sendVerificationEmail, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -34,27 +33,8 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		isTermAndConditionAccepted,
 	});
 
-	// generate access and refresh tokens and set cookies
-	const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
-	setCookie(res, 'abegAccessToken', accessToken, {
-		maxAge: 15 * 60 * 1000, // 15 minutes
-	});
-
-	const refreshToken = await hashData(
-		{ id: user._id.toString() },
-		{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH },
-		ENVIRONMENT.JWT.REFRESH_KEY
-	);
-	setCookie(res, 'abegRefreshToken', refreshToken, {
-		maxAge: 24 * 60 * 60 * 1000, // 24 hours
-	});
 	await sendVerificationEmail(user, req);
 
-	// delete user from collection
-	// TODO:review this
-	// await User.findByIdAndDelete(user._id);
-
 	// save user to cache without password
-	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
 	AppResponse(res, 201, toJSON(user), 'Account created successfully');
 });

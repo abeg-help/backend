@@ -2,6 +2,7 @@ import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
+import { twoFactorSchema } from './twoFactorModel';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 
@@ -127,19 +128,8 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			select: false,
 		},
 		timeBased2FA: {
-			active: Boolean,
-			secret: {
-				type: String,
-				select: false,
-			},
-			recoveryCode: {
-				type: String,
-				select: false,
-			},
-			receiveCodeViaEmail: {
-				type: Boolean,
-				select: true,
-			},
+			type: twoFactorSchema,
+			default: {},
 		},
 		isTermAndConditionAccepted: {
 			type: Boolean,
