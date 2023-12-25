@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { ENVIRONMENT, connectDb } from '@/common/config';
+import '@/common/interfaces/IRequest';
 import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/common/utils/errorController';
 import { validateDataWithZod } from '@/queues/middlewares';
@@ -29,7 +30,6 @@ import xss from 'xss-clean';
 import socketController from './controllers/sockets';
 import { catchSocketAsync } from './queues/middlewares/catchSocketAsyncErrors';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import '@/common/interfaces/IRequest';
 /**
  *  uncaughtException handler
  */
@@ -81,7 +81,6 @@ app.use(limiter);
 app.use(
 	cors({
 		origin: ['https://abeghelp.me', 'http://localhost:3000', 'http://localhost:3001'],
-		methods: ['GET', 'POST'],
 		credentials: true,
 	})
 );

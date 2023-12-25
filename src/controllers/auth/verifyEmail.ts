@@ -1,4 +1,5 @@
-import { decodeData, setCache, toJSON } from '@/common/utils';
+import { IUser } from '@/common/interfaces';
+import { decodeData, getFromCache, setCache, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/queues/middlewares';
@@ -16,6 +17,12 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 
 	if (!decryptedToken.id) {
 		throw new AppError('Invalid verification token');
+	}
+
+	const cachedUser = (await getFromCache(decryptedToken.id)) as IUser;
+
+	if (cachedUser.isEmailVerified) {
+		return AppResponse(res, 200, {}, 'Account already verified!');
 	}
 
 	const updatedUser = await UserModel.findByIdAndUpdate(decryptedToken.id, { isEmailVerified: true }, { new: true });
