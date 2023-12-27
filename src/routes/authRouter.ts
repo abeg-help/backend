@@ -1,5 +1,4 @@
 import {
-	completeTimeBased2fa,
 	get2faCodeViaEmail,
 	forgotPassword,
 	protect,
@@ -30,6 +29,6 @@ router.use(protect); // Protect all routes after this middleware
 router.get('/session', session);
 router.get('/signout', signOut);
 router.post('/2fa/time/setup', setupTimeBased2fa);
-router.post('/2fa/time/complete', completeTimeBased2fa);
+router.post('/2fa/time/complete', verifyTimeBased2fa);
 
 export { router as authRouter };

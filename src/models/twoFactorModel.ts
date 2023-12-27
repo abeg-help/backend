@@ -16,6 +16,10 @@ export const twoFactorSchema = new mongoose.Schema(
 			type: String,
 			select: false,
 		},
+		active: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		_id: false,

@@ -16,6 +16,7 @@ import { VerifyTimeBased2faTypeEnum } from '../../common/constants';
 import { DateTime } from 'luxon';
 import { ENVIRONMENT } from '../../common/config';
 
+// THIS IS THE VERIFY THAT WORKS BECAUSE IT GIVES OPTION OF EITHER APP OR EMAIL BUT SCROLL DOWN
 export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
 	const { email, token, twoFactorVerificationType } = req.body;
 
@@ -25,6 +26,8 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		throw new AppError('No user found with provided email', 404);
 	}
 
+	// THIS CHECK CANNOT BE HERE, BECAUSE TO SETUP 2FA ON SIGNIN WE HAVE TO USE THIS ONCE BUT ITS DEFAULT IS SET TO ACITVE FALSE
+	// BBUT IT REQUIRES IT TO BE TRUE TO ALLOW THE PERSON DO IT THE FIRST TIME TO ACTIVATE IT AND SET IT TO TRUE
 	if (!user.timeBased2FA.active) {
 		throw new AppError('2FA is not active', 400);
 	}

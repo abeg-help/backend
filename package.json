@@ -79,6 +79,7 @@
 		"@types/hpp": "^0.2.3",
 		"@types/jsonwebtoken": "^9.0.4",
 		"@types/morgan": "^1.9.6",
+		"@types/qrcode": "^1.5.5",
 		"@types/redis-info": "^3.0.2",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",
 		"@typescript-eslint/parser": "^6.7.4",

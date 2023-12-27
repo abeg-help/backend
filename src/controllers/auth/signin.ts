@@ -15,7 +15,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	}
 
 	const user = await User.findOne({ email, provider: Provider.Local }).select(
-		'+refreshToken +loginRetries +isSuspended +isEmailVerified +lastLogin +password'
+		'+refreshToken +loginRetries +isSuspended +isEmailVerified +lastLogin +password +timeBased2FA'
 	);
 
 	if (!user) {
