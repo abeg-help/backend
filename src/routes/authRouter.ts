@@ -12,7 +12,7 @@ import {
 	verifyEmail,
 	verifyTimeBased2fa,
 } from '@/controllers';
-import { completeTimeBased2fa } from '@/controllers/auth/completeTimeBased2faSetup';
+import { complete2faSetup } from '@/controllers/auth/complete2faSetup';
 import { Router } from 'express';
 
 const router = Router();
@@ -30,7 +30,7 @@ router.use(protect); // Protect all routes after this middleware
 router.get('/session', session);
 router.get('/signout', signOut);
 router.post('/2fa/time/setup', setupTimeBased2fa);
-router.post('/2fa/time/complete', completeTimeBased2fa);
+router.post('/2fa/time/complete', complete2faSetup);
 router.post('/2fa/time/verify', verifyTimeBased2fa);
 
 export { router as authRouter };

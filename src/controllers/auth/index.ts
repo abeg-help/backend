@@ -8,5 +8,5 @@ export * from './signin';
 export * from './signout';
 export * from './signup';
 export * from './verifyEmail';
-export * from './setup2faCodeViaEmail';
+export * from './get2faCodeViaEmail';
 export * from './verifyTimeBased2fa';
