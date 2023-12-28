@@ -42,6 +42,7 @@ const toJSON = (obj: IUser, fields?: string[]): Partial<IUser> => {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { refreshToken, loginRetries, lastLogin, password, updatedAt, ...rest } = user;
+
 	return rest;
 };
 

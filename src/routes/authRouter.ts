@@ -1,6 +1,6 @@
 import {
-	get2faCodeViaEmail,
 	forgotPassword,
+	get2faCodeViaEmail,
 	protect,
 	resendVerification,
 	resetPassword,

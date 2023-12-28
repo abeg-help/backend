@@ -31,8 +31,8 @@ export const authenticate = async ({
 		const user = cachedUser
 			? cachedUser
 			: ((await User.findOne({ _id: decoded.id }).select(
-					'refreshToken loginRetries isSuspended lastLogin'
-			  )) as Require_id<IUser>);
+					'refreshToken isSuspended isEmailVerified'
+				)) as Require_id<IUser>);
 
 		if (!cachedUser && user) {
 			await setCache(decoded.id, user);
@@ -104,7 +104,7 @@ export const authenticate = async ({
 			return { currentUser };
 		}
 	} catch (error) {
-		if ((error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) && abegAccessToken) {
+		if ((error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) && abegRefreshToken) {
 			// verify the refresh token and generate a new access token
 			return await handleTokenRefresh();
 		} else {

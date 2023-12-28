@@ -1,9 +1,6 @@
-if (process.env.NODE_ENV === 'production') {
-	require('module-alias/register');
-}
+import 'module-alias/register';
 import * as dotenv from 'dotenv';
 dotenv.config();
-
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import '@/common/interfaces/IRequest';
 import { logger, stream } from '@/common/utils/logger';
@@ -196,7 +193,6 @@ const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
 		origin: ['https://abeghelp.me', 'http://localhost:3000', 'http://localhost:3001'],
-		methods: ['GET', 'POST'],
 		credentials: true,
 	},
 });
