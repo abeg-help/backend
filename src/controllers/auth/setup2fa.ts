@@ -1,9 +1,8 @@
 import { catchAsync } from '@/middlewares';
 import { Request, Response } from 'express';
 import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils';
+import { AppResponse, get2faCodeViaEmailHelper } from '@/common/utils';
 import { twoFactorTypeEnum } from '../../common/constants';
-import { get2faCodeViaEmail } from './get2faCodeViaEmail';
 import { generateRandomBase32, generateTimeBased2fa, hashData, setCache } from '@/common/utils';
 import { getFromCache, toJSON } from '@/common/utils';
 import { Require_id } from 'mongoose';
@@ -22,14 +21,14 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 		throw new AppError('Unauthorized', 401);
 	}
 
-	if (user?.timeBased2FA && user.timeBased2FA.active === true) {
+	if (user?.twoFA && user.twoFA.active === true) {
 		throw new AppError('2FA is already active', 400);
 	}
 
 	if (twoFactorType === twoFactorTypeEnum.EMAIL) {
-		await get2faCodeViaEmail(user.email);
+		await get2faCodeViaEmailHelper(user.email);
 		await UserModel.findByIdAndUpdate(user?._id, {
-			timeBased2FA: {
+			twoFA: {
 				type: twoFactorTypeEnum.EMAIL,
 			},
 		});
@@ -43,7 +42,7 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 		const hashedSecret = hashData({ token: secret }, { expiresIn: 0 });
 
 		await UserModel.findByIdAndUpdate(user?._id, {
-			timeBased2FA: {
+			twoFA: {
 				secret: hashedSecret,
 				type: twoFactorTypeEnum.APP,
 			},
@@ -54,10 +53,7 @@ export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) 
 		if (userFromCache) {
 			await setCache(
 				user._id.toString()!,
-				toJSON(
-					{ ...userFromCache, timeBased2FA: { secret: hashedSecret, active: false, type: twoFactorTypeEnum.APP } },
-					[]
-				)
+				toJSON({ ...userFromCache, twoFA: { secret: hashedSecret, active: false, type: twoFactorTypeEnum.APP } }, [])
 			);
 		}
 

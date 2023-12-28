@@ -48,40 +48,43 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Your account is currently suspended', 401);
 	}
 
-	if (user.timeBased2FA.active) {
-		AppResponse(
+	// generate access and refresh tokens and set cookies
+	const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
+	setCookie(res, 'abegAccessToken', accessToken, {
+		maxAge: 15 * 60 * 1000, // 15 minutes
+	});
+
+	const refreshToken = await hashData(
+		{ id: user._id.toString() },
+		{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH },
+		ENVIRONMENT.JWT.REFRESH_KEY
+	);
+	setCookie(res, 'abegRefreshToken', refreshToken, {
+		maxAge: 24 * 60 * 60 * 1000, // 24 hours
+	});
+
+	// update user loginRetries to 0 and lastLogin to current time
+	await User.findByIdAndUpdate(user._id, {
+		loginRetries: 0,
+		lastLogin: DateTime.now(),
+		refreshToken,
+	});
+
+	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
+
+	if (user.twoFA.active) {
+		return AppResponse(
 			res,
 			200,
 			{
-				timeBased2FA: true,
-				email: user.email,
+				twoFA: {
+					type: user.twoFA.type,
+					active: user.twoFA.active,
+				},
 			},
 			'Sign in successfully, proceed to 2fa verification'
 		);
 	} else {
-		// generate access and refresh tokens and set cookies
-		const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
-		setCookie(res, 'abegAccessToken', accessToken, {
-			maxAge: 15 * 60 * 1000, // 15 minutes
-		});
-
-		const refreshToken = await hashData(
-			{ id: user._id.toString() },
-			{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH },
-			ENVIRONMENT.JWT.REFRESH_KEY
-		);
-		setCookie(res, 'abegRefreshToken', refreshToken, {
-			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-		});
-
-		// update user loginRetries to 0 and lastLogin to current time
-		await User.findByIdAndUpdate(user._id, {
-			loginRetries: 0,
-			lastLogin: DateTime.now(),
-			refreshToken,
-		});
-
-		await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
 		return AppResponse(res, 200, toJSON(user), 'Sign in successful');
 	}
 });

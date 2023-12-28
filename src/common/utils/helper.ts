@@ -14,6 +14,8 @@ import { promisify } from 'util';
 import { ENVIRONMENT } from '../config';
 import { IHashData } from '../interfaces/helper';
 import { IUser } from '../interfaces/user';
+import AppError from './appError';
+import { UserModel } from '../../models';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
@@ -201,6 +203,34 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 	});
 };
 
+const get2faCodeViaEmailHelper = async (email: string) => {
+	if (!email) {
+		throw new AppError('Email is required', 400);
+	}
+
+	const user = await UserModel.findOne({ email });
+
+	if (!user) {
+		throw new AppError('No user found with provided email', 404);
+	}
+
+	const token = generateRandom6DigitKey();
+	const hashedToken = hashData({ token }, { expiresIn: '5m' });
+
+	await addEmailToQueue({
+		type: 'get2faCodeViaEmail',
+		data: {
+			to: user.email,
+			name: user.firstName,
+			twoFactorCode: token,
+			expiryTime: '5',
+			priority: 'high',
+		},
+	});
+
+	await setCache(`2FAEmailCode:${user._id.toString()}`, { token: hashedToken }, 300);
+};
+
 export {
 	decodeData,
 	generateRandom6DigitKey,
@@ -217,4 +247,5 @@ export {
 	setCookie,
 	toJSON,
 	validateTimeBased2fa,
+	get2faCodeViaEmailHelper,
 };

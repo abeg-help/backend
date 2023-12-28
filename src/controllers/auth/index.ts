@@ -9,4 +9,4 @@ export * from './signout';
 export * from './signup';
 export * from './verifyEmail';
 export * from './get2faCodeViaEmail';
-export * from './verifyTimeBased2fa';
+export * from './verify2fa';

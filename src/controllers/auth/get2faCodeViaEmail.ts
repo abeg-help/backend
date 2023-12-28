@@ -1,32 +1,21 @@
-import { generateRandom6DigitKey, hashData, setCache } from '@/common/utils';
+import { AppResponse, get2faCodeViaEmailHelper } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-import { addEmailToQueue } from '@/queues/emailQueue';
-import { UserModel } from '../../models';
+import { Request, Response } from 'express';
+import { catchAsync } from '../../middlewares';
+import { twoFactorTypeEnum } from '../../common/constants';
 
-export const get2faCodeViaEmail = async (email) => {
-	if (!email) {
-		throw new AppError('Email is required', 400);
-	}
-
-	const user = await UserModel.findOne({ email });
+export const get2faCodeViaEmail = catchAsync(async (req: Request, res: Response) => {
+	const { user } = req;
 
 	if (!user) {
-		throw new AppError('No user found with provided email', 404);
+		throw new AppError('Unauthorized');
 	}
 
-	const token = generateRandom6DigitKey();
-	const hashedToken = hashData({ token }, { expiresIn: '5m' });
+	if (user.twoFA.type !== twoFactorTypeEnum.EMAIL) {
+		throw new AppError('Sorry, this action is only allowed for users with email-based two-factor authentication.', 400);
+	}
 
-	await addEmailToQueue({
-		type: 'get2faCodeViaEmail',
-		data: {
-			to: user.email,
-			name: user.firstName,
-			twoFactorCode: token,
-			expiryTime: '5',
-			priority: 'high',
-		},
-	});
+	await get2faCodeViaEmailHelper(user.email);
 
-	await setCache(`2FAEmailCode:${user._id.toString()}`, { token: hashedToken }, 300);
-};
+	return AppResponse(res, 200, null, 'Code sent to email successfully');
+});
