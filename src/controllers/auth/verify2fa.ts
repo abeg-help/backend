@@ -10,9 +10,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 	const { user } = req;
 	const { token } = req.body;
 
-	const userFromDb = await UserModel.findOne({ email: user?.email }).select(
-		'+timeBased2FA.secret +timeBased2FA.recoveryCode'
-	);
+	const userFromDb = await UserModel.findOne({ email: user?.email }).select('+twoFA.secret +twoFA.recoveryCode');
 
 	if (!user || !userFromDb) {
 		throw new AppError('Unable to complete request, try again later', 404);

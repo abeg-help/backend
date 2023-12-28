@@ -5,21 +5,22 @@ import { catchAsync } from '../../middlewares';
 import { UserModel } from '../../models';
 
 export const disable2fa = catchAsync(async (req: Request, res: Response) => {
-	const { email, token } = req.body;
+	const { user } = req;
+	const { token } = req.body;
 
-	if (!email || !token) {
-		throw new AppError('Email and Token is required', 400);
+	if (!token) {
+		throw new AppError('Token is required', 400);
 	}
 
-	const user = await UserModel.findOne({ email }).select('+twoFA.recoveryCode');
+	const userFromDb = await UserModel.findOne({ email: user?.email }).select('+twoFA.recoveryCode');
 
-	if (!user) {
+	if (!userFromDb) {
 		throw new AppError('User not found with provided email', 404);
 	}
 
 	let decodedRecoveryCode: Record<string, string[]>;
 	try {
-		decodedRecoveryCode = await decodeData(user.twoFA.recoveryCode!);
+		decodedRecoveryCode = await decodeData(userFromDb.twoFA.recoveryCode!);
 	} catch (e) {
 		throw new AppError('Invalid recovery token', 400);
 	}
@@ -33,13 +34,13 @@ export const disable2fa = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Invalid recovery code', 400);
 	}
 
-	await UserModel.findByIdAndUpdate(user._id, {
+	await UserModel.findByIdAndUpdate(userFromDb._id, {
 		$unset: {
 			twoFA: 1,
 		},
 	});
 
-	await removeFromCache(user._id.toString());
+	await removeFromCache(userFromDb._id.toString());
 
 	return AppResponse(res, 200, null, '2fa disabled successfully');
 });
