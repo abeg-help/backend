@@ -138,7 +138,8 @@ const generateRandomBase32 = () => {
 
 const generateQrCode = async (data: string | Record<string, string[]>) => {
 	const code = new Promise((resolve, reject) => {
-		qrcode.toDataURL(data, (err, url) => {
+		const dataString = typeof data === 'object' ? JSON.stringify(data) : data;
+		qrcode.toDataURL(dataString, (err, url) => {
 			if (err) {
 				reject(err);
 			} else {

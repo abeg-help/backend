@@ -1,13 +1,9 @@
-import { AppResponse, generateRandom6DigitKey, hashData, setCache } from '@/common/utils';
+import { generateRandom6DigitKey, hashData, setCache } from '@/common/utils';
 import AppError from '@/common/utils/appError';
-import { catchAsync } from '@/middlewares';
 import { addEmailToQueue } from '@/queues/emailQueue';
-import { Request, Response } from 'express';
 import { UserModel } from '../../models';
 
-export const get2faCodeViaEmail = catchAsync(async (req: Request, res: Response) => {
-	const { email } = req.body;
-
+export const get2faCodeViaEmail = async (email) => {
 	if (!email) {
 		throw new AppError('Email is required', 400);
 	}
@@ -16,10 +12,6 @@ export const get2faCodeViaEmail = catchAsync(async (req: Request, res: Response)
 
 	if (!user) {
 		throw new AppError('No user found with provided email', 404);
-	}
-
-	if (!user.timeBased2FA.receiveCodeViaEmail) {
-		throw new AppError('Your account is not configured to receive 2FA code via email', 400);
 	}
 
 	const token = generateRandom6DigitKey();
@@ -37,5 +29,4 @@ export const get2faCodeViaEmail = catchAsync(async (req: Request, res: Response)
 	});
 
 	await setCache(`2FAEmailCode:${user._id.toString()}`, { token: hashedToken }, 300);
-	return AppResponse(res, 200, null, 'OTP code sent to email successfully');
-});
+};

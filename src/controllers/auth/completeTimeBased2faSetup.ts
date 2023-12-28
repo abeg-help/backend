@@ -6,6 +6,7 @@ import { catchAsync } from '../../middlewares';
 import { UserModel } from '../../models';
 import { Request, Response } from 'express';
 
+// I FEEL THIS ENTIRE CODE ISNT NECCESARY BECASE IT DOESNT GIVE THE OPPOTUNITY TO CHECK MULTIPLES SO I WANTED TO REMOVE IT INITIALLY
 export const completeTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;
 	const { token, receiveCodeViaEmail } = req.body;
