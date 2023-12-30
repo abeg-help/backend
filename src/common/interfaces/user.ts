@@ -34,6 +34,7 @@ interface IUser {
 		secret?: string;
 		recoveryCode?: string;
 		type?: twoFactorTypeEnum;
+		verificationTime?: Date;
 	};
 	isTermAndConditionAccepted: boolean;
 	lastLogin: Date;

@@ -20,6 +20,9 @@ export const twoFactorSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		verificationTime: {
+			type: Date,
+		},
 	},
 	{
 		_id: false,

@@ -10,9 +10,11 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 	const { user } = req;
 	const { token } = req.body;
 
-	const userFromDb = await UserModel.findOne({ email: user?.email }).select('+twoFA.secret +twoFA.recoveryCode');
+	let userFromDb = await UserModel.findOne({ email: user?.email }).select(
+		'+twoFA.secret +twoFA.recoveryCode +lastLogin'
+	);
 
-	if (!user || !userFromDb) {
+	if (!user || !userFromDb || !userFromDb?.lastLogin) {
 		throw new AppError('Unable to complete request, try again later', 404);
 	}
 
@@ -20,14 +22,17 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		throw new AppError('2FA is not active', 400);
 	}
 
-	if (new Date(userFromDb.lastLogin).getTime() < DateTime.now().plus({ minutes: 5 }).toJSDate().getTime()) {
+	const lastLoginTimeInMilliseconds = new Date(userFromDb.lastLogin).getTime();
+	const currentTimeInMilliseconds = DateTime.now().plus({ minutes: 5 }).toJSDate().getTime();
+
+	if (lastLoginTimeInMilliseconds > currentTimeInMilliseconds) {
 		throw new AppError('Kindly login to complete verification', 400);
 	}
 
 	const twoFAType = userFromDb.twoFA.type;
 
 	if (twoFAType === twoFactorTypeEnum.APP) {
-		const decryptedSecret = await decodeData(user.twoFA.secret!);
+		const decryptedSecret = await decodeData(userFromDb.twoFA.secret!);
 		const isTokenValid = validateTimeBased2fa(decryptedSecret.token, token, 1);
 
 		if (!isTokenValid) {
@@ -51,5 +56,15 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		await removeFromCache(`2FAEmailCode:${user._id.toString()}`);
 	}
 
-	return AppResponse(res, 200, user, '2FA verified successfully');
+	userFromDb = await UserModel.findOneAndUpdate(
+		{ _id: user._id },
+		{
+			$set: {
+				'twoFA.verificationTime': DateTime.now().toJSDate(),
+			},
+		},
+		{ new: true }
+	);
+
+	return AppResponse(res, 200, userFromDb, '2FA verified successfully');
 });

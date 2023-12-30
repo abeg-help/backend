@@ -116,7 +116,6 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		},
 		lastLogin: {
 			type: Date,
-			select: false,
 			default: Date.now(),
 		},
 		verificationToken: {
