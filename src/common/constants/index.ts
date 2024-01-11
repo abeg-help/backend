@@ -35,3 +35,17 @@ export enum VerifyTimeBased2faTypeEnum {
 	EMAIL_CODE = 'EMAIL_CODE',
 	DISABLE_2FA = 'DISABLE_2FA',
 }
+
+export enum Country {
+	NIGERIA = 'NIGERIA',
+	GHANA = 'GHANA',
+	MALI = 'MALI',
+	LIBERIA = 'LIBERIA',
+	GAMBIA = ' CAMEROON ',
+	CAMEROON = 'CAMEROON',
+}
+
+// add categories
+export enum Category {
+	some = 'some',
+}
