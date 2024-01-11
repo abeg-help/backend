@@ -1,7 +1,6 @@
-import { baseTemplate } from './baseTemplate';
 
 export const welcomeEmail = (data) => {
-	return baseTemplate(
+	return 
 		`<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 		<html dir="ltr" lang="en">
@@ -53,12 +52,12 @@ export const welcomeEmail = (data) => {
 					  </tbody>
 					</table>
 					<p class="line-height-[32.78px]" style="font-size:24px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:600;text-align:center;padding:0px;margin-top:35px;margin-bottom:35px;margin-left:0px;margin-right:0px">Verify your email</p>
-					<p style="font-size:20px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:600;text-align:center;padding:0px;margin-top:3.5rem;margin-bottom:30px;margin-left:0px;margin-right:0px">Hi LocsDesigner,</p>
+					<p style="font-size:20px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:600;text-align:center;padding:0px;margin-top:3.5rem;margin-bottom:30px;margin-left:0px;margin-right:0px">${data.name},</p>
 					<p style="font-size:20px;line-height:24px;margin:16px 0;color:rgb(0,0,0);font-weight:400;text-align:center">Thank you for choosing AbegHelp.me. To complete your<br /> registration and secure your account, please use the email<br /> verification link below;</p>
 					<table align="center" width="100%" class="" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="text-align:center;margin-top:4rem;margin-bottom:3.5rem">
 					  <tbody>
 						<tr>
-						  <td><a style="background-color:rgb(0,128,128);color:rgb(255,255,255);font-size:16px;font-weight:700;text-align:center;padding-top:0.75rem;padding-bottom:0.75rem;padding-left:5rem;padding-right:5rem;border-radius:7px;line-height:100%;text-decoration:none;display:inline-block;max-width:100%;padding:12px 80px 12px 80px" target="_blank"><span><!--[if mso]><i style="letter-spacing: 80px;mso-font-width:-100%;mso-text-raise:18" hidden>&nbsp;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px">Verify your email</span><span><!--[if mso]><i style="letter-spacing: 80px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a></td>
+						  <td><a href=${data.verificationLink} style="background-color:rgb(0,128,128);color:rgb(255,255,255);font-size:16px;font-weight:700;text-align:center;padding-top:0.75rem;padding-bottom:0.75rem;padding-left:5rem;padding-right:5rem;border-radius:7px;line-height:100%;text-decoration:none;display:inline-block;max-width:100%;padding:12px 80px 12px 80px" target="_blank"><span><!--[if mso]><i style="letter-spacing: 80px;mso-font-width:-100%;mso-text-raise:18" hidden>&nbsp;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px">Verify your email</span><span><!--[if mso]><i style="letter-spacing: 80px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a></td>
 						</tr>
 					  </tbody>
 					</table>
@@ -91,7 +90,6 @@ export const welcomeEmail = (data) => {
 		  </body>
 		
 		</html>`
-		
 
-	);
+	
 };
