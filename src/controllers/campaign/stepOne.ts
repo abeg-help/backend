@@ -1,4 +1,8 @@
-// creating step 1 for campaign creation
+import { catchAsync } from '@/queues/middlewares';
+import { Request, Response } from 'express';
 
-let firstStep = 1;
+const firstStep = catchAsync(async (req: Request, res: Response) => {
+	console.log(res, req);
+});
+
 export default firstStep;
