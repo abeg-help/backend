@@ -46,3 +46,17 @@ export enum twoFactorTypeEnum {
 	EMAIL = 'EMAIL',
 	APP = 'APP',
 }
+
+export enum Country {
+	NIGERIA = 'NIGERIA',
+	GHANA = 'GHANA',
+	MALI = 'MALI',
+	LIBERIA = 'LIBERIA',
+	GAMBIA = ' CAMEROON ',
+	CAMEROON = 'CAMEROON',
+}
+
+// add categories
+export enum Category {
+	some = 'some',
+}
