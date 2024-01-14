@@ -3,8 +3,8 @@ import firstStep from './stepOne';
 import { catchAsync } from '@/middlewares';
 import { Response, Request, NextFunction } from 'express';
 
-const General = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-	const step = req.body.step;
+const CreateCampaign = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+	const { step } = req.body;
 	switch (step) {
 		case 'one':
 			firstStep(req, res, next);
@@ -20,4 +20,4 @@ const General = catchAsync(async (req: Request, res: Response, next: NextFunctio
 	}
 });
 
-export default General;
+export default CreateCampaign;
