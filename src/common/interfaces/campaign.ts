@@ -9,6 +9,10 @@ interface ICampaign {
 	image: string;
 	title: string;
 	deadline: Date;
+	campaignCreator: {
+		type: string;
+		ref: string;
+	};
 }
 
 export { ICampaign };

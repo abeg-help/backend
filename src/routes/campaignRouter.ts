@@ -4,5 +4,5 @@ import express from 'express';
 const router = express.Router();
 
 router.use(protect);
-router.post('/create', createCampaign);
+router.post('/create/:step', createCampaign);
 export { router as campaignRouter };

@@ -34,6 +34,10 @@ const campaignSchema = new mongoose.Schema<ICampaign>({
 		type: String,
 		required: true,
 	},
+	campaignCreator: {
+		type: mongoose.Types.ObjectId,
+		ref: 'User',
+	},
 });
 
 const campaignModel = mongoose.model('campaign', campaignSchema);
