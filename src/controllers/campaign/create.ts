@@ -1,5 +1,6 @@
 import AppError from '@/common/utils/appError';
 import firstStep from './stepOne';
+import secondStep from './stepTwo';
 import { catchAsync } from '@/middlewares';
 import { Response, Request, NextFunction } from 'express';
 
@@ -10,7 +11,7 @@ const CreateCampaign = catchAsync(async (req: Request, res: Response, next: Next
 			firstStep(req, res, next);
 			break;
 		case 'two':
-			//add second step
+			secondStep(req, res, next);
 			break;
 		case 'three':
 			// add third step
