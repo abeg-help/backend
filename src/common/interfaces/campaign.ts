@@ -9,6 +9,7 @@ interface ICampaign {
 	image: string;
 	title: string;
 	deadline: Date;
+	deletedDate: Date;
 }
 
 export { ICampaign };

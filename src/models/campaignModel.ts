@@ -34,6 +34,9 @@ const campaignSchema = new mongoose.Schema<ICampaign>({
 		type: String,
 		required: true,
 	},
+	deletedDate: {
+		type: Date,
+	},
 });
 
 const campaignModel = mongoose.model('campaign', campaignSchema);
