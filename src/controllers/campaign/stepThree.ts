@@ -14,13 +14,12 @@ export const thirdStep = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('All fields are required!', 400);
 	}
 	const dateInMilliseconds = DateTime.now().toMillis();
-	const fileName = `${userId}/campaign-image/${userId}-${dateInMilliseconds}.${image.mimetype.split('/')[1]}`;
+	const fileName = `${userId}/campaigns/${id}/cover/${dateInMilliseconds}.${image.mimetype.split('/')[1]}`;
 	const image_url = await uploadSingleFile({
 		fileName,
 		buffer: image.buffer,
 		mimetype: image.mimetype,
 	});
-
 	await campaignModel.findByIdAndUpdate(id, { story: story, image: image_url }, { new: true });
 
 	return AppResponse(res, 200, {}, 'Step 3 completed successfully!');
