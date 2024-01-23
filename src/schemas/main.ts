@@ -72,7 +72,7 @@ export const mainSchema = z
 		isTermAndConditionAccepted: z.boolean(),
 		receiveCodeViaEmail: z.boolean(),
 		twoFactorType: z.enum([twoFactorTypeEnum.APP, twoFactorTypeEnum.EMAIL]),
-		country: z.enum([Country.NIGERIA, Country.GHANA, Country.CAMEROON, Country.MALI, Country.LIBERIA]),
+		country: z.enum([Country.NIGERIA, Country.GHANA, Country.CAMEROON, Country.MALI, Country.LIBERIA, Country.GAMBIA]),
 		tags: z.string(),
 		description: z.string(),
 		twoFactorVerificationType: z
