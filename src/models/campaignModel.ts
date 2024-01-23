@@ -37,6 +37,15 @@ const campaignSchema = new mongoose.Schema<ICampaign>({
 	deletedDate: {
 		type: Date,
 	},
+	isDeleted: {
+		type: Boolean,
+		default: false,
+	},
+	creator: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		required: true,
+	},
 });
 
 const campaignModel = mongoose.model('campaign', campaignSchema);
