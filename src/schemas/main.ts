@@ -1,6 +1,7 @@
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import { z } from 'zod';
-import { Country, VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '../common/constants';
+import { Country, FundraiserEnum, VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '../common/constants';
+import { dateFromString } from '../common/utils';
 
 const verifyPhoneNumber = (value: string) => {
 	const phoneUtil = PhoneNumberUtil.getInstance();
@@ -27,9 +28,16 @@ export const baseSchema = z.object({
 		VerifyTimeBased2faTypeEnum.EMAIL_CODE,
 		VerifyTimeBased2faTypeEnum.DISABLE_2FA,
 	]),
-	country: z.enum([Country.NIGERIA, Country.GHANA, Country.CAMEROON, Country.MALI, Country.LIBERIA]),
-	tags: z.string(),
+	country: z.enum([...Object.values(Country)] as [string, ...string[]]),
+	tags: z.string().array(),
 	description: z.string(),
+	name: z.string(),
+	categoryId: z.string(),
+	title: z.string(),
+	fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
+	goal: z.number(),
+	deadline: z.custom((value) => dateFromString(value as string)),
+	story: z.string(),
 });
 
 export const mainSchema = z
@@ -72,8 +80,8 @@ export const mainSchema = z
 		isTermAndConditionAccepted: z.boolean(),
 		receiveCodeViaEmail: z.boolean(),
 		twoFactorType: z.enum([twoFactorTypeEnum.APP, twoFactorTypeEnum.EMAIL]),
-		country: z.enum([Country.NIGERIA, Country.GHANA, Country.CAMEROON, Country.MALI, Country.LIBERIA, Country.GAMBIA]),
-		tags: z.string(),
+		country: z.enum([...Object.values(Country)] as [string, ...string[]]),
+		tags: z.string().array(),
 		description: z.string(),
 		twoFactorVerificationType: z
 			.enum([
@@ -82,6 +90,13 @@ export const mainSchema = z
 				VerifyTimeBased2faTypeEnum.DISABLE_2FA,
 			])
 			.default(VerifyTimeBased2faTypeEnum.CODE),
+		name: z.string(),
+		categoryId: z.string(),
+		title: z.string().min(3),
+		fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
+		goal: z.number().min(1),
+		deadline: z.custom((value) => dateFromString(value as string)),
+		story: z.string().min(100),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',

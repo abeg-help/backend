@@ -1,18 +1,34 @@
-import { Category, Country } from '../constants';
+import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '../constants';
 
 interface ICampaign {
-	category: Category;
-	country: Country;
-	tags: string[];
-	goal: string;
-	story: string;
-	image: string;
-	title: string;
-	deadline: Date;
-	campaignCreator: {
+	categoryId: {
 		type: string;
 		ref: string;
 	};
+	country: Country;
+	tags: string[];
+	goal: number;
+	story: string;
+	image: string;
+	title: string;
+	fundraiser: FundraiserEnum;
+	deadline: Date;
+	creator: {
+		type: string;
+		ref: string;
+	};
+	isComplete: boolean;
+	isPublished: boolean;
+	status: StatusEnum;
+	isFlagged: boolean;
+	flaggedReasons: {
+		type: FlaggedReasonTypeEnum;
+		reason: string;
+	};
 }
 
-export { ICampaign };
+interface ICampaignCategory {
+	name: string;
+}
+
+export { ICampaign, ICampaignCategory };
