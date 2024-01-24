@@ -74,3 +74,25 @@ export enum FundraiserEnum {
 	INDIVIDUAL = 'INDIVIDUAL',
 	BENEFICIARY = 'BENEFICIARY',
 }
+
+export enum StatusEnum {
+	SUCCESS = 'Success',
+	ACTIVE = 'Active',
+	DRAFT = 'Draft',
+	PENDING_APPROVAL = 'Pending Approval',
+	FAILED = 'Failed',
+	CANCELED = 'Canceled',
+}
+
+export enum FlaggedReasonTypeEnum {
+	RACISM = 'Racism',
+	NUDITY = 'Nudity',
+	DECEIT = 'Deceit',
+	HATE_SPEECH = 'Hate Speech',
+	VIOLENCE = 'Violence',
+	HARASSMENT = 'Harassment',
+	FRAUD = 'Fraud',
+	DISCRIMINATION = 'Discrimination',
+	EXPLICIT_CONTENT = 'Explicit Content',
+	ILLEGAL_ACTIVITY = 'Illegal Activity',
+}

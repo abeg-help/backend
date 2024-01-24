@@ -1,4 +1,4 @@
-import { Country, FundraiserEnum } from '../constants';
+import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '../constants';
 
 interface ICampaign {
 	categoryId: {
@@ -18,6 +18,13 @@ interface ICampaign {
 		ref: string;
 	};
 	isComplete: boolean;
+	isPublished: boolean;
+	status: StatusEnum;
+	isFlagged: boolean;
+	flaggedReasons: {
+		type: FlaggedReasonTypeEnum;
+		reason: string;
+	};
 }
 
 interface ICampaignCategory {

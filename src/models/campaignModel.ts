@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 import { ICampaign } from '@/common/interfaces/campaign';
-import { Country, FundraiserEnum } from '@/common/constants';
+import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '@/common/constants';
 
 type campaignModel = Model<ICampaign>;
 
@@ -44,6 +44,26 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 		isComplete: {
 			type: Boolean,
 			default: false,
+		},
+		isPublished: {
+			type: Boolean,
+			default: false,
+		},
+		status: {
+			type: String,
+			enum: [...Object.values(StatusEnum)],
+			default: StatusEnum.PENDING_APPROVAL,
+		},
+		isFlagged: {
+			type: Boolean,
+			default: false,
+		},
+		flaggedReasons: {
+			type: {
+				type: String,
+				enum: [...Object.values(FlaggedReasonTypeEnum)],
+			},
+			reason: String,
 		},
 	},
 	{ timestamps: true }

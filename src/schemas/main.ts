@@ -37,6 +37,7 @@ export const baseSchema = z.object({
 	fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
 	goal: z.number(),
 	deadline: z.custom((value) => dateFromString(value as string)),
+	story: z.string(),
 });
 
 export const mainSchema = z
@@ -95,6 +96,7 @@ export const mainSchema = z
 		fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
 		goal: z.number().min(1),
 		deadline: z.custom((value) => dateFromString(value as string)),
+		story: z.string().min(100),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',
