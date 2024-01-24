@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 import { ICampaign } from '@/common/interfaces/campaign';
-import { Country } from '@/common/constants';
+import { Country, FundraiserEnum } from '@/common/constants';
 
 type campaignModel = Model<ICampaign>;
 
@@ -21,8 +21,12 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 		title: {
 			type: String,
 		},
-		goal: {
+		fundraiser: {
 			type: String,
+			enum: [...Object.values(FundraiserEnum)],
+		},
+		goal: {
+			type: Number,
 		},
 		deadline: {
 			type: Date,

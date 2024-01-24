@@ -1,6 +1,7 @@
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import { z } from 'zod';
-import { Country, VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '../common/constants';
+import { Country, FundraiserEnum, VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '../common/constants';
+import { dateFromString } from '../common/utils';
 
 const verifyPhoneNumber = (value: string) => {
 	const phoneUtil = PhoneNumberUtil.getInstance();
@@ -32,6 +33,10 @@ export const baseSchema = z.object({
 	description: z.string(),
 	name: z.string(),
 	categoryId: z.string(),
+	title: z.string(),
+	fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
+	goal: z.number(),
+	deadline: z.custom((value) => dateFromString(value as string)),
 });
 
 export const mainSchema = z
@@ -86,6 +91,10 @@ export const mainSchema = z
 			.default(VerifyTimeBased2faTypeEnum.CODE),
 		name: z.string(),
 		categoryId: z.string(),
+		title: z.string().min(3),
+		fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
+		goal: z.number().min(1),
+		deadline: z.custom((value) => dateFromString(value as string)),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',

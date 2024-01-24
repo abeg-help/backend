@@ -232,6 +232,16 @@ const get2faCodeViaEmailHelper = async (email: string) => {
 	await setCache(`2FAEmailCode:${user._id.toString()}`, { token: hashedToken }, 300);
 };
 
+const dateFromString = async (value: string) => {
+	const date = new Date(value);
+
+	if (isNaN(date?.getTime())) {
+		return false;
+	}
+
+	return date;
+};
+
 export {
 	decodeData,
 	generateRandom6DigitKey,
@@ -249,4 +259,5 @@ export {
 	toJSON,
 	validateTimeBased2fa,
 	get2faCodeViaEmailHelper,
+	dateFromString,
 };

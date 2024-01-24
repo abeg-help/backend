@@ -1,4 +1,4 @@
-import { Country } from '../constants';
+import { Country, FundraiserEnum } from '../constants';
 
 interface ICampaign {
 	categoryId: {
@@ -7,10 +7,11 @@ interface ICampaign {
 	};
 	country: Country;
 	tags: string[];
-	goal: string;
+	goal: number;
 	story: string;
 	image: string;
 	title: string;
+	fundraiser: FundraiserEnum;
 	deadline: Date;
 	creator: {
 		type: string;

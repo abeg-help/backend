@@ -69,3 +69,8 @@ export enum Category {
 	Wedding = 'Wedding',
 	Others = 'Others',
 }
+
+export enum FundraiserEnum {
+	INDIVIDUAL = 'INDIVIDUAL',
+	BENEFICIARY = 'BENEFICIARY',
+}

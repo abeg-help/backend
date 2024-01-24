@@ -2,6 +2,7 @@ import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { Response, Request } from 'express';
 import stepOne from './create-steps/stepOne';
+import stepTwo from './create-steps/stepTwo';
 
 const CreateCampaign = catchAsync(async (req: Request, res: Response) => {
 	const { step } = req.params;
@@ -12,7 +13,7 @@ const CreateCampaign = catchAsync(async (req: Request, res: Response) => {
 
 	const steps = {
 		one: stepOne,
-		two: '',
+		two: stepTwo,
 		three: '',
 	};
 
