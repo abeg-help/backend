@@ -1,26 +1,28 @@
 import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { Response, Request } from 'express';
-import stepOne from './stepOne';
+import stepOne from './create-steps/stepOne';
 
 const CreateCampaign = catchAsync(async (req: Request, res: Response) => {
-	const step = req.params.step;
+	const { step } = req.params;
+
 	if (!step) {
 		throw new AppError('Please Provide a step', 400);
 	}
-	switch (step) {
-		case 'one':
-			await stepOne(req, res);
-			break;
-		case 'two':
-			//add second step
-			break;
-		case 'three':
-			// add third step
-			break;
-		default:
-			throw new AppError('Invalid request', 400);
+
+	const steps = {
+		one: stepOne,
+		two: '',
+		three: '',
+	};
+
+	const stepFunction = steps[step];
+
+	if (!stepFunction) {
+		throw new AppError('Invalid request', 400);
 	}
+
+	return await stepFunction(req, res);
 });
 
 export default CreateCampaign;

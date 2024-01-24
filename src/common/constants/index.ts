@@ -58,7 +58,7 @@ export enum Country {
 
 export enum Category {
 	Health_and_Wellness = 'Health and Wellness',
-	Business = 'Bssiness',
+	Business = 'Business',
 	Family = 'Family',
 	Emergency = 'Emergency',
 	Religion = 'Religion',

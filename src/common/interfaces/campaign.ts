@@ -1,7 +1,10 @@
-import { Category, Country } from '../constants';
+import { Country } from '../constants';
 
 interface ICampaign {
-	category: Category;
+	categoryId: {
+		type: string;
+		ref: string;
+	};
 	country: Country;
 	tags: string[];
 	goal: string;
@@ -9,10 +12,15 @@ interface ICampaign {
 	image: string;
 	title: string;
 	deadline: Date;
-	campaignCreator: {
+	creator: {
 		type: string;
 		ref: string;
 	};
+	isComplete: boolean;
 }
 
-export { ICampaign };
+interface ICampaignCategory {
+	name: string;
+}
+
+export { ICampaign, ICampaignCategory };
