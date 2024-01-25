@@ -10,5 +10,5 @@ router.post('/restore', restoreAccount);
 router.use(protect); // Protect all routes after this middleware
 router.post('/updateProfile', editUserProfile);
 router.post('/profile-photo', multerUpload.single('photo'), updateProfilePhoto);
-router.delete('/', deleteAccount);
+router.post('/', deleteAccount);
 export { router as userRouter };
