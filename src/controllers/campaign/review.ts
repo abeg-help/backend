@@ -7,17 +7,22 @@ import BadWords from 'bad-words';
 import { FlaggedReasonTypeEnum, StatusEnum } from '../../common/constants';
 import * as natural from 'natural';
 
-const reviewCampaign = catchAsync(async (req: Request, res: Response) => {
+// Note : this is for testing purpose and will be removed / changed to manual review for admin once the auto review implementation is completed.
+export const reviewCampaign = catchAsync(async (req: Request, res: Response) => {
 	const { id } = req.params;
 
+	const result = await processCampaign(id);
+
+	return AppResponse(res, 200, result, '');
+});
+
+export const processCampaign = async (id: string) => {
 	const reasons: {
 		type: FlaggedReasonTypeEnum;
 		reason: string;
 	}[] = [];
 
 	const campaign = await campaignModel.findById(id);
-
-	console.log({ campaign });
 
 	if (!campaign) {
 		throw new AppError('Campaign not found', 404);
@@ -59,10 +64,8 @@ const reviewCampaign = catchAsync(async (req: Request, res: Response) => {
 	campaign.status = reasons.length > 0 ? StatusEnum.PENDING_APPROVAL : StatusEnum.SUCCESS;
 	await campaign.save();
 
-	return AppResponse(res, 200, campaign, '');
-});
-
-export default reviewCampaign;
+	return campaign;
+};
 
 function containsInappropriateContent(value: string): boolean {
 	const filter = new BadWords();
