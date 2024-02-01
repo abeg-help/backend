@@ -5,5 +5,5 @@ import { multerUpload } from '../common/config/multer';
 const router = express.Router();
 
 router.use(protect);
-router.post('/create/:step', multerUpload.single('cover-photo'), createCampaign);
+router.post('/create/:step', multerUpload.array('photos'), createCampaign);
 export { router as campaignRouter };
