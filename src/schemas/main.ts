@@ -38,6 +38,7 @@ export const baseSchema = z.object({
 	goal: z.number(),
 	deadline: z.custom((value) => dateFromString(value as string)),
 	story: z.string(),
+	storyHtml: z.string(),
 });
 
 export const mainSchema = z
@@ -97,6 +98,7 @@ export const mainSchema = z
 		goal: z.number().min(1),
 		deadline: z.custom((value) => dateFromString(value as string)),
 		story: z.string().min(100),
+		storyHtml: z.string(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match!',

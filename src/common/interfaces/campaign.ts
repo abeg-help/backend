@@ -9,7 +9,8 @@ interface ICampaign {
 	tags: string[];
 	goal: number;
 	story: string;
-	image: string;
+	storyHtml: string;
+	images: string[];
 	title: string;
 	fundraiser: FundraiserEnum;
 	deadline: Date;

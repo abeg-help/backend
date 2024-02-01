@@ -31,10 +31,15 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 		deadline: {
 			type: Date,
 		},
-		image: {
+		images: [
+			{
+				type: String,
+			},
+		],
+		story: {
 			type: String,
 		},
-		story: {
+		storyHtml: {
 			type: String,
 		},
 		creator: {
