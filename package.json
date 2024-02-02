@@ -9,7 +9,7 @@
 		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register build/server.js",
 		"start-prod": "node build/server.js",
 		"build": "tsc",
-		"dev": "./start-dev-server.sh",
+		"dev": "bash ./start-dev-server.sh",
 		"watch": "tsc --watch & nodemon build/index.js",
 		"lint": "npx eslint src/",
 		"format": "npx prettier --write .",
