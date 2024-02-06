@@ -41,7 +41,9 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 
 	if (!user.isEmailVerified) {
 		await sendVerificationEmail(user, req);
-		throw new AppError('Your email is yet to be verified', 401);
+		// do not change status code from 403 as it will break frontend logic
+		// 403 helps them handle redirection to email verification page
+		throw new AppError('Your email is yet to be verified', 403);
 	}
 
 	if (user.isSuspended) {
