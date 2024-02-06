@@ -61,7 +61,6 @@ export const authenticate = async ({
 		) {
 			throw new AppError('Password changed since last login. Please log in again!', 401);
 		}
-
 		// csrf protection
 		// browser client fingerprinting
 
@@ -73,20 +72,16 @@ export const authenticate = async ({
 			const decodeRefreshToken = await decodeData(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
 			const currentUser = await handleUserVerification(decodeRefreshToken);
 
-			// generate access and refresh tokens and set cookies
+			// generate access tokens
 			const accessToken = await hashData(
 				{ id: currentUser._id.toString() },
 				{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS }
 			);
 
-			if (accessToken) {
-				return {
-					accessToken,
-					currentUser,
-				};
-			}
-
-			return { currentUser };
+			return {
+				accessToken,
+				currentUser,
+			};
 		} catch (error) {
 			throw new AppError('Session expired, please log in again', 401);
 		}
