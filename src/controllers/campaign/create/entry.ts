@@ -33,5 +33,4 @@ export const createCampaign = catchAsync(async (req: Request, res: Response) => 
 	} else {
 		throw new AppError('Step function not found', 500);
 	}
-  
 });
