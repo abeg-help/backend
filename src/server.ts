@@ -10,9 +10,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 ///////////////////////////////////////////////////////////////////////
-import 'module-alias/register';
-import '@/common/interfaces/request';
 import { ENVIRONMENT, connectDb } from '@/common/config';
+import '@/common/interfaces/request';
 import { logger, stream } from '@/common/utils';
 import { errorHandler, socketController } from '@/controllers';
 import { catchSocketAsync, timeoutMiddleware, validateDataWithZod } from '@/middlewares';
