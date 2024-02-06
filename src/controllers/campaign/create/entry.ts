@@ -12,17 +12,25 @@ export const createCampaign = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('Please Provide a step', 400);
 	}
 
-	const steps = {
-		one: stepOne,
-		two: stepTwo,
-		three: stepThree,
-	};
+	// Opted for map instead of a simple object lookup or switch to mitigate against DoS attacks
+	//REF: https://cwe.mitre.org/data/definitions/754.html
+	//REF: https://owasp.org/www-community/attacks/Denial_of_Service
 
-	const stepFunction = steps[step];
+	const steps = new Map([
+		['one', stepOne],
+		['two', stepTwo],
+		['three', stepThree],
+	]);
 
-	if (!stepFunction) {
-		throw new AppError('Invalid request', 400);
+	if (!steps.has(step)) {
+		throw new AppError('Step is invalid!', 400);
 	}
 
-	return await stepFunction(req, res);
+	const stepFunction = steps.get(step);
+
+	if (typeof stepFunction === 'function') {
+		return await stepFunction(req, res);
+	} else {
+		throw new AppError('Step function not found', 500);
+	}
 });
