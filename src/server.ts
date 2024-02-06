@@ -36,7 +36,10 @@ import { Server, Socket } from 'socket.io';
 import xss from 'xss-clean';
 import socketController from './controllers/sockets';
 import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
-import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
+import { emailQueue } from './queues/emailQueue';
+import { startAllQueuesAndWorkers, stopAllQueuesAndWorkers } from './queues/index';
+import { campaignQueue } from './queues/campaignQueue';
+
 dotenv.config();
 /**
  *  uncaughtException handler
@@ -45,7 +48,7 @@ process.on('uncaughtException', async (error: Error) => {
 	console.log('UNCAUGHT EXCEPTION! 💥 Server Shutting down...');
 	console.log(error.name, error.message);
 	logger.error('UNCAUGHT EXCEPTION!! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
-	await stopQueue();
+	await stopAllQueuesAndWorkers();
 	process.exit(1);
 });
 
@@ -60,7 +63,7 @@ const appName = ENVIRONMENT.APP.NAME;
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath('/api/v1/queue');
 createBullBoard({
-	queues: [new BullMQAdapter(emailQueue)],
+	queues: [new BullMQAdapter(emailQueue), new BullMQAdapter(campaignQueue)],
 	serverAdapter,
 });
 
@@ -254,9 +257,7 @@ const appServer = server.listen(port, async () => {
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 	// start the email worker and queues
 	(async () => {
-		await emailQueue.waitUntilReady();
-		await emailWorker.waitUntilReady();
-		await emailQueueEvent.waitUntilReady();
+		await startAllQueuesAndWorkers();
 	})();
 });
 
@@ -274,7 +275,7 @@ process.on('unhandledRejection', async (error: Error) => {
 	console.log('UNHANDLED REJECTION! 💥 Server Shutting down...');
 	console.log(error.name, error.message);
 	logger.error('UNHANDLED REJECTION! 💥 Server Shutting down... ' + new Date(Date.now()) + error.name, error.message);
-	await stopQueue();
+	await stopAllQueuesAndWorkers();
 	appServer.close(() => {
 		process.exit(1);
 	});

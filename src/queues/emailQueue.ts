@@ -3,7 +3,7 @@ import { EmailJobData } from '@/common/interfaces/emailQueue';
 import { logger } from '@/common/utils/logger';
 import { Job, Queue, QueueEvents, Worker, WorkerOptions } from 'bullmq';
 import IORedis from 'ioredis';
-import { sendEmail } from './handlers';
+import { sendEmail } from './handlers/emailHandler';
 
 // create a connection to Redis
 const connection = new IORedis({
@@ -98,10 +98,16 @@ emailWorker.on('error', (err) => {
 
 // TODO: Implement RETRY logic for failed or stalled jobs
 
-const stopQueue = async () => {
+const startEmailQueue = async () => {
+	await emailQueue.waitUntilReady();
+	await emailWorker.waitUntilReady();
+	await emailQueueEvent.waitUntilReady();
+};
+
+const stopEmailQueue = async () => {
 	await emailWorker.close();
 	await emailQueue.close();
 	console.info('Email queue closed!');
 };
 
-export { addEmailToQueue, emailQueue, emailQueueEvent, emailWorker, stopQueue };
+export { addEmailToQueue, emailQueue, emailQueueEvent, emailWorker, stopEmailQueue, startEmailQueue };

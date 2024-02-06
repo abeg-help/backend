@@ -144,12 +144,13 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 
 // only pick users that are not deleted or suspended
 userSchema.pre(/^find/, function (this: Model<IUser>, next) {
-	if (Object.keys(this['_conditions']).includes('isDeleted')) {
-		this.find({ isSuspended: { $ne: true } });
-		return next();
-	}
+	// if (Object.keys(this['_conditions']).includes('isDeleted')) {
+	// 	this.find({ isSuspended: { $ne: true } });
+	// 	return next();
+	// }
 
-	this.find({ isDeleted: { $ne: true }, isSuspended: { $ne: true } });
+	// do not select users that are deleted or suspended
+	this.find({ $or: [{ isDeleted: { $ne: true } }, { isSuspended: { $ne: true } }] });
 	next();
 });
 
@@ -181,5 +182,6 @@ userSchema.method('verifyPassword', async function (this: HydratedDocument<IUser
 	return isValid;
 });
 
-const UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
+const UserModel = (mongoose.models.User as UserModel) || mongoose.model<IUser, UserModel>('User', userSchema);
+
 export { UserModel };

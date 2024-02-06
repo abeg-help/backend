@@ -22,10 +22,10 @@ interface ICampaign {
 	isPublished: boolean;
 	status: StatusEnum;
 	isFlagged: boolean;
-	flaggedReasons: {
+	flaggedReasons: Array<{
 		type: FlaggedReasonTypeEnum;
 		reason: string;
-	};
+	}>;
 }
 
 interface ICampaignCategory {

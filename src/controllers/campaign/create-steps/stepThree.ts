@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { campaignModel } from '@/models/campaignModel';
 import { AppResponse, uploadSingleFile } from '@/common/utils';
 import { DateTime } from 'luxon';
+import { CampaignJobEnum, campaignQueue } from '../../../queues/campaignQueue';
 
 const stepThree = async (req: Request, res: Response) => {
 	const { story, storyHtml } = req.body;
@@ -58,7 +59,8 @@ const stepThree = async (req: Request, res: Response) => {
 		throw new AppError(`Unable to process request , try again later`, 404);
 	}
 
-	// TODO: add to queue for auto processing and check
+	// add campaign to queue for auto processing and check
+	campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign._id });
 
 	AppResponse(res, 200, updatedCampaign, 'Campaign Created Successfully');
 };

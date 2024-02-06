@@ -95,4 +95,7 @@ export enum FlaggedReasonTypeEnum {
 	DISCRIMINATION = 'Discrimination',
 	EXPLICIT_CONTENT = 'Explicit Content',
 	ILLEGAL_ACTIVITY = 'Illegal Activity',
+	INAPPROPRIATE_CONTENT = 'In-appropriate Content',
+	MISMATCH = 'Mismatch',
+	EXISTS = 'Exists',
 }
