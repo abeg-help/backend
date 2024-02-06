@@ -20,8 +20,13 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 	const reqPath = req.path;
 
 	// check if user has been authenticated but has not verified 2fa
-	if (!reqPath.includes('/2fa/') && req.user.twoFA.active && !req.user.twoFA.isVerified) {
-		throw new AppError('2FA verification is required', 403);
+	if (!reqPath.includes('/2fa/') && req.user.twoFA.active) {
+		const lastLoginTimeInMilliseconds = new Date(currentUser.lastLogin).getTime();
+		const lastVerificationTimeInMilliseconds = new Date(currentUser.twoFA.verificationTime as Date).getTime();
+
+		if (lastLoginTimeInMilliseconds > lastVerificationTimeInMilliseconds) {
+			throw new AppError('2FA verification is required', 403);
+		}
 	}
 
 	next();
