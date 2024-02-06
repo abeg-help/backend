@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		phoneNumber: {
 			type: String,
 			unique: true,
+			sparse: true,
 		},
 		photo: {
 			type: String,
