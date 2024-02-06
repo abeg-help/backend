@@ -2,7 +2,6 @@
 // DO NOT CHANGE THE ORDER OF THE IMPORTS;
 // DOT ENV AND MODULE ALIAS WILL NOT WORK PROPERLY UNLESS THEY ARE IMPORTED FIRST
 
-import '@/common/interfaces/request';
 import * as dotenv from 'dotenv';
 dotenv.config();
 if (process.env.NODE_ENV === 'production') {
@@ -10,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 ///////////////////////////////////////////////////////////////////////
-
+import '@/common/interfaces/request';
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import { logger, stream } from '@/common/utils';
 import { errorHandler, socketController } from '@/controllers';
