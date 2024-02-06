@@ -2,6 +2,7 @@
 // DO NOT CHANGE THE ORDER OF THE IMPORTS;
 // DOT ENV AND MODULE ALIAS WILL NOT WORK PROPERLY UNLESS THEY ARE IMPORTED FIRST
 
+import '@/common/interfaces/request';
 import * as dotenv from 'dotenv';
 dotenv.config();
 if (process.env.NODE_ENV === 'production') {
@@ -11,12 +12,11 @@ if (process.env.NODE_ENV === 'production') {
 ///////////////////////////////////////////////////////////////////////
 
 import { ENVIRONMENT, connectDb } from '@/common/config';
-import '@/common/interfaces/IRequest';
-import { logger, stream } from '@/common/utils/logger';
-import errorHandler from '@/controllers/errorController';
-import { validateDataWithZod } from '@/middlewares';
-import { timeoutMiddleware } from '@/middlewares/timeout';
-import { authRouter, campaignCategoryRouter, campaignRouter, userRouter } from '@/routes';
+import { logger, stream } from '@/common/utils';
+import { errorHandler, socketController } from '@/controllers';
+import { catchSocketAsync, timeoutMiddleware, validateDataWithZod } from '@/middlewares';
+import { campaignQueue, emailQueue, startAllQueuesAndWorkers, stopAllQueuesAndWorkers } from '@/queues';
+import { authRouter, campaignRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
@@ -30,15 +30,14 @@ import helmet, { HelmetOptions } from 'helmet';
 import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import http from 'http';
-import 'module-alias/register';
 import morgan from 'morgan';
 import { Server, Socket } from 'socket.io';
+
+////////////////////////////////
+// XSS-CLEAN IS DEPRECATED
+// TODO: REWRITE A CUSTOM XSS CLEANER
 import xss from 'xss-clean';
-import socketController from './controllers/sockets';
-import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
-import { emailQueue } from './queues/emailQueue';
-import { startAllQueuesAndWorkers, stopAllQueuesAndWorkers } from './queues/index';
-import { campaignQueue } from './queues/campaignQueue';
+////////////////////////////////
 
 dotenv.config();
 /**
@@ -167,17 +166,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 /**
  * Initialize routes
  */
-
-// catch 404 and forward to error handler
 app.use(validateDataWithZod);
-app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/alive', (req, res) =>
 	res.status(200).json({ status: 'success', message: 'Server is up and running' })
 );
-app.use('/api/v1/user', userRouter);
+app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/user', userRouter);
 app.use('/api/v1/campaign', campaignRouter);
-app.use('/api/v1/campaign/category', campaignCategoryRouter);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
@@ -188,16 +184,6 @@ app.all('/*', async (req, res) => {
 		} route. Check the API documentation for more details.`,
 	});
 });
-
-/**
- * status check
- */
-app.get('*', (req: Request, res: Response) =>
-	res.send({
-		Time: new Date(),
-		status: 'Up and running',
-	})
-);
 
 /**
  * Bootstrap server

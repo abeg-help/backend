@@ -1,9 +1,9 @@
-import { UserModel as User } from '@/models';
+import { ENVIRONMENT } from '@/common/config';
+import type { IUser } from '@/common/interfaces';
+import { UserModel } from '@/models';
 import jwt from 'jsonwebtoken';
 import { DateTime } from 'luxon';
 import { Require_id } from 'mongoose';
-import { ENVIRONMENT } from '../config';
-import { IUser } from '../interfaces';
 import AppError from './appError';
 import { decodeData, getFromCache, hashData, setCache } from './helper';
 
@@ -30,7 +30,7 @@ export const authenticate = async ({
 
 		const user = cachedUser
 			? cachedUser
-			: ((await User.findOne({ _id: decoded.id }).select(
+			: ((await UserModel.findOne({ _id: decoded.id }).select(
 					'refreshToken isSuspended isEmailVerified'
 			  )) as Require_id<IUser>);
 
@@ -61,6 +61,7 @@ export const authenticate = async ({
 		) {
 			throw new AppError('Password changed since last login. Please log in again!', 401);
 		}
+
 		// csrf protection
 		// browser client fingerprinting
 

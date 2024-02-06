@@ -1,6 +1,5 @@
 import { ENVIRONMENT } from '@/common/config';
-import AppError from '@/common/utils/appError';
-import { logger } from '@/common/utils/logger';
+import { AppError, logger } from '@/common/utils';
 import { NextFunction, Response } from 'express';
 import { CastError, Error as MongooseError } from 'mongoose';
 
@@ -73,7 +72,7 @@ const sendErrorProd = (err: AppError, res: Response) => {
 	}
 };
 
-const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || 'Error';
 
@@ -92,5 +91,3 @@ const errorHandler = (err, req, res, next) => {
 		sendErrorProd(error, res);
 	}
 };
-
-export default errorHandler;

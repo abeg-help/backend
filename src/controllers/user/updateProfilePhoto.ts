@@ -1,6 +1,5 @@
-import { IUser } from '@/common/interfaces';
-import { AppResponse, getFromCache, setCache, toJSON, uploadSingleFile } from '@/common/utils';
-import AppError from '@/common/utils/appError';
+import type { IUser } from '@/common/interfaces';
+import { AppError, AppResponse, getFromCache, setCache, toJSON, uploadSingleFile } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import type { Request, Response } from 'express';

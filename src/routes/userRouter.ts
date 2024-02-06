@@ -1,14 +1,13 @@
-import { multerUpload } from '@/common/config/multer';
-import { protect } from '@/controllers';
-import { editUserProfile } from '@/controllers/auth/editUserProfile';
-import { deleteAccount, restoreAccount, updateProfilePhoto } from '@/controllers/user';
+import { multerUpload } from '@/common/config';
+import { deleteAccount, editUserProfile, restoreAccount, updateProfilePhoto } from '@/controllers';
+import { protect } from '@/middlewares';
 import express from 'express';
 const router = express.Router();
 
 router.post('/restore', restoreAccount);
 
 router.use(protect); // Protect all routes after this middleware
-router.post('/updateProfile', editUserProfile);
+router.post('/update-profile', editUserProfile);
 router.post('/profile-photo', multerUpload.single('photo'), updateProfilePhoto);
-router.delete('/', deleteAccount);
+router.delete('/delete-account', deleteAccount);
 export { router as userRouter };

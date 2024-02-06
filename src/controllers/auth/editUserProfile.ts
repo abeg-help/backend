@@ -1,9 +1,7 @@
-import { IUser } from '@/common/interfaces';
-import { setCache, toJSON } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import type { IUser } from '@/common/interfaces';
+import { AppError, AppResponse, setCache, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const editUserProfile = catchAsync(async (req: Request, res: Response) => {
@@ -23,7 +21,7 @@ export const editUserProfile = catchAsync(async (req: Request, res: Response) =>
 	};
 
 	//updates the id with object, new returns the updated user while runnung mongoose validation
-	const updatedUser = await User.findByIdAndUpdate({ _id: UserToUpdateID }, objectToUpdate, {
+	const updatedUser = await UserModel.findByIdAndUpdate({ _id: UserToUpdateID }, objectToUpdate, {
 		new: true,
 		runValidators: true,
 	});

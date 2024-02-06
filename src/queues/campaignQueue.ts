@@ -1,7 +1,7 @@
+import { ENVIRONMENT } from '@/common/config';
 import { Job, Queue, Worker, WorkerOptions } from 'bullmq';
-import { processCampaign } from '../controllers/campaign/review';
 import IORedis from 'ioredis';
-import { ENVIRONMENT } from '@/common/config/environment';
+import { processCampaign } from './handlers/processCampaign';
 
 export enum CampaignJobEnum {
 	PROCESS_CAMPAIGN_REVIEW = 'PROCESS_CAMPAIGN_REVIEW',
@@ -63,4 +63,4 @@ const stopCampaignQueue = async () => {
 	console.info('campaign queue closed!');
 };
 
-export { campaignQueue, campaignWorker, stopCampaignQueue, startCampaignQueue };
+export { campaignQueue, campaignWorker, startCampaignQueue, stopCampaignQueue };

@@ -1,11 +1,11 @@
-import AppError from '@/common/utils/appError';
+import { AppError } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { Response, Request } from 'express';
-import stepOne from './create-steps/stepOne';
-import stepTwo from './create-steps/stepTwo';
-import stepThree from './create-steps/stepThree';
+import { Request, Response } from 'express';
+import { stepOne } from './stepOne';
+import { stepThree } from './stepThree';
+import { stepTwo } from './stepTwo';
 
-const CreateCampaign = catchAsync(async (req: Request, res: Response) => {
+export const createCampaign = catchAsync(async (req: Request, res: Response) => {
 	const { step } = req.params;
 
 	if (!step) {
@@ -26,5 +26,3 @@ const CreateCampaign = catchAsync(async (req: Request, res: Response) => {
 
 	return await stepFunction(req, res);
 });
-
-export default CreateCampaign;

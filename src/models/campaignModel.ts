@@ -1,6 +1,6 @@
-import mongoose, { Model } from 'mongoose';
-import { ICampaign } from '@/common/interfaces/campaign';
 import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '@/common/constants';
+import type { ICampaign } from '@/common/interfaces';
+import mongoose, { Model } from 'mongoose';
 
 type campaignModel = Model<ICampaign>;
 
@@ -79,6 +79,4 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 campaignSchema.index({ title: 'text' });
 campaignSchema.index({ creator: 1 });
 
-const campaignModel = (mongoose.models.campaign as campaignModel) || mongoose.model('campaign', campaignSchema);
-
-export { campaignModel };
+export const campaignModel = (mongoose.models.Campaign as campaignModel) || mongoose.model('Campaign', campaignSchema);

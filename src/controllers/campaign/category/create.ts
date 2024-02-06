@@ -1,10 +1,9 @@
-import { catchAsync } from '../../../middlewares';
+import { AppError, AppResponse } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
+import { campaignCategoryModel } from '@/models';
 import { Request, Response } from 'express';
-import { AppResponse } from '@/common/utils';
-import { campaignCategoryModel } from '@/models/campaignCategoryModel';
-import AppError from '../../../common/utils/appError';
 
-const createCategory = catchAsync(async (req: Request, res: Response) => {
+export const createCategory = catchAsync(async (req: Request, res: Response) => {
 	let { name } = req.body;
 	name = name.trim();
 
@@ -22,5 +21,3 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 
 	return AppResponse(res, 201, category, 'Success');
 });
-
-export default createCategory;

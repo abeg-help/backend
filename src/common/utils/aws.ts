@@ -1,8 +1,8 @@
+import { ENVIRONMENT } from '@/common/config';
+import type { IAwsUploadFile } from '@/common/interfaces';
 import AWS from 'aws-sdk';
-import { ENVIRONMENT } from '../config';
-import { IAwsUploadFile } from '../interfaces';
-import { isValidFileNameAwsUpload } from './helper';
 import AppError from './appError';
+import { isValidFileNameAwsUpload } from './helper';
 
 AWS.config.update({
 	accessKeyId: ENVIRONMENT.AWS.ACCESS_KEY_ID,
@@ -14,7 +14,7 @@ const s3 = new AWS.S3();
 const bucketName = ENVIRONMENT.AWS.BUCKET_NAME;
 const cloudFrontUrl = ENVIRONMENT.AWS.CLOUD_FRONT_URL;
 
-const uploadSingleFile = async (payload: IAwsUploadFile): Promise<string> => {
+export const uploadSingleFile = async (payload: IAwsUploadFile): Promise<string> => {
 	const { fileName, buffer, mimetype } = payload;
 
 	if (!fileName || !buffer || !mimetype) {
@@ -44,11 +44,11 @@ const uploadSingleFile = async (payload: IAwsUploadFile): Promise<string> => {
 	});
 };
 
-const uploadMultipleFiles = (files: IAwsUploadFile[]): Promise<string[]> => {
+export const uploadMultipleFiles = (files: IAwsUploadFile[]): Promise<string[]> => {
 	return Promise.all(files.map((file) => uploadSingleFile(file)));
 };
 
-const deleteFile = async (fileName: string): Promise<boolean> => {
+export const deleteFile = async (fileName: string): Promise<boolean> => {
 	if (!fileName) {
 		return false;
 	}
@@ -69,5 +69,3 @@ const deleteFile = async (fileName: string): Promise<boolean> => {
 		);
 	});
 };
-
-export { uploadSingleFile, uploadMultipleFiles, deleteFile };

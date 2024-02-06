@@ -1,8 +1,8 @@
 import { Gender, IDType, Provider, Role } from '@/common/constants';
-import { IUser, UserMethods } from '@/common/interfaces';
+import type { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
-import { twoFactorSchema } from './twoFactorModel';
+import { TwoFAModel } from './twoFactorModel';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 
@@ -127,7 +127,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			select: false,
 		},
 		twoFA: {
-			type: twoFactorSchema,
+			type: TwoFAModel,
 			default: {},
 		},
 		isTermAndConditionAccepted: {
@@ -182,6 +182,4 @@ userSchema.method('verifyPassword', async function (this: HydratedDocument<IUser
 	return isValid;
 });
 
-const UserModel = (mongoose.models.User as UserModel) || mongoose.model<IUser, UserModel>('User', userSchema);
-
-export { UserModel };
+export const UserModel = (mongoose.models.User as UserModel) || mongoose.model<IUser, UserModel>('User', userSchema);

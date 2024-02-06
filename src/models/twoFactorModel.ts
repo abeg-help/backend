@@ -1,7 +1,7 @@
+import { twoFactorTypeEnum } from '@/common/constants';
 import mongoose from 'mongoose';
-import { twoFactorTypeEnum } from '../common/constants';
 
-export const twoFactorSchema = new mongoose.Schema(
+export const TwoFAModel = new mongoose.Schema(
 	{
 		type: {
 			type: String,
@@ -22,6 +22,9 @@ export const twoFactorSchema = new mongoose.Schema(
 		},
 		verificationTime: {
 			type: Date,
+		},
+		isVerified: {
+			type: Boolean,
 		},
 	},
 	{

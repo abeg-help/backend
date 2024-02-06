@@ -1,9 +1,8 @@
+import { AppError, AppResponse, generateRandomString, hashData, setCache, setCookie } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
+import { UserModel } from '@/models';
+import { addEmailToQueue } from '@/queues';
 import { Request, Response } from 'express';
-import { AppResponse, generateRandomString, hashData, setCache, setCookie } from '../../common/utils';
-import AppError from '../../common/utils/appError';
-import { catchAsync } from '../../middlewares';
-import { UserModel } from '../../models';
-import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;

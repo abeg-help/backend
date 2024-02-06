@@ -1,9 +1,7 @@
 import { Provider } from '@/common/constants';
-import { hashPassword, sendVerificationEmail, setCache, toJSON } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import { AppError, AppResponse, hashPassword, sendVerificationEmail, setCache, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
@@ -17,14 +15,14 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Kindly accept terms and conditions to sign up', 400);
 	}
 
-	const existingUser = await User.findOne({ email });
+	const existingUser = await UserModel.findOne({ email });
 	if (existingUser) {
 		throw new AppError(`User with email already exists`, 409);
 	}
 
 	const hashedPassword = await hashPassword(password);
 
-	const user = await User.create({
+	const user = await UserModel.create({
 		email,
 		firstName,
 		lastName,

@@ -1,9 +1,7 @@
-import { generateRandomString, hashData } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import { AppError, AppResponse, generateRandomString, hashData } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models/userModel';
-import { addEmailToQueue } from '@/queues/emailQueue';
+import { UserModel } from '@/models';
+import { addEmailToQueue } from '@/queues';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
@@ -14,14 +12,16 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('Email is required', 400);
 	}
 
-	const user = await User.findOne({ email }).select('+passwordResetToken +passwordResetExpires +passwordResetRetries');
+	const user = await UserModel.findOne({ email }).select(
+		'+passwordResetToken +passwordResetExpires +passwordResetRetries'
+	);
 
 	if (!user) {
 		throw new AppError('No user found with provided email', 404);
 	}
 
 	if (user.passwordResetRetries >= 3) {
-		await User.findByIdAndUpdate(user._id, {
+		await UserModel.findByIdAndUpdate(user._id, {
 			isSuspended: true,
 		});
 
@@ -35,7 +35,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 
 	const passwordResetUrl = `${req.get('Referrer')}/reset-password?token=${hashedPasswordResetToken}`;
 
-	await User.findByIdAndUpdate(user._id, {
+	await UserModel.findByIdAndUpdate(user._id, {
 		passwordResetToken: passwordResetToken,
 		passwordResetExpires: DateTime.now().plus({ minutes: 15 }).toJSDate(),
 		$inc: {

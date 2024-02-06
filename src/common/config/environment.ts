@@ -1,4 +1,4 @@
-import { IEnvironment } from '@/common/interfaces/environment';
+import type { IEnvironment } from '@/common/interfaces';
 
 export const ENVIRONMENT: IEnvironment = {
 	APP: {

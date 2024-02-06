@@ -1,13 +1,20 @@
+import { twoFactorTypeEnum } from '@/common/constants';
+import type { IUser } from '@/common/interfaces';
+import {
+	AppError,
+	AppResponse,
+	generateRandomBase32,
+	generateTimeBased2fa,
+	get2faCodeViaEmailHelper,
+	getFromCache,
+	hashData,
+	setCache,
+	toJSON,
+} from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { Request, Response } from 'express';
-import AppError from '@/common/utils/appError';
-import { AppResponse, get2faCodeViaEmailHelper } from '@/common/utils';
-import { twoFactorTypeEnum } from '../../common/constants';
-import { generateRandomBase32, generateTimeBased2fa, hashData, setCache } from '@/common/utils';
-import { getFromCache, toJSON } from '@/common/utils';
-import { Require_id } from 'mongoose';
 import { UserModel } from '@/models';
-import { IUser } from '@/common/interfaces';
+import { Request, Response } from 'express';
+import { Require_id } from 'mongoose';
 
 export const setupTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;

@@ -1,10 +1,9 @@
-import AppError from '@/common/utils/appError';
+import { AppError, AppResponse } from '@/common/utils';
+import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
-import { campaignModel } from '@/models/campaignModel';
-import { AppResponse } from '@/common/utils';
 import { DateTime } from 'luxon';
 
-const stepTwo = async (req: Request, res: Response) => {
+export const stepTwo = async (req: Request, res: Response) => {
 	const { title, fundraiser, goal, deadline } = req.body;
 	const { user } = req;
 	const { id } = req.query;
@@ -46,5 +45,3 @@ const stepTwo = async (req: Request, res: Response) => {
 
 	AppResponse(res, 200, updatedCampaign, 'Proceed to step 3');
 };
-
-export default stepTwo;

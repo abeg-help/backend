@@ -1,8 +1,7 @@
-import { AppResponse, get2faCodeViaEmailHelper } from '@/common/utils';
-import AppError from '@/common/utils/appError';
+import { twoFactorTypeEnum } from '@/common/constants';
+import { AppError, AppResponse, get2faCodeViaEmailHelper } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
 import { Request, Response } from 'express';
-import { catchAsync } from '../../middlewares';
-import { twoFactorTypeEnum } from '../../common/constants';
 
 export const get2faCodeViaEmail = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;

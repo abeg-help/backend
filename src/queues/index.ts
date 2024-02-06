@@ -1,5 +1,5 @@
-import { startEmailQueue, stopEmailQueue } from './emailQueue';
 import { startCampaignQueue, stopCampaignQueue } from './campaignQueue';
+import { startEmailQueue, stopEmailQueue } from './emailQueue';
 
 const startAllQueuesAndWorkers = async () => {
 	await startEmailQueue();
@@ -11,4 +11,6 @@ const stopAllQueuesAndWorkers = async () => {
 	await stopCampaignQueue();
 };
 
+export * from './campaignQueue';
+export * from './emailQueue';
 export { startAllQueuesAndWorkers, stopAllQueuesAndWorkers };

@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
+import { twoFactorTypeEnum } from '@/common/constants';
+import { AppError, AppResponse, decodeData, getFromCache, removeFromCache, validateTimeBased2fa } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { AppResponse, decodeData, getFromCache, removeFromCache, validateTimeBased2fa } from '../../common/utils';
-import { UserModel } from '../../models';
-import AppError from '../../common/utils/appError';
-import { twoFactorTypeEnum } from '../../common/constants';
+import { UserModel } from '@/models';
+import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
 export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
@@ -22,11 +21,13 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		throw new AppError('2FA is not active', 400);
 	}
 
+	// TODO: add limit to tries to avoid brute force
+
 	const lastLoginTimeInMilliseconds = new Date(userFromDb.lastLogin).getTime();
 	const currentTimeInMilliseconds = DateTime.now().plus({ minutes: 5 }).toJSDate().getTime();
 
 	if (lastLoginTimeInMilliseconds > currentTimeInMilliseconds) {
-		throw new AppError('Kindly login to complete verification', 400);
+		throw new AppError('Timeout Error, Please log in again', 400);
 	}
 
 	const twoFAType = userFromDb.twoFA.type;
@@ -61,6 +62,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		{
 			$set: {
 				'twoFA.verificationTime': DateTime.now().toJSDate(),
+				'twoFA.isVerified': true,
 			},
 		},
 		{ new: true }

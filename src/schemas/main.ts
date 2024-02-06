@@ -1,7 +1,7 @@
+import { Country, FundraiserEnum, VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '@/common/constants';
+import { dateFromString } from '@/common/utils';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import { z } from 'zod';
-import { Country, FundraiserEnum, VerifyTimeBased2faTypeEnum, twoFactorTypeEnum } from '../common/constants';
-import { dateFromString } from '../common/utils';
 
 const verifyPhoneNumber = (value: string) => {
 	const phoneUtil = PhoneNumberUtil.getInstance();

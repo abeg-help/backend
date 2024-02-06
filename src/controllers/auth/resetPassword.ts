@@ -1,11 +1,9 @@
-import { decodeData, hashPassword } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import { AppError, AppResponse, decodeData, hashPassword } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models/userModel';
+import { UserModel } from '@/models';
+import { addEmailToQueue } from '@/queues';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 	const { token, password, confirmPassword } = req.body;
@@ -24,7 +22,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Invalid token', 400);
 	}
 
-	const user = await User.findOne({
+	const user = await UserModel.findOne({
 		passwordResetToken: decodedToken.token,
 		passwordResetExpires: {
 			$gt: DateTime.now().toJSDate(),
@@ -38,7 +36,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 	const hashedPassword = await hashPassword(password);
 
-	await User.findByIdAndUpdate(
+	await UserModel.findByIdAndUpdate(
 		user._id,
 		{
 			password: hashedPassword,

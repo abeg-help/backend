@@ -1,6 +1,4 @@
-import { toJSON } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import { AppError, AppResponse, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { Request, Response } from 'express';
 

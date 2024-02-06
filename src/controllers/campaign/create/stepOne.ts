@@ -1,10 +1,9 @@
-import AppError from '@/common/utils/appError';
+import type { ICampaign } from '@/common/interfaces';
+import { AppError, AppResponse } from '@/common/utils';
+import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
-import { campaignModel } from '@/models/campaignModel';
-import { AppResponse } from '@/common/utils';
-import { ICampaign } from '../../../common/interfaces/campaign';
 
-const stepOne = async (req: Request, res: Response) => {
+export const stepOne = async (req: Request, res: Response) => {
 	const { country, tags, categoryId } = req.body;
 	const { user } = req;
 	const { id } = req.query;
@@ -27,5 +26,3 @@ const stepOne = async (req: Request, res: Response) => {
 
 	AppResponse(res, 200, createdCampaign, 'Proceed to step 2');
 };
-
-export default stepOne;

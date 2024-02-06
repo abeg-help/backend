@@ -1,8 +1,7 @@
-import { AppResponse, decodeData, removeFromCache } from '@/common/utils';
-import AppError from '@/common/utils/appError';
+import { AppError, AppResponse, decodeData, removeFromCache } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
-import { catchAsync } from '../../middlewares';
-import { UserModel } from '../../models';
 
 export const disable2fa = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;

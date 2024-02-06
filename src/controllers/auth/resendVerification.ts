@@ -1,8 +1,6 @@
-import { sendVerificationEmail } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import { AppError, AppResponse, sendVerificationEmail } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models/userModel';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const resendVerification = catchAsync(async (req: Request, res: Response) => {
@@ -12,7 +10,7 @@ export const resendVerification = catchAsync(async (req: Request, res: Response)
 		throw new AppError('Email is required', 400);
 	}
 
-	const user = await User.findOne({ email });
+	const user = await UserModel.findOne({ email });
 
 	if (!user) {
 		throw new AppError('No user found with provided email', 404);

@@ -1,8 +1,9 @@
-import { Gender, IDType, Provider, Role, twoFactorTypeEnum } from '@/common/constants';
+import { Gender, IDType, Provider, Role } from '@/common/constants';
 import type { SignOptions } from 'jsonwebtoken';
 import { Model } from 'mongoose';
+import { ITwoFactor } from './2fa';
 
-interface IUser {
+export interface IUser {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -29,26 +30,18 @@ interface IUser {
 	isEmailVerified: boolean;
 	isDeleted: boolean;
 	accountRestoreToken: string;
-	twoFA: {
-		active?: boolean;
-		secret?: string;
-		recoveryCode?: string;
-		type?: twoFactorTypeEnum;
-		verificationTime?: Date;
-	};
+	twoFA: ITwoFactor;
 	isTermAndConditionAccepted: boolean;
 	lastLogin: Date;
 	createdAt: Date;
 	updatedAt: Date;
 }
 
-interface UserMethods extends Omit<IUser, 'toJSON'> {
+export interface UserMethods extends Omit<IUser, 'toJSON'> {
 	generateAccessToken(options?: SignOptions): string;
 	generateRefreshToken(options?: SignOptions): string;
 	verifyPassword(enteredPassword: string): Promise<boolean>;
 	toJSON(excludedFields?: Array<keyof IUser>): object;
 }
 
-type UserModel = Model<UserMethods>;
-
-export { IUser, UserMethods, UserModel };
+export type UserModel = Model<UserMethods>;

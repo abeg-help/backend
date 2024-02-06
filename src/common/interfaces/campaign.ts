@@ -1,6 +1,6 @@
-import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '../constants';
+import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '@/common/constants';
 
-interface ICampaign {
+export interface ICampaign {
 	categoryId: {
 		type: string;
 		ref: string;
@@ -28,8 +28,6 @@ interface ICampaign {
 	}>;
 }
 
-interface ICampaignCategory {
+export interface ICampaignCategory {
 	name: string;
 }
-
-export { ICampaign, ICampaignCategory };

@@ -1,5 +1,10 @@
-export * from './helper';
+///////////////////////////////////////////////////////////////////////
+// LOGGER MUST BE THE FIRST IMPORT
 export * from './logger';
-export * from './aws';
+///////////////////////////////////////////////////////////////////////
+
+export { default as AppError } from './appError';
 export * from './appResponse';
-export * from './appError';
+export * from './authenticate';
+export * from './aws';
+export * from './helper';

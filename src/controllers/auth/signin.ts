@@ -1,10 +1,8 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
-import AppError from '@/common/utils/appError';
-import { AppResponse } from '@/common/utils/appResponse';
+import { AppError, AppResponse, hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models/userModel';
+import { UserModel } from '@/models';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
@@ -14,7 +12,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Email and password are required fields', 401);
 	}
 
-	const user = await User.findOne({ email, provider: Provider.Local }).select(
+	const user = await UserModel.findOne({ email, provider: Provider.Local }).select(
 		'+refreshToken +loginRetries +isSuspended +isEmailVerified +lastLogin +password +twoFA.type +twoFA.active'
 	);
 
@@ -33,7 +31,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 
 	const isPasswordValid = await user.verifyPassword(password);
 	if (!isPasswordValid) {
-		await User.findByIdAndUpdate(user._id, {
+		await UserModel.findByIdAndUpdate(user._id, {
 			$inc: { loginRetries: 1 },
 		});
 		throw new AppError('Email or password is incorrect', 401);
@@ -66,10 +64,11 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	// update user loginRetries to 0 and lastLogin to current time
-	await User.findByIdAndUpdate(user._id, {
+	await UserModel.findByIdAndUpdate(user._id, {
 		loginRetries: 0,
 		lastLogin: DateTime.now(),
 		refreshToken,
+		...(user.twoFA.active && { 'twoFA.isVerified': false }),
 	});
 
 	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });

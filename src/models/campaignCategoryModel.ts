@@ -1,5 +1,5 @@
+import type { ICampaignCategory } from '@/common/interfaces';
 import mongoose, { Model } from 'mongoose';
-import { ICampaignCategory } from '@/common/interfaces/campaign';
 
 type campaignCategoryModel = Model<ICampaignCategory>;
 
@@ -14,5 +14,6 @@ const campaignCategorySchema = new mongoose.Schema<ICampaignCategory>(
 	{ timestamps: true }
 );
 
-const campaignCategoryModel = mongoose.model('campaignCategory', campaignCategorySchema);
-export { campaignCategoryModel };
+export const campaignCategoryModel =
+	(mongoose.models.CampaignCategory as campaignCategoryModel) ||
+	mongoose.model('CampaignCategory', campaignCategorySchema);

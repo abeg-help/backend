@@ -1,4 +1,4 @@
-import AppError from '@/common/utils/appError';
+import { AppError } from '@/common/utils';
 import { baseSchema, mainSchema } from '@/schemas';
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
@@ -6,7 +6,7 @@ import { catchAsync } from './catchAsyncErrors';
 
 type MyDataShape = z.infer<typeof baseSchema>;
 
-const validateDataWithZod = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const validateDataWithZod = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	if (req.method === 'GET') return next();
 	if (req.url === '/api/v1/auth/signin') return next();
 	const rawData = req.body as Partial<MyDataShape>;
@@ -75,5 +75,3 @@ const validateDataWithZod = catchAsync(async (req: Request, res: Response, next:
 
 	next();
 });
-
-export { validateDataWithZod };

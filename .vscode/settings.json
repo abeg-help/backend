@@ -1,6 +1,6 @@
 {
 	"editor.codeActionsOnSave": {
-		"source.organizeImports": "never"
+		"source.organizeImports": "always"
 	},
 	"cSpell.words": [
 		"Abeg",
@@ -19,6 +19,8 @@
 		"Noto",
 		"Segoe",
 		"signin",
+		"signout",
+		"TOTP",
 		"uniquelocal"
 	],
 	"rules": {

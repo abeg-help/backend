@@ -1,9 +1,8 @@
+import { AppError, AppResponse, decodeData } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
+import { UserModel } from '@/models';
+import { addEmailToQueue } from '@/queues';
 import { Request, Response } from 'express';
-import { AppResponse, decodeData } from '../../common/utils';
-import AppError from '../../common/utils/appError';
-import { catchAsync } from '../../middlewares';
-import { UserModel } from '../../models';
-import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const restoreAccount = catchAsync(async (req: Request, res: Response) => {
 	const { token } = req.query;

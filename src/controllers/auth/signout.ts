@@ -2,7 +2,7 @@ import { removeFromCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
-import { UserModel as User } from '@/models';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const signOut = catchAsync(async (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ export const signOut = catchAsync(async (req: Request, res: Response) => {
 
 	await removeFromCache(user._id.toString());
 	//$unset the refreshToken from the mongodb
-	await User.findByIdAndUpdate(user._id, { $unset: { refreshToken: 1 } });
+	await UserModel.findByIdAndUpdate(user._id, { $unset: { refreshToken: 1 } });
 
 	//clearing the cookies set on the frontend by setting a new cookie with empty values and an expiry time in the past
 	setCookie(res, 'abegAccessToken', 'expired', { maxAge: -1 });

@@ -1,4 +1,4 @@
-import AppError from '@/common/utils/appError';
+import { AppError } from '@/common/utils';
 import type { Socket } from 'socket.io';
 
 export const catchSocketAsync = (fn: (socket: Socket, next?: () => void) => Promise<void>) => {

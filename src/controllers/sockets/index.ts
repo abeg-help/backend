@@ -20,10 +20,8 @@ const events: Event[] = [
 	},
 ];
 
-const socketController = (socket: Socket, io: Server) => {
+export const socketController = (socket: Socket, io: Server) => {
 	events.forEach((event: Event) => {
 		socket.on(event.name, (data: unknown, ackCallback: () => void) => event.handler({ socket, io, data, ackCallback }));
 	});
 };
-
-export default socketController;

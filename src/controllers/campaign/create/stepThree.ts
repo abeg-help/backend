@@ -1,11 +1,10 @@
-import AppError from '@/common/utils/appError';
+import { AppError, AppResponse, uploadSingleFile } from '@/common/utils';
+import { campaignModel } from '@/models';
+import { CampaignJobEnum, campaignQueue } from '@/queues';
 import { Request, Response } from 'express';
-import { campaignModel } from '@/models/campaignModel';
-import { AppResponse, uploadSingleFile } from '@/common/utils';
 import { DateTime } from 'luxon';
-import { CampaignJobEnum, campaignQueue } from '../../../queues/campaignQueue';
 
-const stepThree = async (req: Request, res: Response) => {
+export const stepThree = async (req: Request, res: Response) => {
 	const { story, storyHtml } = req.body;
 	const { user } = req;
 	const { id } = req.query;
@@ -64,5 +63,3 @@ const stepThree = async (req: Request, res: Response) => {
 
 	AppResponse(res, 200, updatedCampaign, 'Campaign Created Successfully');
 };
-
-export default stepThree;

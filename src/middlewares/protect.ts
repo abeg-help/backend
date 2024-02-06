@@ -1,8 +1,6 @@
-import { setCookie } from '@/common/utils';
-import { authenticate } from '@/common/utils/authenticate';
+import { AppError, authenticate, setCookie } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import type { NextFunction, Request, Response } from 'express';
-import AppError from '../../common/utils/appError';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	// get the cookies from the request headers
@@ -21,13 +19,9 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 
 	const reqPath = req.path;
 
-	if (reqPath !== '/2fa/verify') {
-		const lastLoginTimeInMilliseconds = new Date(currentUser.lastLogin).getTime();
-		const lastVerificationTimeInMilliseconds = new Date(currentUser.twoFA.verificationTime as Date).getTime();
-
-		if (lastLoginTimeInMilliseconds > lastVerificationTimeInMilliseconds) {
-			throw new AppError('Kindly login to process request', 401);
-		}
+	// check if user has been authenticated but has not verified 2fa
+	if (reqPath !== '/2fa/verify' && req.user.twoFA.active && !req.user.twoFA.isVerified) {
+		throw new AppError('2FA verification is required', 403);
 	}
 
 	next();

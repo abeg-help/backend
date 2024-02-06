@@ -1,20 +1,20 @@
-import { Require_id } from 'mongoose';
-import { IUser } from '../../common/interfaces';
+import { twoFactorTypeEnum } from '@/common/constants';
+import type { IUser } from '@/common/interfaces';
 import {
-	validateTimeBased2fa,
+	AppError,
 	AppResponse,
-	getFromCache,
-	setCache,
-	toJSON,
 	decodeData,
 	generateRandom6DigitKey,
+	getFromCache,
 	hashData,
-} from '../../common/utils';
-import AppError from '../../common/utils/appError';
-import { catchAsync } from '../../middlewares';
-import { UserModel } from '../../models';
+	setCache,
+	toJSON,
+	validateTimeBased2fa,
+} from '@/common/utils';
+import { catchAsync } from '@/middlewares';
+import { UserModel } from '@/models';
 import { Request, Response } from 'express';
-import { twoFactorTypeEnum } from '../../common/constants';
+import { Require_id } from 'mongoose';
 
 export const complete2faSetup = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;

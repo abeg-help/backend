@@ -1,6 +1,6 @@
-import { ENVIRONMENT } from '@/common/config/environment';
-import { EmailJobData } from '@/common/interfaces/emailQueue';
-import { logger } from '@/common/utils/logger';
+import { ENVIRONMENT } from '@/common/config';
+import type { EmailJobData } from '@/common/interfaces';
+import { logger } from '@/common/utils';
 import { Job, Queue, QueueEvents, Worker, WorkerOptions } from 'bullmq';
 import IORedis from 'ioredis';
 import { sendEmail } from './handlers/emailHandler';
@@ -110,4 +110,4 @@ const stopEmailQueue = async () => {
 	console.info('Email queue closed!');
 };
 
-export { addEmailToQueue, emailQueue, emailQueueEvent, emailWorker, stopEmailQueue, startEmailQueue };
+export { addEmailToQueue, emailQueue, emailQueueEvent, emailWorker, startEmailQueue, stopEmailQueue };

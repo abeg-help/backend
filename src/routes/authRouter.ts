@@ -1,7 +1,8 @@
 import {
+	complete2faSetup,
+	disable2fa,
 	forgotPassword,
 	get2faCodeViaEmail,
-	protect,
 	resendVerification,
 	resetPassword,
 	session,
@@ -12,9 +13,9 @@ import {
 	verifyEmail,
 	verifyTimeBased2fa,
 } from '@/controllers';
-import { complete2faSetup } from '@/controllers/auth/complete2faSetup';
+import { protect } from '@/middlewares';
+
 import { Router } from 'express';
-import { disable2fa } from '../controllers/auth/disable2fa';
 
 const router = Router();
 
