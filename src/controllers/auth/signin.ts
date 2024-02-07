@@ -1,5 +1,6 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
+import { IUser } from '@/common/interfaces';
 import { AppError, AppResponse, hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
@@ -64,14 +65,18 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	// update user loginRetries to 0 and lastLogin to current time
-	await UserModel.findByIdAndUpdate(user._id, {
-		loginRetries: 0,
-		lastLogin: DateTime.now(),
-		refreshToken,
-		...(user.twoFA.active && { 'twoFA.isVerified': false }),
-	});
+	const updatedUser = (await UserModel.findByIdAndUpdate(
+		user._id,
+		{
+			loginRetries: 0,
+			lastLogin: DateTime.now(),
+			refreshToken,
+			...(user.twoFA.active && { 'twoFA.isVerified': false }),
+		},
+		{ new: true }
+	)) as IUser;
 
-	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
+	await setCache(user._id.toString(), { ...toJSON(updatedUser, ['password']), refreshToken });
 
 	if (user.twoFA.active) {
 		return AppResponse(
@@ -86,6 +91,6 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 			'Sign in successfully, proceed to 2fa verification'
 		);
 	} else {
-		return AppResponse(res, 200, toJSON(user), 'Sign in successful');
+		return AppResponse(res, 200, toJSON(updatedUser), 'Sign in successful');
 	}
 });

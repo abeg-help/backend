@@ -1,5 +1,15 @@
 import { twoFactorTypeEnum } from '@/common/constants';
-import { AppError, AppResponse, decodeData, getFromCache, removeFromCache, validateTimeBased2fa } from '@/common/utils';
+import { IUser } from '@/common/interfaces';
+import {
+	AppError,
+	AppResponse,
+	decodeData,
+	getFromCache,
+	removeFromCache,
+	setCache,
+	validateTimeBased2fa,
+	toJSON,
+} from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import { Request, Response } from 'express';
@@ -57,7 +67,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		await removeFromCache(`2FAEmailCode:${user._id.toString()}`);
 	}
 
-	userFromDb = await UserModel.findOneAndUpdate(
+	const updatedUser = (await UserModel.findOneAndUpdate(
 		{ _id: user._id },
 		{
 			$set: {
@@ -66,7 +76,9 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 			},
 		},
 		{ new: true }
-	);
+	)) as IUser;
 
-	return AppResponse(res, 200, userFromDb, '2FA verified successfully');
+	await setCache(user._id.toString(), { ...user, ...toJSON(updatedUser, ['password']) });
+
+	return AppResponse(res, 200, toJSON(updatedUser), '2FA verified successfully');
 });
