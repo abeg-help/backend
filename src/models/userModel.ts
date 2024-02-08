@@ -145,10 +145,11 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 
 // only pick users that are not deleted or suspended
 userSchema.pre(/^find/, function (this: Model<IUser>, next) {
-	// if (Object.keys(this['_conditions']).includes('isDeleted')) {
-	// 	this.find({ isSuspended: { $ne: true } });
-	// 	return next();
-	// }
+	// pick deleted users if the query has isDeleted
+	if (Object.keys(this['_conditions']).includes('isDeleted')) {
+		this.find({ isSuspended: { $ne: true } });
+		return next();
+	}
 
 	// do not select users that are deleted or suspended
 	this.find({ $or: [{ isDeleted: { $ne: true } }, { isSuspended: { $ne: true } }] });

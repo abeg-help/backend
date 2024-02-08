@@ -1,5 +1,4 @@
 import { twoFactorTypeEnum } from '@/common/constants';
-import type { IUser } from '@/common/interfaces';
 import {
 	AppError,
 	AppResponse,
@@ -14,7 +13,6 @@ import {
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import { Request, Response } from 'express';
-import { Require_id } from 'mongoose';
 
 export const complete2faSetup = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;
@@ -28,7 +26,7 @@ export const complete2faSetup = catchAsync(async (req: Request, res: Response) =
 		throw new AppError('Unauthorized, kindly login again.');
 	}
 
-	if (user?.twoFA.active) {
+	if (user?.twoFA?.active) {
 		throw new AppError('2FA is already active', 400);
 	}
 
@@ -73,12 +71,8 @@ export const complete2faSetup = catchAsync(async (req: Request, res: Response) =
 		'twoFA.recoveryCode': hashedRecoveryCode,
 	});
 
-	const userFromCache = await getFromCache<Require_id<IUser>>(user._id.toString());
-
-	if (userFromCache) {
-		// update cache
-		await setCache(user._id.toString()!, toJSON({ ...userFromCache, twoFA: { active: true } }, []));
-	}
+	// update cache
+	await setCache(user._id.toString()!, toJSON({ ...user, twoFA: { active: true } }, []));
 
 	return AppResponse(res, 200, { recoveryCode }, '2FA enabled successfully');
 });

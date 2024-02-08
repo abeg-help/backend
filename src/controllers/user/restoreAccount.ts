@@ -11,24 +11,19 @@ export const restoreAccount = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('Token is required', 400);
 	}
 
-	const decodedToken = await decodeData(token.toString());
+	let decodedToken;
+	try {
+		decodedToken = await decodeData(token.toString());
+	} catch {
+		throw new AppError('Invalid or expired token', 400);
+	}
 
 	if (!decodedToken.token || !decodedToken.id) {
 		throw new AppError('Invalid token', 400);
 	}
 
-	const user = await UserModel.findOne({
-		_id: decodedToken.id,
-		isDeleted: true,
-		accountRestoreToken: decodedToken.token,
-	});
-
-	if (!user) {
-		throw new AppError('Invalid token', 400);
-	}
-
-	await UserModel.findOneAndUpdate(
-		{ _id: decodedToken.id, isDeleted: true },
+	const user = await UserModel.findOneAndUpdate(
+		{ _id: decodedToken.id, isDeleted: true, accountRestoreToken: decodedToken.token },
 		{
 			isDeleted: false,
 			passwordResetRetries: 0,
@@ -40,12 +35,16 @@ export const restoreAccount = catchAsync(async (req: Request, res: Response) => 
 		}
 	);
 
+	if (!user) {
+		throw new AppError('Invalid or expired token', 400);
+	}
+
 	await addEmailToQueue({
 		type: 'restoreAccount',
 		data: {
-			to: user.email,
+			to: user?.email,
 			name: user?.firstName || user?.lastName || 'User',
-			loginLink: `${req.get('Referrer')}/login`,
+			loginLink: `${req.get('Referrer')}/signin`,
 		},
 	});
 

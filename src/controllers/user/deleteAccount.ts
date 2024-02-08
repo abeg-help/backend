@@ -1,4 +1,4 @@
-import { AppError, AppResponse, generateRandomString, hashData, setCache, setCookie } from '@/common/utils';
+import { AppError, AppResponse, generateRandomString, hashData, removeFromCache, setCookie } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import { addEmailToQueue } from '@/queues';
@@ -15,7 +15,7 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 	const hashedAccountRestorationToken = hashData(
 		{
 			token: accountRestorationToken,
-			id: user?._id.toString(),
+			id: user?._id?.toString(),
 		},
 		{
 			expiresIn: '30d',
@@ -42,7 +42,8 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	// clear cache and cookies
-	await setCache(user?._id.toString(), {});
+	await removeFromCache(user?._id?.toString());
+
 	setCookie(res, 'abegAccessToken', 'expired', { maxAge: -1 });
 	setCookie(res, 'abegRefreshToken', 'expired', { maxAge: -1 });
 

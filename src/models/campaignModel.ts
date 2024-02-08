@@ -72,11 +72,29 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 				reason: String,
 			},
 		],
+		isDeleted: {
+			type: Boolean,
+			default: false,
+			select: false,
+		},
 	},
 	{ timestamps: true }
 );
 
 campaignSchema.index({ title: 'text' });
 campaignSchema.index({ creator: 1 });
+
+// only pick campaigns that are not deleted or suspended
+campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {
+	// pick deleted campaigns if the query has isDeleted
+	if (Object.keys(this['_conditions']).includes('isDeleted')) {
+		this.find({ isSuspended: { $ne: true } });
+		return next();
+	}
+
+	// do not select campaigns that are deleted or suspended
+	this.find({ $or: [{ isDeleted: { $ne: true } }, { isSuspended: { $ne: true } }] });
+	next();
+});
 
 export const campaignModel = (mongoose.models.Campaign as campaignModel) || mongoose.model('Campaign', campaignSchema);

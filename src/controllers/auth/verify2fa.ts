@@ -78,6 +78,10 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		{ new: true }
 	)) as IUser;
 
+	if (!updatedUser) {
+		throw new AppError('Unable to complete request, try again later', 400);
+	}
+
 	await setCache(user._id.toString(), { ...user, ...toJSON(updatedUser, ['password']) });
 
 	return AppResponse(res, 200, toJSON(updatedUser), '2FA verified successfully');

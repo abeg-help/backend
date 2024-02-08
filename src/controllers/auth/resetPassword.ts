@@ -1,4 +1,4 @@
-import { AppError, AppResponse, decodeData, hashPassword } from '@/common/utils';
+import { AppError, AppResponse, decodeData, hashPassword, removeFromCache } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import { addEmailToQueue } from '@/queues';
@@ -36,7 +36,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 	const hashedPassword = await hashPassword(password);
 
-	await UserModel.findByIdAndUpdate(
+	const updatedUser = await UserModel.findByIdAndUpdate(
 		user._id,
 		{
 			password: hashedPassword,
@@ -49,8 +49,13 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 		},
 		{
 			runValidators: true,
+			new: true,
 		}
 	);
+
+	if (!updatedUser) {
+		throw new AppError('Password reset failed', 400);
+	}
 
 	// send password reset complete email
 	addEmailToQueue({
@@ -60,6 +65,9 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 			priority: 'high',
 		},
 	});
+
+	// update the cache
+	await removeFromCache(updatedUser._id.toString());
 
 	return AppResponse(res, 200, null, 'Password reset successfully');
 });
