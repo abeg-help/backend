@@ -65,7 +65,7 @@ export enum Category {
 	Medical = 'Medical',
 	Volunteer = 'Volunteer',
 	Education = 'Education',
-	Event = ' Event',
+	Event = 'Event',
 	Wedding = 'Wedding',
 	Others = 'Others',
 }
