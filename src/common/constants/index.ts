@@ -52,7 +52,7 @@ export enum Country {
 	GHANA = 'GHANA',
 	MALI = 'MALI',
 	LIBERIA = 'LIBERIA',
-	GAMBIA = ' GAMBIA ',
+	GAMBIA = ' GAMBIA',
 	CAMEROON = 'CAMEROON',
 }
 
@@ -65,7 +65,7 @@ export enum Category {
 	Medical = 'Medical',
 	Volunteer = 'Volunteer',
 	Education = 'Education',
-	Event = ' Event',
+	Event = 'Event',
 	Wedding = 'Wedding',
 	Others = 'Others',
 }

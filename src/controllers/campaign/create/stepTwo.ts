@@ -40,7 +40,7 @@ export const stepTwo = async (req: Request, res: Response) => {
 	);
 
 	if (!updatedCampaign) {
-		throw new AppError(`Unable to process request , try again later`, 404);
+		throw new AppError(`Unable to process request, try again later`, 404);
 	}
 
 	AppResponse(res, 200, updatedCampaign, 'Proceed to step 3');
