@@ -52,7 +52,7 @@ export enum Country {
 	GHANA = 'GHANA',
 	MALI = 'MALI',
 	LIBERIA = 'LIBERIA',
-	GAMBIA = ' GAMBIA ',
+	GAMBIA = 'GAMBIA',
 	CAMEROON = 'CAMEROON',
 }
 
