@@ -4,16 +4,23 @@ import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const stepOne = async (req: Request, res: Response) => {
-	const { country, tags, categoryId } = req.body;
+	const { country, tags, categoryId, campaignId } = req.body;
 	const { user } = req;
-	const { id } = req.query;
 
 	if (!country || !tags || !categoryId) {
 		throw new AppError('Please provide required details', 400);
 	}
 
-	const filter = id ? { _id: id, isComplete: false, creator: user?._id } : { isComplete: false, creator: user?._id };
-	const update = { country, tags, categoryId };
+	const existingCampaign = await campaignModel.findOne({ isComplete: false, creator: user?._id });
+
+	if (existingCampaign && !categoryId) {
+		throw new AppError('Only one incomplete campaign allowed at a time.', 400);
+	}
+
+	const filter = campaignId
+		? { _id: campaignId, isComplete: false, creator: user?._id }
+		: { isComplete: false, creator: user?._id };
+	const update = { country, tags, categoryId, creator: user?._id };
 
 	// This creates a new document if not existing {upsert: true} or updates the existing document if it exists based on the filter
 	const createdCampaign: ICampaign | null = await campaignModel.findOneAndUpdate(filter, update, {
