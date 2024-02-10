@@ -5,54 +5,61 @@ import BadWords from 'bad-words';
 import * as natural from 'natural';
 
 export const processCampaign = async (id: string) => {
-	const reasons: {
-		type: FlaggedReasonTypeEnum;
-		reason: string;
-	}[] = [];
+	try {
+		console.log('campaign processing');
 
-	const campaign = await campaignModel.findById(id);
+		const reasons: {
+			type: FlaggedReasonTypeEnum;
+			reason: string;
+		}[] = [];
 
-	if (!campaign) {
-		throw new AppError('Campaign not found', 404);
+		const campaign = await campaignModel.findById(id);
+
+		console.log({ campaign });
+
+		if (!campaign) {
+			throw new AppError('Campaign not found', 404);
+		}
+
+		// perform checks
+		const [titleIsInAppropriate, storyIsInAppropriate, titleAndStoryAreSimilar, similarCampaignExist] =
+			await Promise.all([
+				containsInappropriateContent(campaign.title),
+				containsInappropriateContent(campaign.story),
+				checkSimilarity(campaign.title, campaign.story),
+				checkForSimilarCampaign(campaign.creator.toString(), campaign.title),
+			]);
+
+		if (titleIsInAppropriate || storyIsInAppropriate) {
+			reasons.push({
+				type: FlaggedReasonTypeEnum.INAPPROPRIATE_CONTENT,
+				reason: `Campaign ${titleIsInAppropriate ? 'title' : 'story'} contains In-appropriate content`,
+			});
+		}
+
+		if (!titleAndStoryAreSimilar) {
+			reasons.push({
+				type: FlaggedReasonTypeEnum.MISMATCH,
+				reason: `Campaign story does not match with title`,
+			});
+		}
+
+		if (similarCampaignExist) {
+			reasons.push({
+				type: FlaggedReasonTypeEnum.EXISTS,
+				reason: `Similar campaign already exists in your account.`,
+			});
+		}
+
+		campaign.flaggedReasons = reasons;
+		campaign.isFlagged = reasons.length > 0;
+		campaign.status = reasons.length > 0 ? StatusEnum.IN_REVIEW : StatusEnum.APPROVED;
+		await campaign.save();
+
+		return campaign;
+	} catch (e) {
+		console.log('processCampaign error : ', e);
 	}
-
-	// perform checks
-	const [titleIsInAppropriate, storyIsInAppropriate, titleAndStoryAreSimilar, similarCampaignExist] = await Promise.all(
-		[
-			containsInappropriateContent(campaign.title),
-			containsInappropriateContent(campaign.story),
-			checkSimilarity(campaign.title, campaign.story),
-			checkForSimilarCampaign(campaign.creator.toString(), campaign.title),
-		]
-	);
-
-	if (titleIsInAppropriate || storyIsInAppropriate) {
-		reasons.push({
-			type: FlaggedReasonTypeEnum.INAPPROPRIATE_CONTENT,
-			reason: `Campaign ${titleIsInAppropriate ? 'title' : 'story'} contains In-appropriate content`,
-		});
-	}
-
-	if (!titleAndStoryAreSimilar) {
-		reasons.push({
-			type: FlaggedReasonTypeEnum.MISMATCH,
-			reason: `Campaign story does not match with title`,
-		});
-	}
-
-	if (similarCampaignExist) {
-		reasons.push({
-			type: FlaggedReasonTypeEnum.EXISTS,
-			reason: `Similar campaign already exists in your account.`,
-		});
-	}
-
-	campaign.flaggedReasons = reasons;
-	campaign.isFlagged = reasons.length > 0 ? true : false;
-	campaign.status = reasons.length > 0 ? StatusEnum.PENDING_APPROVAL : StatusEnum.SUCCESS;
-	await campaign.save();
-
-	return campaign;
 };
 
 function containsInappropriateContent(value: string): boolean {
@@ -97,3 +104,5 @@ async function checkForSimilarCampaign(creator: string, title: string): Promise<
 
 	return false;
 }
+
+processCampaign('65c789216e8ed33c5076b9d9');

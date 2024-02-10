@@ -1,7 +1,7 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Job, Queue, Worker, WorkerOptions } from 'bullmq';
 import IORedis from 'ioredis';
-import { processCampaign } from './handlers/processCampaign';
+import { processCampaign } from '@/queues/handlers/processCampaign';
 
 export enum CampaignJobEnum {
 	PROCESS_CAMPAIGN_REVIEW = 'PROCESS_CAMPAIGN_REVIEW',
@@ -45,8 +45,12 @@ const workerOptions: WorkerOptions = {
 const campaignWorker = new Worker(
 	'campaignQueue',
 	async (job: Job) => {
-		if (job.name === CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW) {
-			await processCampaign(job.data.id);
+		try {
+			if (job.name === CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW) {
+				await processCampaign(job.data.id);
+			}
+		} catch (e) {
+			console.log('Error processing job', e);
 		}
 	},
 	workerOptions

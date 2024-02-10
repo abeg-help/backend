@@ -2,6 +2,7 @@ import type { ICampaign } from '@/common/interfaces';
 import { AppError, AppResponse } from '@/common/utils';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
+import { StatusEnum } from '@/common/constants';
 
 export const stepOne = async (req: Request, res: Response) => {
 	const { country, tags, categoryId } = req.body;
@@ -13,7 +14,7 @@ export const stepOne = async (req: Request, res: Response) => {
 	}
 
 	const userCampaign = await campaignModel.findOne(
-		id ? { _id: id, isComplete: false, creator: user?._id } : { isComplete: false, creator: user?._id }
+		id ? { _id: id, creator: user?._id } : { creator: user?._id, status: StatusEnum.DRAFT }
 	);
 
 	let createdCampaign: ICampaign | null;
