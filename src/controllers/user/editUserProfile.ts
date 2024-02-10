@@ -34,5 +34,6 @@ export const editUserProfile = catchAsync(async (req: Request, res: Response) =>
 	// update the cached user
 	await setCache(updatedUser?._id?.toString(), { ...toJSON(updatedUser, ['password']), ...req.user });
 
+	await setCache(`Updated User: ${updatedUser?._id.toString()}`, toJSON(updatedUser, ['password']), 3600);
 	AppResponse(res, 200, toJSON(updatedUser), 'Profile Successfully Updated');
 });
