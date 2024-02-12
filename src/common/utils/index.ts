@@ -8,4 +8,4 @@ export * from './appResponse';
 export * from './authenticate';
 export * from './aws';
 export * from './helper';
-export * from './queryHandler';
+export { default as QueryHandler } from './queryHandler';

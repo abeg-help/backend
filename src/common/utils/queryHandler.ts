@@ -9,7 +9,7 @@ interface QueryString {
 	[key: string]: string | undefined;
 }
 
-class QueryHandler<T extends Document> {
+export default class QueryHandler<T extends Document> {
 	private query: Query<T[], T>;
 	private queryString: QueryString;
 	private excludedFields: string[];
@@ -61,5 +61,3 @@ class QueryHandler<T extends Document> {
 		return await this.query;
 	}
 }
-
-export { QueryHandler };
