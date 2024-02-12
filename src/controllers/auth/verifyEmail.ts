@@ -1,5 +1,5 @@
 import type { IUser } from '@/common/interfaces';
-import { AppError, AppResponse, decodeData, getFromCache, setCache, toJSON } from '@/common/utils';
+import { AppError, AppResponse, decodeData, getFromCache, removeFromCache } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import { Request, Response } from 'express';
@@ -29,7 +29,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Verification failed!', 400);
 	}
 
-	await setCache(updatedUser._id.toString(), toJSON(updatedUser, ['password']));
+	await removeFromCache(updatedUser._id.toString());
 
 	AppResponse(res, 200, {}, 'Account successfully verified!');
 });

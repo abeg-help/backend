@@ -6,25 +6,21 @@ import { DateTime } from 'luxon';
 import { StatusEnum } from '@/common/constants';
 
 export const stepThree = async (req: Request, res: Response) => {
-	const { story, storyHtml } = req.body;
+	const { story, storyHtml, campaignId } = req.body;
 	const { user } = req;
-	const { id } = req.query;
+
 	const files = req.files as Express.Multer.File[];
 
-	if (!id) {
-		throw new AppError('Id is required');
-	}
-
-	if (!story) {
+	if (!story || !storyHtml || !campaignId) {
 		throw new AppError('Please provide required details', 400);
 	}
 
-	// this enables to ensure user is not trying to update a non-existent or complete campaign from step 3 creation flow
+	// this enable to ensure user is not trying to update a non existent or complete campaign from step 3 creation flow
 	// helps save aws resources by early return
-	const campaignExist = await campaignModel.findOne({ _id: id, creator: user?._id });
+	const campaignExist = await campaignModel.findOne({ _id: campaignId, creator: user?._id });
 
 	if (!campaignExist) {
-		throw new AppError(`Unable to process request , try again later`, 404);
+		throw new AppError(`Campaign does not exist`, 404);
 	}
 
 	const uploadedFiles =
@@ -32,7 +28,7 @@ export const stepThree = async (req: Request, res: Response) => {
 			? await Promise.all([
 					...files.map(async (file, index) => {
 						const dateInMilliseconds = DateTime.now().toMillis();
-						const fileName = `${user!._id}/campaigns/${id}/${index}_${dateInMilliseconds}.${
+						const fileName = `${user!._id}/campaigns/${campaignId}/${index}_${dateInMilliseconds}.${
 							file.mimetype.split('/')[1]
 						}`;
 
@@ -46,7 +42,7 @@ export const stepThree = async (req: Request, res: Response) => {
 			: [];
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
-		{ _id: id, creator: user?._id },
+		{ _id: campaignId, creator: user?._id },
 		{
 			images: [...campaignExist.images, ...uploadedFiles],
 			story,
@@ -57,13 +53,11 @@ export const stepThree = async (req: Request, res: Response) => {
 	);
 
 	if (!updatedCampaign) {
-		throw new AppError(`Unable to process request , try again later`, 404);
+		throw new AppError(`Unable to update campaign, try again later`, 404);
 	}
 
-	console.log('updated campaign id', updatedCampaign._id.toString());
-
 	// add campaign to queue for auto processing and check
-	await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign._id.toString() });
+	await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign._id });
 
 	AppResponse(res, 200, updatedCampaign, 'Campaign Created Successfully');
 };

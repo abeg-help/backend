@@ -6,15 +6,12 @@ import * as natural from 'natural';
 
 export const processCampaign = async (id: string) => {
 	try {
-		console.log('campaign processing');
-
 		const reasons: {
 			type: FlaggedReasonTypeEnum;
 			reason: string;
 		}[] = [];
 
 		const campaign = await campaignModel.findById(id);
-
 		console.log({ campaign });
 
 		if (!campaign) {
@@ -80,10 +77,18 @@ function checkSimilarity(title: string, story: string): boolean {
 	const titleTokens = tokenizer.tokenize(title.toLocaleLowerCase());
 	const storyTokens = tokenizer.tokenize(story.toLowerCase());
 
+	console.log('similarity check started');
+	console.log(titleTokens, storyTokens);
+
 	// calculate the Jac card similarity coefficient
 	const intersection = titleTokens?.filter((token) => storyTokens?.includes(token));
+	console.log('intersection  started');
+	console.log(intersection);
 	const union = [...new Set([...titleTokens!, ...storyTokens!])];
+	console.log(union);
+
 	const similarity = intersection!.length / union.length;
+	console.log(similarity);
 
 	const threshold = 0.5;
 
@@ -104,5 +109,3 @@ async function checkForSimilarCampaign(creator: string, title: string): Promise<
 
 	return false;
 }
-
-processCampaign('65c789216e8ed33c5076b9d9');

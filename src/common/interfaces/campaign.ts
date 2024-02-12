@@ -26,8 +26,10 @@ export interface ICampaign {
 		type: FlaggedReasonTypeEnum;
 		reason: string;
 	}>;
+	isDeleted: boolean;
 }
 
 export interface ICampaignCategory {
 	name: string;
+	isDeleted: boolean;
 }

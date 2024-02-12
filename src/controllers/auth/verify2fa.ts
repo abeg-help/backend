@@ -19,7 +19,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 	const { user } = req;
 	const { token } = req.body;
 
-	let userFromDb = await UserModel.findOne({ email: user?.email }).select(
+	const userFromDb = await UserModel.findOne({ email: user?.email }).select(
 		'+twoFA.secret +twoFA.recoveryCode +lastLogin'
 	);
 
@@ -77,6 +77,10 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		},
 		{ new: true }
 	)) as IUser;
+
+	if (!updatedUser) {
+		throw new AppError('Unable to complete request, try again later', 400);
+	}
 
 	await setCache(user._id.toString(), { ...user, ...toJSON(updatedUser, ['password']) });
 

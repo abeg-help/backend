@@ -2,6 +2,7 @@ import { createCampaign, createCategory, getCategories, reviewCampaign } from '@
 import { protect } from '@/middlewares';
 import express from 'express';
 import { multerUpload } from '../common/config/multer';
+import { deleteCampaign } from '../controllers/campaign/delete';
 
 const router = express.Router();
 
@@ -10,4 +11,5 @@ router.get('/categories', getCategories);
 router.post('/category/create', createCategory);
 router.post('/create/:step', multerUpload.array('photos'), createCampaign);
 router.post('/review/:id', reviewCampaign);
+router.post('/delete', deleteCampaign);
 export { router as campaignRouter };
