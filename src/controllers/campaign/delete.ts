@@ -4,7 +4,7 @@ import { catchAsync } from '@/middlewares';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 
-export const createCampaign = catchAsync(async (req: Request, res: Response) => {
+export const deleteCampaign = catchAsync(async (req: Request, res: Response) => {
 	const { campaignId } = req.body;
 	const { user } = req;
 
@@ -16,7 +16,7 @@ export const createCampaign = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('Unauthorized, kindly login again.');
 	}
 
-	const deleteCampaign = await campaignModel.findOneAndUpdate(
+	const deletedCampaign = await campaignModel.findOneAndUpdate(
 		{
 			_id: campaignId,
 			...(user.role === Role.User && { creator: user._id }), // only allow user to delete their own campaign if not SuperUser | Admin
@@ -24,7 +24,7 @@ export const createCampaign = catchAsync(async (req: Request, res: Response) => 
 		{ $set: { isDeleted: true } }
 	);
 
-	if (!deleteCampaign) {
+	if (!deletedCampaign) {
 		throw new AppError('Campaign not found', 404);
 	}
 
