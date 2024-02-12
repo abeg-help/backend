@@ -11,11 +11,11 @@ export const processCampaign = async (id: string) => {
 	}[] = [];
 
 	const campaign = await campaignModel.findById(id);
-
+	console.log(campaign);
 	if (!campaign) {
 		throw new AppError('Campaign not found', 404);
 	}
-
+	console.log('check started');
 	// perform checks
 	const [titleIsInAppropriate, storyIsInAppropriate, titleAndStoryAreSimilar, similarCampaignExist] = await Promise.all(
 		[
@@ -25,6 +25,8 @@ export const processCampaign = async (id: string) => {
 			checkForSimilarCampaign(campaign.creator.toString(), campaign.title),
 		]
 	);
+
+	console.log(titleIsInAppropriate, storyIsInAppropriate, titleAndStoryAreSimilar, similarCampaignExist);
 
 	if (titleIsInAppropriate || storyIsInAppropriate) {
 		reasons.push({
@@ -73,10 +75,18 @@ function checkSimilarity(title: string, story: string): boolean {
 	const titleTokens = tokenizer.tokenize(title.toLocaleLowerCase());
 	const storyTokens = tokenizer.tokenize(story.toLowerCase());
 
+	console.log('similarity check started');
+	console.log(titleTokens, storyTokens);
+
 	// calculate the Jac card similarity coefficient
 	const intersection = titleTokens?.filter((token) => storyTokens?.includes(token));
+	console.log('intersection  started');
+	console.log(intersection);
 	const union = [...new Set([...titleTokens!, ...storyTokens!])];
+	console.log(union);
+
 	const similarity = intersection!.length / union.length;
+	console.log(similarity);
 
 	const threshold = 0.5;
 

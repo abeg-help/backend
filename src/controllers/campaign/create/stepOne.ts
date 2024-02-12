@@ -7,8 +7,8 @@ export const stepOne = async (req: Request, res: Response) => {
 	const { country, tags, categoryId, campaignId } = req.body;
 	const { user } = req;
 
-	if (!country || !tags || !categoryId) {
-		throw new AppError('Please provide required details', 400);
+	if (!country || (tags && !Array.isArray(tags)) || !categoryId) {
+		throw new AppError('Country and categoryId are required', 400);
 	}
 
 	const existingCampaign = await campaignModel.findOne({ isComplete: false, creator: user?._id });

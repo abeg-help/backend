@@ -84,6 +84,7 @@ export const authenticate = async ({
 				currentUser,
 			};
 		} catch (error) {
+			console.log(error);
 			throw new AppError('Session expired, please log in again', 401);
 		}
 	};

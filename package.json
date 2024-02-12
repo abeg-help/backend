@@ -33,6 +33,7 @@
 		"@bull-board/express": "^5.9.1",
 		"@types/luxon": "^3.3.4",
 		"@types/multer": "^1.4.11",
+		"@xenova/transformers": "^2.15.0",
 		"aws-sdk": "^2.1502.0",
 		"bad-words": "^3.0.4",
 		"bcryptjs": "^2.4.3",

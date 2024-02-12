@@ -66,6 +66,7 @@ export const mainSchema = z.object({
 	deadline: z.custom((value) => dateFromString(value as string)),
 	story: z.string().min(100),
 	storyHtml: z.string(),
+	campaignId: z.string(),
 });
 
 // Define the partial for partial validation
