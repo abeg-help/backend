@@ -12,6 +12,7 @@ export const processCampaign = async (id: string) => {
 
 	const campaign = await campaignModel.findById(id);
 	console.log(campaign);
+
 	if (!campaign) {
 		throw new AppError('Campaign not found', 404);
 	}
