@@ -13,7 +13,7 @@ export const stepOne = async (req: Request, res: Response) => {
 
 	const existingCampaign = await campaignModel.findOne({ isComplete: false, creator: user?._id });
 
-	if (existingCampaign && !categoryId) {
+	if (existingCampaign && !campaignId) {
 		throw new AppError('Only one incomplete campaign allowed at a time.', 400);
 	}
 
