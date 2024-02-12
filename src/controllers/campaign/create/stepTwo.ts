@@ -28,7 +28,7 @@ export const stepTwo = async (req: Request, res: Response) => {
 	}
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
-		{ _id: campaignId, isComplete: false, creator: user?._id },
+		{ _id: campaignId, creator: user?._id },
 		{
 			title,
 			fundraiser,

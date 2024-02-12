@@ -46,18 +46,10 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 			type: mongoose.Types.ObjectId,
 			ref: 'User',
 		},
-		isComplete: {
-			type: Boolean,
-			default: false,
-		},
-		isPublished: {
-			type: Boolean,
-			default: false,
-		},
 		status: {
 			type: String,
 			enum: [...Object.values(StatusEnum)],
-			default: StatusEnum.PENDING_APPROVAL,
+			default: StatusEnum.DRAFT,
 		},
 		isFlagged: {
 			type: Boolean,

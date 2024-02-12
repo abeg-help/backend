@@ -19,7 +19,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 	const { user } = req;
 	const { token } = req.body;
 
-	let userFromDb = await UserModel.findOne({ email: user?.email }).select(
+	const userFromDb = await UserModel.findOne({ email: user?.email }).select(
 		'+twoFA.secret +twoFA.recoveryCode +lastLogin'
 	);
 

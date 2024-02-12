@@ -3,6 +3,7 @@ import { campaignModel } from '@/models';
 import { CampaignJobEnum, campaignQueue } from '@/queues';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
+import { StatusEnum } from '@/common/constants';
 
 export const stepThree = async (req: Request, res: Response) => {
 	const { story, storyHtml, campaignId } = req.body;
@@ -17,33 +18,37 @@ export const stepThree = async (req: Request, res: Response) => {
 
 	// this enable to ensure user is not trying to update a non existent or complete campaign from step 3 creation flow
 	// helps save aws resources by early return
-	const campaignExist = await campaignModel.findOne({ _id: campaignId, isComplete: false, creator: user?._id });
+	const campaignExist = await campaignModel.findOne({ _id: campaignId, creator: user?._id });
 
 	if (!campaignExist) {
 		throw new AppError(`Campaign does not exist`, 404);
 	}
 
-	const uploadedFiles = await Promise.all([
-		...files.map(async (file, index) => {
-			const dateInMilliseconds = DateTime.now().toMillis();
-			const fileName = `${user!._id}/campaigns/${campaignId}/${index}_${dateInMilliseconds}.${
-				file.mimetype.split('/')[1]
-			}`;
+	const uploadedFiles =
+		files.length > 0
+			? await Promise.all([
+					...files.map(async (file, index) => {
+						const dateInMilliseconds = DateTime.now().toMillis();
+						const fileName = `${user!._id}/campaigns/${campaignId}/${index}_${dateInMilliseconds}.${
+							file.mimetype.split('/')[1]
+						}`;
 
-			return await uploadSingleFile({
-				fileName,
-				buffer: file.buffer,
-				mimetype: file.mimetype,
-			});
-		}),
-	]);
+						return await uploadSingleFile({
+							fileName,
+							buffer: file.buffer,
+							mimetype: file.mimetype,
+						});
+					}),
+				])
+			: [];
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
-		{ _id: campaignId, isComplete: false, creator: user?._id },
+		{ _id: campaignId, creator: user?._id },
 		{
-			...(uploadedFiles.length > 0 && { images: uploadedFiles }),
+			images: [...campaignExist.images, ...uploadedFiles],
 			story,
 			storyHtml,
+			status: StatusEnum.IN_REVIEW,
 		},
 		{ new: true }
 	);

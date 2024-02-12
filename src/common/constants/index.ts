@@ -76,12 +76,10 @@ export enum FundraiserEnum {
 }
 
 export enum StatusEnum {
-	SUCCESS = 'Success',
-	ACTIVE = 'Active',
+	IN_REVIEW = 'In Review',
+	APPROVED = 'Approved',
+	REJECTED = 'Rejected',
 	DRAFT = 'Draft',
-	PENDING_APPROVAL = 'Pending Approval',
-	FAILED = 'Failed',
-	CANCELED = 'Canceled',
 }
 
 export enum FlaggedReasonTypeEnum {

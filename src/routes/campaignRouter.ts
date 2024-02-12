@@ -1,8 +1,8 @@
 import { createCampaign, createCategory, getCategories, reviewCampaign } from '@/controllers';
 import { protect } from '@/middlewares';
 import express from 'express';
-import { multerUpload } from '../common/config/multer';
-import { deleteCampaign } from '../controllers/campaign/delete';
+import { multerUpload } from '@/common/config';
+import { deleteCampaign } from '@/controllers/campaign/delete';
 
 const router = express.Router();
 
