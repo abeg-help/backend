@@ -8,3 +8,4 @@ export * from './appResponse';
 export * from './authenticate';
 export * from './aws';
 export * from './helper';
+export * from './queryHandler';
