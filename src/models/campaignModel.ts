@@ -93,12 +93,12 @@ campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {
 campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {
 	// pick deleted campaigns if the query has isDeleted
 	if (Object.keys(this['_conditions']).includes('isDeleted')) {
-		this.find({ isSuspended: { $ne: true } });
+		this.find({});
 		return next();
 	}
 
 	// do not select campaigns that are deleted or suspended
-	this.find({ $or: [{ isDeleted: { $ne: true } }, { isSuspended: { $ne: true } }] });
+	this.find({ isDeleted: { $ne: true } });
 	next();
 });
 

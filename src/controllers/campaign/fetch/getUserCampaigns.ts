@@ -16,3 +16,4 @@ export const stepOne = async (req: Request, res: Response) => {
 
 	AppResponse(res, 200, campaigns, 'Proceed to step 2');
 };
+0;

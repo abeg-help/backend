@@ -47,7 +47,7 @@ export default class QueryHandler<T extends Document> {
 		return this;
 	}
 
-	paginate(defaultPage: number = 1, defaultLimit: number = 100): QueryHandler<T> {
+	paginate(defaultPage: number = 1, defaultLimit: number = 10): QueryHandler<T> {
 		const page = parseInt(this.queryString.page || '') || defaultPage;
 		const limit = parseInt(this.queryString.limit || '') || defaultLimit;
 		const skip = (page - 1) * limit;

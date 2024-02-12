@@ -51,7 +51,7 @@ export const authenticate = async ({
 		}
 
 		if (!user.isEmailVerified) {
-			throw new AppError('Your email is yet to be verified', 422);
+			throw new AppError('Your email is yet to be verified', 422, `email-unverified:${user.email}`);
 		}
 		// check if user has changed password after the token was issued
 		// if so, invalidate the token
