@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 
 export const stepThree = async (req: Request, res: Response) => {
 	const { story, storyHtml, campaignId } = req.body;
+
 	const { user } = req;
 
 	const files = req.files as Express.Multer.File[];

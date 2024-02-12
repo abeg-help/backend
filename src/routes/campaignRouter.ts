@@ -8,6 +8,6 @@ const router = express.Router();
 router.use(protect);
 router.get('/categories', getCategories);
 router.post('/category/create', createCategory);
-router.post('/create/:step', multerUpload.array('photos'), createCampaign);
+router.post('/create/:step', multerUpload.array('photos', 5), createCampaign);
 router.post('/review/:id', reviewCampaign);
 export { router as campaignRouter };

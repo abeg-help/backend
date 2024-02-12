@@ -19,7 +19,6 @@ export const authenticate = async ({
 	abegAccessToken?: string;
 	abegRefreshToken?: string;
 }): Promise<AuthenticateResult> => {
-	console.log(abegAccessToken, abegRefreshToken);
 	if (!abegRefreshToken) {
 		throw new AppError('Unauthorized', 401);
 	}
