@@ -39,7 +39,7 @@ export const stepThree = async (req: Request, res: Response) => {
 							mimetype: file.mimetype,
 						});
 					}),
-				])
+			  ])
 			: [];
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
