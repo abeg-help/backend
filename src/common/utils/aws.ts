@@ -4,6 +4,16 @@ import AWS from 'aws-sdk';
 import AppError from './appError';
 import { isValidFileNameAwsUpload } from './helper';
 
+if (
+	!ENVIRONMENT.AWS.ACCESS_KEY_ID ||
+	!ENVIRONMENT.AWS.SECRET_ACCESS_KEY ||
+	!ENVIRONMENT.AWS.REGION ||
+	!ENVIRONMENT.AWS.BUCKET_NAME ||
+	!ENVIRONMENT.AWS.CLOUD_FRONT_URL
+) {
+	throw new Error('AWS environment variables are not set');
+}
+
 AWS.config.update({
 	accessKeyId: ENVIRONMENT.AWS.ACCESS_KEY_ID,
 	secretAccessKey: ENVIRONMENT.AWS.SECRET_ACCESS_KEY,

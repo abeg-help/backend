@@ -76,6 +76,18 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 campaignSchema.index({ title: 'text' });
 campaignSchema.index({ creator: 1 });
 
+// Add a virtual populate field for 'donations'
+campaignSchema.virtual('donations', {
+	ref: 'Donation', // The model to use
+	localField: '_id', // Find donations where 'localField'
+	foreignField: 'campaignId', // is equal to 'foreignField'
+	justOne: false, // And only get the first one found,
+	options: {
+		sort: { createdAt: -1 },
+		limit: 10,
+	},
+});
+
 // only pick campaigns that are not deleted or suspended
 campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {
 	// pick deleted campaigns if the query has isDeleted
