@@ -1,14 +1,16 @@
 import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '@/common/constants';
 import type { ICampaign } from '@/common/interfaces';
 import mongoose, { Model } from 'mongoose';
+import mongooseAutopopulate from 'mongoose-autopopulate';
 
 type campaignModel = Model<ICampaign>;
 
 const campaignSchema = new mongoose.Schema<ICampaign>(
 	{
-		categoryId: {
+		category: {
 			type: mongoose.Types.ObjectId,
 			ref: 'CampaignCategory',
+			autopopulate: true,
 		},
 		country: {
 			type: String,
@@ -78,6 +80,8 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 	},
 	{ timestamps: true }
 );
+
+campaignSchema.plugin(mongooseAutopopulate);
 
 campaignSchema.index({ title: 'text' });
 campaignSchema.index({ creator: 1 });

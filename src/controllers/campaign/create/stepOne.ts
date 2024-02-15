@@ -21,7 +21,7 @@ export const stepOne = async (req: Request, res: Response) => {
 	const filter = campaignId
 		? { _id: campaignId, creator: user?._id }
 		: { creator: user?._id, status: StatusEnum.DRAFT };
-	const update = { country, tags, categoryId, creator: user?._id };
+	const update = { country, tags, category: categoryId, creator: user?._id };
 
 	// This creates a new document if not existing {upsert: true} or updates the existing document if it exists based on the filter
 	const createdCampaign: ICampaign | null = await campaignModel.findOneAndUpdate(filter, update, {
