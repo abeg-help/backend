@@ -10,6 +10,7 @@ export interface IUser {
 	password: string;
 	refreshToken: string;
 	photo: string;
+	blurHash: string;
 	role: Role;
 	isProfileComplete: boolean;
 	provider: Provider;

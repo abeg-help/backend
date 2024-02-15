@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		photo: {
 			type: String,
 		},
+		blurHash: {
+			type: String,
+		},
 		role: {
 			type: String,
 			enum: Object.values(Role),

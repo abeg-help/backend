@@ -17,16 +17,21 @@ export const updateProfilePhoto = catchAsync(async (req: Request, res: Response)
 	const dateInMilliseconds = DateTime.now().toMillis();
 	const fileName = `${user?._id}/profile-images/${dateInMilliseconds}.${file.mimetype.split('/')[1]}`;
 
-	const photoUrl = await uploadSingleFile({
+	const { secureUrl, blurHash } = await uploadSingleFile({
 		fileName,
 		buffer: file.buffer,
 		mimetype: file.mimetype,
 	});
 
+	if (!secureUrl) {
+		throw new AppError('Error uploading file', 500);
+	}
+
 	const updatedUser = (await UserModel.findByIdAndUpdate(
 		user?._id,
 		{
-			photo: photoUrl,
+			photo: secureUrl,
+			blurHash,
 		},
 		{ new: true }
 	)) as Require_id<IUser>;
@@ -35,7 +40,7 @@ export const updateProfilePhoto = catchAsync(async (req: Request, res: Response)
 		throw new AppError('User not found for update', 404);
 	}
 
-	await setCache(updatedUser._id.toString()!, { ...user, photo: photoUrl });
+	await setCache(updatedUser._id.toString()!, { ...user, photo: secureUrl, blurHash });
 
 	return AppResponse(res, 200, toJSON(updatedUser), 'Profile photo updated successfully');
 });
