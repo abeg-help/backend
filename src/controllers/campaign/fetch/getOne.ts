@@ -1,10 +1,11 @@
 import { ICampaign } from '@/common/interfaces';
 import { AppResponse, getFromCache, setCache } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 import { Require_id } from 'mongoose';
 
-export const getOneCampaign = async (req: Request, res: Response) => {
+export const getOneCampaign = catchAsync(async (req: Request, res: Response) => {
 	const { campaignId } = req.body;
 
 	if (!campaignId) {
@@ -25,4 +26,4 @@ export const getOneCampaign = async (req: Request, res: Response) => {
 	}
 
 	AppResponse(res, 200, campaign, 'Campaigns fetched successfully!');
-};
+});

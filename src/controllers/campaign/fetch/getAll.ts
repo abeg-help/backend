@@ -1,9 +1,10 @@
 import { Role } from '@/common/constants';
 import { AppResponse, QueryHandler, authenticate, setCookie } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 
-export const getAllCampaigns = async (req: Request, res: Response) => {
+export const getAllCampaigns = catchAsync(async (req: Request, res: Response) => {
 	const { query, params } = req;
 
 	const userId = params.userId;
@@ -40,4 +41,4 @@ export const getAllCampaigns = async (req: Request, res: Response) => {
 	const campaigns = await features.filter().sort().limitFields().paginate().populateFields().execute();
 
 	AppResponse(res, 200, campaigns, 'Campaigns fetched successfully!');
-};
+});

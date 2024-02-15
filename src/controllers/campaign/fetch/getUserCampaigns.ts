@@ -1,8 +1,9 @@
 import { AppError, AppResponse, QueryHandler } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 
-export const stepOne = async (req: Request, res: Response) => {
+export const stepOne = catchAsync(async (req: Request, res: Response) => {
 	const { user, query } = req;
 
 	if (!user) {
@@ -15,5 +16,4 @@ export const stepOne = async (req: Request, res: Response) => {
 	const campaigns = await features.filter().sort().limitFields().paginate().execute();
 
 	AppResponse(res, 200, campaigns, 'Proceed to step 2');
-};
-0;
+});
