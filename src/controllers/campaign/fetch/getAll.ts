@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 export const getAllCampaigns = catchAsync(async (req: Request, res: Response) => {
 	const { query, params } = req;
 
-	const userId = params.userId;
+	const userId = params?.userId;
 
 	// TODO:
 	// Add geographic location filter

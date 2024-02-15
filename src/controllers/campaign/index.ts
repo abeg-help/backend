@@ -5,3 +5,7 @@ export * from './create/stepOne';
 export * from './create/stepThree';
 export * from './create/stepTwo';
 export * from './review';
+export * from './fetch/featured';
+export * from './fetch/getOne';
+export * from './fetch/getAll';
+export * from './delete';

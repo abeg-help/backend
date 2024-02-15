@@ -3,7 +3,7 @@ import { catchAsync } from '@/middlewares';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 
-export const stepOne = catchAsync(async (req: Request, res: Response) => {
+export const featuredCampaigns = catchAsync(async (req: Request, res: Response) => {
 	const { query } = req;
 
 	// Create a new QueryHandler instance

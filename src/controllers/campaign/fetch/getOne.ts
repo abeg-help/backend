@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 import { Require_id } from 'mongoose';
 
 export const getOneCampaign = catchAsync(async (req: Request, res: Response) => {
-	const { campaignId } = req.body;
+	const { campaignId } = req.params;
 
 	if (!campaignId) {
 		return AppResponse(res, 400, null, 'Please provide a campaign url');
