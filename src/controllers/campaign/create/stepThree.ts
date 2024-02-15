@@ -33,11 +33,12 @@ export const stepThree = async (req: Request, res: Response) => {
 							file.mimetype.split('/')[1]
 						}`;
 
-						return await uploadSingleFile({
+						const { secureUrl, blurHash } = await uploadSingleFile({
 							fileName,
 							buffer: file.buffer,
 							mimetype: file.mimetype,
 						});
+						return { secureUrl, blurHash };
 					}),
 			  ])
 			: [];

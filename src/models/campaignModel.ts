@@ -33,7 +33,13 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 		},
 		images: [
 			{
-				type: String,
+				secureUrl: {
+					type: String,
+					required: true,
+				},
+				blurHash: {
+					type: String,
+				},
 			},
 		],
 		story: {
