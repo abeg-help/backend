@@ -32,4 +32,5 @@ export interface ICampaign {
 export interface ICampaignCategory {
 	name: string;
 	isDeleted: boolean;
+	image: string;
 }

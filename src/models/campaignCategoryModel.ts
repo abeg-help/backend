@@ -10,6 +10,11 @@ const campaignCategorySchema = new mongoose.Schema<ICampaignCategory>(
 			required: true,
 			unique: true,
 		},
+		image: String,
+		isDeleted: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
