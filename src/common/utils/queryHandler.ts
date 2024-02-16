@@ -72,7 +72,7 @@ export default class QueryHandler<T extends Document> {
 		return this;
 	}
 
-	paginate(defaultPage: number = 1, defaultLimit: number = 10): QueryHandler<T> {
+	paginate(defaultPage: number = 1, defaultLimit: number = 50): QueryHandler<T> {
 		const page = parseInt(this.queryString.page || '') || defaultPage;
 		const limit = parseInt(this.queryString.limit || '') || defaultLimit;
 		const skip = (page - 1) * limit;
@@ -82,14 +82,15 @@ export default class QueryHandler<T extends Document> {
 		return this;
 	}
 
-	populateFields(): QueryHandler<T> {
-		if (this.queryString.populate) {
-			const populateFields = this.queryString.populate.split(',').join(' ');
-			this.query = this.query.populate(populateFields);
-		}
+	// populateFields(): QueryHandler<T> {
+	// 	if (this.queryString.populate) {
+	// 		const populateFields = this.queryString.populate.split(',').join(' ');
+	// 		console.log(populateFields);
+	// 		this.query = this.query.populate(populateFields);
+	// 	}
 
-		return this;
-	}
+	// 	return this;
+	// }
 
 	async execute(): Promise<T[]> {
 		return await this.query;
