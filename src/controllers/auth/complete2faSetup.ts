@@ -12,6 +12,7 @@ import {
 } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
+import { addEmailToQueue } from '@/queues';
 import { Request, Response } from 'express';
 
 export const complete2faSetup = catchAsync(async (req: Request, res: Response) => {
@@ -69,6 +70,16 @@ export const complete2faSetup = catchAsync(async (req: Request, res: Response) =
 	await UserModel.findByIdAndUpdate(user?._id, {
 		'twoFA.active': true,
 		'twoFA.recoveryCode': hashedRecoveryCode,
+	});
+
+	// added the email to queue
+	await addEmailToQueue({
+		type: 'recoveryKeysEmail',
+		data: {
+			to: user.email,
+			name: user.firstName,
+			recoveryCode: recoveryCode,
+		},
 	});
 
 	// update cache

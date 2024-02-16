@@ -37,6 +37,10 @@ export interface Get2faCodeViaEmailData extends CommonDataFields {
 	twoFactorCode: string;
 	expiryTime: string;
 }
+export interface RecoveryKeysEmailData extends CommonDataFields {
+	name: string;
+	recoveryCode: string;
+}
 
 export type EmailJobData =
 	| { type: 'welcomeEmail'; data: WelcomeEmailData }
@@ -45,4 +49,5 @@ export type EmailJobData =
 	| { type: 'deleteAccount'; data: DeleteAccountData }
 	| { type: 'restoreAccount'; data: RestoreAccountData }
 	| { type: 'fallbackOTP'; data: FallbackOTPEmailData }
-	| { type: 'get2faCodeViaEmail'; data: Get2faCodeViaEmailData };
+	| { type: 'get2faCodeViaEmail'; data: Get2faCodeViaEmailData }
+	| { type: 'recoveryKeysEmail'; data: RecoveryKeysEmailData };
