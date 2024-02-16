@@ -7,6 +7,11 @@ type campaignModel = Model<ICampaign>;
 
 const campaignSchema = new mongoose.Schema<ICampaign>(
 	{
+		url: {
+			type: String,
+			unique: true,
+			sparse: true,
+		},
 		category: {
 			type: mongoose.Types.ObjectId,
 			ref: 'CampaignCategory',
@@ -76,6 +81,10 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 			type: Boolean,
 			default: false,
 			select: false,
+		},
+		featured: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	{ timestamps: true }

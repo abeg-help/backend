@@ -16,8 +16,8 @@ const router = express.Router();
 
 router.get('/featured', featuredCampaigns);
 router.get('/all', getAllCampaigns);
-router.get('/:campaignId', getOneCampaign);
-router.get('/:userId', getAllCampaigns);
+router.get('/one/:shortId', getOneCampaign);
+router.get('/user/:userId', getAllCampaigns);
 
 router.use(protect);
 router.get('/categories', getCategories);

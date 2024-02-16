@@ -3,11 +3,11 @@ import { AppResponse, QueryHandler, authenticate, setCookie } from '@/common/uti
 import { catchAsync } from '@/middlewares';
 import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
+import { sanitize } from 'express-mongo-sanitize';
 
 export const getAllCampaigns = catchAsync(async (req: Request, res: Response) => {
-	const { query, params } = req;
-
-	const userId = params?.userId;
+	const query = sanitize(req.query);
+	const { userId } = sanitize(req.params);
 
 	// TODO:
 	// Add geographic location filter
