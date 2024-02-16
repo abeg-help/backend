@@ -1,5 +1,6 @@
-import { Query, FilterQuery, Document } from 'mongoose';
+import { Query, FilterQuery } from 'mongoose';
 import { ParsedQs } from 'qs';
+import { ICampaign } from '../interfaces';
 
 interface QueryString {
 	page?: string;
@@ -9,7 +10,7 @@ interface QueryString {
 	[key: string]: string | undefined;
 }
 
-export default class QueryHandler<T extends Document> {
+export default class QueryHandler<T extends ICampaign> {
 	private query: Query<T[], T>;
 	private queryString: QueryString;
 	private excludedFields: string[];
@@ -78,15 +79,6 @@ export default class QueryHandler<T extends Document> {
 		const skip = (page - 1) * limit;
 
 		this.query = this.query.skip(skip).limit(limit);
-
-		return this;
-	}
-
-	populateFields(): QueryHandler<T> {
-		if (this.queryString.populate) {
-			const populateFields = this.queryString.populate.split(',').join(' ');
-			this.query = this.query.populate(populateFields);
-		}
 
 		return this;
 	}

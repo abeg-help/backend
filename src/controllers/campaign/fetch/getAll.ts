@@ -36,7 +36,6 @@ export const getAllCampaigns = catchAsync(async (req: Request, res: Response) =>
 
 	// Create a new QueryHandler instance
 	const features = new QueryHandler(campaignModel.find(queryObj), query);
-
 	// Enable all features
 	const campaigns = await features.filter().sort().limitFields().paginate().execute();
 

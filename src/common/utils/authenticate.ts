@@ -32,7 +32,7 @@ export const authenticate = async ({
 			? cachedUser
 			: ((await UserModel.findOne({ _id: decoded.id }).select(
 					'refreshToken isSuspended isEmailVerified'
-			  )) as Require_id<IUser>);
+				)) as Require_id<IUser>);
 
 		if (!cachedUser && user) {
 			await setCache(decoded.id, user);
