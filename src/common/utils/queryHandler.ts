@@ -1,5 +1,6 @@
-import { Query, FilterQuery, Document } from 'mongoose';
+import { Query, FilterQuery } from 'mongoose';
 import { ParsedQs } from 'qs';
+import { ICampaign } from '../interfaces';
 
 interface QueryString {
 	page?: string;
@@ -9,7 +10,7 @@ interface QueryString {
 	[key: string]: string | undefined;
 }
 
-export default class QueryHandler<T extends Document> {
+export default class QueryHandler<T extends ICampaign> {
 	private query: Query<T[], T>;
 	private queryString: QueryString;
 	private excludedFields: string[];
@@ -23,16 +24,41 @@ export default class QueryHandler<T extends Document> {
 		this.queryString = Object.fromEntries(Object.entries(queryString).map(([key, value]) => [key, String(value)]));
 		this.excludedFields = excludedFields;
 	}
-
 	filter(): QueryHandler<T> {
-		const queryObj: FilterQuery<T> = { ...(this.queryString as QueryString) };
+		const queryObj: Record<string, unknown> = { ...(this.queryString as QueryString) };
 		this.excludedFields.forEach((el) => delete queryObj[el]);
 
-		this.query = this.query.find(queryObj);
+		// Create a new object to hold the parsed query parameters
+		const parsedQueryObj: Record<string, unknown> = {};
+
+		// Parse query parameters
+		for (const key in queryObj) {
+			const keyValue = queryObj[key];
+			if (typeof keyValue === 'string' && keyValue.includes(':')) {
+				const [operator, value] = keyValue.split(':');
+
+				// Convert operator to MongoDB operator
+				const mongoOperator = `$${operator}`;
+
+				// Parse value as a number if it's numeric, otherwise leave it as a string
+				const parsedValue = isNaN(Number(value)) ? value : Number(value);
+
+				// If the key already exists in parsedQueryObj, add the new operator to it, otherwise create a new object
+				if (typeof parsedQueryObj[key] === 'object' && parsedQueryObj[key] !== null) {
+					(parsedQueryObj[key] as Record<string, unknown>)[mongoOperator] = parsedValue;
+				} else {
+					parsedQueryObj[key] = { [mongoOperator]: parsedValue };
+				}
+			} else {
+				// For other fields, use the key and value directly for the filter
+				parsedQueryObj[key] = keyValue;
+			}
+		}
+
+		this.query = this.query.find(parsedQueryObj as FilterQuery<T>);
 
 		return this;
 	}
-
 	sort(defaultSort: string = '-createdAt'): QueryHandler<T> {
 		const sortBy = this.queryString.sort ? this.queryString.sort.split(',').join(' ') : defaultSort;
 		this.query = this.query.sort(sortBy);

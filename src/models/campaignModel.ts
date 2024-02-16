@@ -1,14 +1,21 @@
 import { Country, FlaggedReasonTypeEnum, FundraiserEnum, StatusEnum } from '@/common/constants';
 import type { ICampaign } from '@/common/interfaces';
 import mongoose, { Model } from 'mongoose';
+import mongooseAutopopulate from 'mongoose-autopopulate';
 
 type campaignModel = Model<ICampaign>;
 
 const campaignSchema = new mongoose.Schema<ICampaign>(
 	{
-		categoryId: {
+		url: {
+			type: String,
+			unique: true,
+			sparse: true,
+		},
+		category: {
 			type: mongoose.Types.ObjectId,
 			ref: 'CampaignCategory',
+			autopopulate: true,
 		},
 		country: {
 			type: String,
@@ -33,7 +40,13 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 		},
 		images: [
 			{
-				type: String,
+				secureUrl: {
+					type: String,
+					required: true,
+				},
+				blurHash: {
+					type: String,
+				},
 			},
 		],
 		story: {
@@ -43,8 +56,11 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 			type: String,
 		},
 		creator: {
-			type: mongoose.Types.ObjectId,
+			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
+			autopopulate: {
+				select: 'firstName lastName photo blurHash',
+			},
 		},
 		status: {
 			type: String,
@@ -69,12 +85,30 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 			default: false,
 			select: false,
 		},
+		featured: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
 
+campaignSchema.plugin(mongooseAutopopulate);
+
 campaignSchema.index({ title: 'text' });
 campaignSchema.index({ creator: 1 });
+
+// Add a virtual populate field for 'donations'
+campaignSchema.virtual('donations', {
+	ref: 'Donation', // The model to use
+	localField: '_id', // Find donations where 'localField'
+	foreignField: 'campaignId', // is equal to 'foreignField'
+	justOne: false, // And only get the first one found,
+	options: {
+		sort: { createdAt: -1 },
+		limit: 10,
+	},
+});
 
 // only pick campaigns that are not deleted or suspended
 campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {

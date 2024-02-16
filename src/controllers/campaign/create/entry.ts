@@ -4,9 +4,10 @@ import { Request, Response } from 'express';
 import { stepOne } from './stepOne';
 import { stepThree } from './stepThree';
 import { stepTwo } from './stepTwo';
+import { sanitize } from 'express-mongo-sanitize';
 
 export const createCampaign = catchAsync(async (req: Request, res: Response) => {
-	const { step } = req.params;
+	const { step } = sanitize(req.params);
 
 	if (!step) {
 		throw new AppError('Please Provide a step', 400);

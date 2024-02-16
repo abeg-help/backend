@@ -3,9 +3,10 @@ import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import { addEmailToQueue } from '@/queues';
 import { Request, Response } from 'express';
+import { sanitize } from 'express-mongo-sanitize';
 
 export const restoreAccount = catchAsync(async (req: Request, res: Response) => {
-	const { token } = req.query;
+	const { token } = sanitize(req.query);
 
 	if (!token) {
 		throw new AppError('Token is required', 400);

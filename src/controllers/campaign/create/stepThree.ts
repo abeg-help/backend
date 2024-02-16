@@ -4,6 +4,10 @@ import { CampaignJobEnum, campaignQueue } from '@/queues';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 import { StatusEnum } from '@/common/constants';
+import { customAlphabet } from 'nanoid';
+import { ENVIRONMENT } from '@/common/config';
+
+const nanoid = customAlphabet('123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ', 6);
 
 export const stepThree = async (req: Request, res: Response) => {
 	const { story, storyHtml, campaignId } = req.body;
@@ -33,32 +37,49 @@ export const stepThree = async (req: Request, res: Response) => {
 							file.mimetype.split('/')[1]
 						}`;
 
-						return await uploadSingleFile({
+						const { secureUrl, blurHash } = await uploadSingleFile({
 							fileName,
 							buffer: file.buffer,
 							mimetype: file.mimetype,
 						});
+						return { secureUrl, blurHash };
 					}),
-			  ])
+				])
 			: [];
 
-	const updatedCampaign = await campaignModel.findOneAndUpdate(
-		{ _id: campaignId, creator: user?._id },
-		{
-			images: [...campaignExist.images, ...uploadedFiles],
-			story,
-			storyHtml,
-			status: StatusEnum.IN_REVIEW,
-		},
-		{ new: true }
-	);
+	const updateCampaign = async () => {
+		const updatedCampaign = await campaignModel.findOneAndUpdate(
+			{ _id: campaignId, creator: user?._id },
+			{
+				images: [...campaignExist.images, ...uploadedFiles],
+				story,
+				storyHtml,
+				status: StatusEnum.IN_REVIEW,
+				url: campaignExist.url || `${ENVIRONMENT.FRONTEND_URL}/c/${nanoid()}`,
+			},
+			{ new: true }
+		);
 
-	if (!updatedCampaign) {
-		throw new AppError(`Unable to update campaign, try again later`, 404);
+		if (!updateCampaign) {
+			throw new AppError('Unable to update campaign', 500);
+		}
+
+		// add campaign to queue for auto processing and check
+		await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign?._id });
+		AppResponse(res, 200, updatedCampaign, 'Campaign Created Successfully');
+	};
+
+	try {
+		await updateCampaign();
+	} catch (err) {
+		interface MongooseError extends Error {
+			code?: number;
+		}
+		// retry the update if shortId collision is detected
+		if ((err as MongooseError).code === 11000) {
+			await updateCampaign();
+		} else {
+			throw new AppError(`Unable to update campaign, try again later`, 404);
+		}
 	}
-
-	// add campaign to queue for auto processing and check
-	await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign._id });
-
-	AppResponse(res, 200, updatedCampaign, 'Campaign Created Successfully');
 };

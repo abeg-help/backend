@@ -28,11 +28,12 @@ export interface IEnvironment {
 		REFRESH: string;
 	};
 	FRONTEND_URL: string;
-	AWS: {
+	R2: {
 		ACCESS_KEY_ID: string;
 		SECRET_ACCESS_KEY: string;
 		REGION: string;
 		BUCKET_NAME: string;
-		CLOUD_FRONT_URL: string;
+		ACCOUNT_ID: string;
+		CDN_URL: string;
 	};
 }
