@@ -5,3 +5,5 @@ export * from './forgotPassword';
 export * from './accountDeletedEmail';
 export * from './restoreAccountEmail';
 export * from './get2faCodeViaEmail';
+export * from './recoveryKeysEmail';
+export * from './loginNotification';

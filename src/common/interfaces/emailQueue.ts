@@ -41,6 +41,12 @@ export interface RecoveryKeysEmailData extends CommonDataFields {
 	name: string;
 	recoveryCode: string;
 }
+export interface LoginNotificationData extends CommonDataFields {
+	name: string;
+	location: string;
+	ip: string;
+	device: string;
+}
 
 export type EmailJobData =
 	| { type: 'welcomeEmail'; data: WelcomeEmailData }
@@ -50,4 +56,5 @@ export type EmailJobData =
 	| { type: 'restoreAccount'; data: RestoreAccountData }
 	| { type: 'fallbackOTP'; data: FallbackOTPEmailData }
 	| { type: 'get2faCodeViaEmail'; data: Get2faCodeViaEmailData }
-	| { type: 'recoveryKeysEmail'; data: RecoveryKeysEmailData };
+	| { type: 'recoveryKeysEmail'; data: RecoveryKeysEmailData }
+	| { type: 'loginNotification'; data: LoginNotificationData };

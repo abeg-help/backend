@@ -31,6 +31,7 @@ import hpp from 'hpp';
 import http from 'http';
 import morgan from 'morgan';
 import { Server, Socket } from 'socket.io';
+import requestIp from 'request-ip';
 
 ////////////////////////////////
 // XSS-CLEAN IS DEPRECATED
@@ -161,6 +162,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	req['requestTime'] = new Date().toISOString();
 	next();
 });
+
+//ip and geolocation middleware
+app.use(requestIp.mw());
 
 /**
  * Initialize routes

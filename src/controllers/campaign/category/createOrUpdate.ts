@@ -29,7 +29,7 @@ export const createOrUpdateCategory = catchAsync(async (req: Request, res: Respo
 				fileName,
 				buffer: image.buffer,
 				mimetype: image.mimetype,
-			})
+		  })
 		: null;
 
 	if (categoryId) {

@@ -9,6 +9,7 @@ import {
 	setCache,
 	validateTimeBased2fa,
 	toJSON,
+	sendLoginNotificationEmail,
 } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
@@ -83,6 +84,6 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 	}
 
 	await setCache(user._id.toString(), { ...user, ...toJSON(updatedUser, ['password']) });
-
+	await sendLoginNotificationEmail(user, req);
 	return AppResponse(res, 200, toJSON(updatedUser), '2FA verified successfully');
 });

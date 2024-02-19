@@ -203,6 +203,19 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 	});
 };
 
+const sendLoginNotificationEmail = async (user: Require_id<IUser>, req: Request) => {
+	await addEmailToQueue({
+		type: 'loginNotification',
+		data: {
+			to: user.email,
+			name: user.firstName,
+			ip: req.ip!,
+			device: req.get('User-Agent') as string,
+			location: req.location!,
+		},
+	});
+};
+
 const get2faCodeViaEmailHelper = async (email: string) => {
 	if (!email) {
 		throw new AppError('Email is required', 400);
@@ -259,4 +272,5 @@ export {
 	setCookie,
 	toJSON,
 	validateTimeBased2fa,
+	sendLoginNotificationEmail,
 };

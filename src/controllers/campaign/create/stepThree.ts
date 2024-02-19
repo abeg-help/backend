@@ -44,7 +44,7 @@ export const stepThree = async (req: Request, res: Response) => {
 						});
 						return { secureUrl, blurHash };
 					}),
-				])
+			  ])
 			: [];
 
 	const updateCampaign = async () => {
