@@ -8,6 +8,7 @@ import {
 	accountRestoredEmailTemplate,
 	forgotPassword,
 	get2faCodeViaEmailTemplate,
+	loginNotification,
 	resetPassword,
 	welcomeEmail,
 } from '../templates';
@@ -50,6 +51,11 @@ const TEMPLATES = {
 		subject: 'AbegHelp 2FA Code',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: recoveryKeysEmail,
+	},
+	loginNotification: {
+		subject: 'AbegHelp Login Notification',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: loginNotification,
 	},
 };
 

@@ -123,17 +123,4 @@ campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {
 	next();
 });
 
-// only pick campaigns that are not deleted or suspended
-campaignSchema.pre(/^find/, function (this: Model<ICampaign>, next) {
-	// pick deleted campaigns if the query has isDeleted
-	if (Object.keys(this['_conditions']).includes('isDeleted')) {
-		this.find({});
-		return next();
-	}
-
-	// do not select campaigns that are deleted or suspended
-	this.find({ isDeleted: { $ne: true } });
-	next();
-});
-
 export const campaignModel = (mongoose.models.Campaign as campaignModel) || mongoose.model('Campaign', campaignSchema);

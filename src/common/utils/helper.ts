@@ -241,7 +241,24 @@ const dateFromString = async (value: string) => {
 	return date;
 };
 
+const extractUAData = (req: Request) => ({
+	country: req.headers['cf-ipcountry']?.toString() || '',
+	city: req.headers['cf-ipcity']?.toString() || '',
+	postalCode: req.headers['cf-postal-code']?.toString() || '',
+	ipv4: req.headers['cf-connecting-ip']?.toString() || '',
+	ipv6: req.headers['x-envoy-external-address']?.toString() || '',
+	geo: {
+		lat: req.headers['cf-iplatitude']?.toString() || '',
+		lng: req.headers['cf-iplongitude']?.toString() || '',
+	},
+	region: req.headers['cf-region']?.toString() || '',
+	continent: req.headers['cf-ipcontinent']?.toString() || '',
+	timezone: req.headers['cf-timezone']?.toString() || '',
+	os: req.headers['sec-ch-ua-platform']?.toString() || '',
+});
+
 export {
+	extractUAData,
 	dateFromString,
 	decodeData,
 	generateRandom6DigitKey,

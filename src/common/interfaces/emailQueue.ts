@@ -1,16 +1,17 @@
+import { locationModel } from './location';
+
 export interface CommonDataFields {
 	to: string;
 	priority?: string;
+	name: string;
 }
 
 export interface WelcomeEmailData extends CommonDataFields {
-	name: string;
 	verificationLink: string;
 }
 
 export interface ForgotPasswordData extends CommonDataFields {
 	token: string;
-	name: string;
 }
 
 export interface ResetPasswordData extends CommonDataFields {
@@ -18,29 +19,26 @@ export interface ResetPasswordData extends CommonDataFields {
 }
 
 export interface DeleteAccountData extends CommonDataFields {
-	name: string;
 	days: string;
 	restoreLink: string;
 }
 
 export interface RestoreAccountData extends CommonDataFields {
-	name: string;
 	loginLink: string;
 }
 export interface FallbackOTPEmailData extends CommonDataFields {
-	name: string;
 	token: string;
 }
 
 export interface Get2faCodeViaEmailData extends CommonDataFields {
-	name: string;
 	twoFactorCode: string;
 	expiryTime: string;
 }
 export interface RecoveryKeysEmailData extends CommonDataFields {
-	name: string;
 	recoveryCode: string;
 }
+
+export interface loginNotificationData extends Partial<locationModel>, CommonDataFields {}
 
 export type EmailJobData =
 	| { type: 'welcomeEmail'; data: WelcomeEmailData }
@@ -50,4 +48,5 @@ export type EmailJobData =
 	| { type: 'restoreAccount'; data: RestoreAccountData }
 	| { type: 'fallbackOTP'; data: FallbackOTPEmailData }
 	| { type: 'get2faCodeViaEmail'; data: Get2faCodeViaEmailData }
-	| { type: 'recoveryKeysEmail'; data: RecoveryKeysEmailData };
+	| { type: 'recoveryKeysEmail'; data: RecoveryKeysEmailData }
+	| { type: 'loginNotification'; data: loginNotificationData };

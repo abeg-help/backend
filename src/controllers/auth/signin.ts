@@ -1,9 +1,20 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { IUser } from '@/common/interfaces';
-import { AppError, AppResponse, hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
+import { ILocation, IUser } from '@/common/interfaces';
+import {
+	AppError,
+	AppResponse,
+	extractUAData,
+	hashData,
+	sendVerificationEmail,
+	setCache,
+	setCookie,
+	toJSON,
+} from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
+import { locationModel } from '@/models/LocationModel';
+import { addEmailToQueue } from '@/queues';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
@@ -76,6 +87,14 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 		{ new: true }
 	)) as IUser;
 
+	const userAgent: Partial<ILocation> = await extractUAData(req);
+
+	// create an entry for login location metadata
+	await locationModel.create({
+		...userAgent,
+		user: user._id,
+	});
+
 	await setCache(user._id.toString(), { ...toJSON(updatedUser, ['password']), refreshToken });
 
 	if (user.twoFA.active) {
@@ -91,6 +110,19 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 			'Sign in successfully, proceed to 2fa verification'
 		);
 	} else {
+		// send login notification email
+		await addEmailToQueue({
+			type: 'loginNotification',
+			data: {
+				to: user.email,
+				name: user.firstName,
+				ipv4: userAgent.ipv4,
+				os: userAgent.os,
+				country: userAgent.country,
+				city: userAgent.city,
+				timezone: userAgent.timezone,
+			},
+		});
 		return AppResponse(res, 200, toJSON(updatedUser), 'Sign in successful');
 	}
 });

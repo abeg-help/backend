@@ -7,3 +7,4 @@ export * from './helper';
 export * from './request';
 export * from './token';
 export * from './user';
+export * from './location';
