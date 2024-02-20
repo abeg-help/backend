@@ -3,7 +3,7 @@ import { locationModel } from './location';
 export interface CommonDataFields {
 	to: string;
 	priority?: string;
-	name: string;
+	name?: string;
 }
 
 export interface WelcomeEmailData extends CommonDataFields {

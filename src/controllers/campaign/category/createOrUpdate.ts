@@ -5,24 +5,25 @@ import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
 export const createOrUpdateCategory = catchAsync(async (req: Request, res: Response) => {
-	let { name, categoryId } = req.body;
-	name = name.trim();
+	const { name, categoryId } = req.body;
+
+	const campaignName = name.trim();
 	const image = req.file;
 
-	if (!name) {
+	if (!campaignName) {
 		throw new AppError('name must not be empty');
 	}
 
-	const categoryExist = await campaignCategoryModel.countDocuments({ name });
+	const categoryExist = await campaignCategoryModel.countDocuments({ name: campaignName });
 
 	if (categoryExist > 0) {
-		throw new AppError(`Category already exist with name : ${name}`);
+		throw new AppError(`Category already exist with name : ${campaignName}`);
 	}
 
 	let category: unknown;
 
 	const dateInMilliseconds = DateTime.now().toMillis();
-	const fileName = `category/${name}/${dateInMilliseconds}.${image?.mimetype.split('/')[1]}`;
+	const fileName = `category/${campaignName}/${dateInMilliseconds}.${image?.mimetype?.split('/')[1]}`;
 
 	const uploadedImage = image
 		? await uploadSingleFile({
@@ -36,13 +37,17 @@ export const createOrUpdateCategory = catchAsync(async (req: Request, res: Respo
 		category = await campaignCategoryModel.findByIdAndUpdate(
 			categoryId,
 			{
-				name,
+				name: campaignName,
 				...(uploadedImage && { image: uploadedImage }),
 			},
+
 			{ new: true }
 		);
 	} else {
-		category = await campaignCategoryModel.create({ name, ...(uploadedImage && { image: uploadedImage }) });
+		category = await campaignCategoryModel.create({
+			name: campaignName,
+			...(uploadedImage && { image: uploadedImage }),
+		});
 	}
 
 	if (!category) {
