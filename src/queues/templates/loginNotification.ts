@@ -1,221 +1,372 @@
 export const loginNotification = (data) => {
 	return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 		<html dir="ltr" lang="en">
 			<head>
-				<meta charset="UTF-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<title>Email Template</title>
-				<style>
-					@font-face {
-						font-family: 'Manrope';
-						font-style: normal;
-						font-weight: 400;
-						mso-font-alt: 'sans-serif';
-						src: url(https://fonts.gstatic.com/s/manrope/v15/xn7gYHE41ni1AdIRggexSg.woff2) format('woff2');
-					}
-
-					* {
-						font-family: 'Manrope', sans-serif;
-					}
-				</style>
+				<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+				<title>AbegHelp - Suspicious Sign-in Detected!</title>
 			</head>
-			<div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0"></div>
-
-			<body
-				style='background-color:rgb(255,255,255);margin-top:auto;margin-bottom:auto;margin-left:auto;margin-right:auto;font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
-			>
+			<body>
 				<table
 					align="center"
 					width="100%"
-					class=" "
+					class=""
 					border="0"
 					cellpadding="0"
 					cellspacing="0"
 					role="presentation"
-					style="max-width:37.5em;margin-left:auto;margin-right:auto;padding:20px"
+					style="max-width:24rem;width:100%;color:rgb(72,72,72);margin-left:auto;margin-right:auto"
 				>
 					<tbody>
 						<tr style="width:100%">
 							<td>
+								<style>
+									@font-face {
+										font-family: 'Manrope';
+										font-style: normal;
+										font-weight: 400;
+										mso-font-alt: 'sans-serif';
+										src: url(https://fonts.gstatic.com/s/manrope/v15/xn7gYHE41ni1AdIRggexSg.woff2) format('woff2');
+									}
+									* {
+										font-family: 'Manrope', sans-serif;
+									}
+								</style>
+								<div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">
+									AbegHelp - Suspicious Sign-in Detected!
+								</div>
 								<table
 									align="center"
 									width="100%"
+									class=""
 									border="0"
 									cellpadding="0"
 									cellspacing="0"
 									role="presentation"
-									style="display:flex;justify-content:center;align-items:center;margin-top:1rem;margin-left:195px"
+									style="width:100%;max-width:100px;margin-left:auto;margin-right:auto"
 								>
-									<tbody style="width:100%">
-										<tr style="width:100%">
-											<td data-id="__react-email-column">
-												<img
-													alt="Logo"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704816639/abeghelp%20assets/abeg_logo_nfbolw.png"
-													class=""
-													style="align-items:center;outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;height:33px;margin-right:0.5rem"
-												/>
-											</td>
-											<td data-id="__react-email-column">
-												<p
-													style="font-size:24px;line-height:24px;margin:16px 0;color:rgb(0,128,128);font-weight:700;text-align:center;margin-top:0.75rem"
+									<tbody>
+										<tr>
+											<td>
+												<table
+													align="center"
+													width="100%"
+													border="0"
+													cellpadding="0"
+													cellspacing="0"
+													role="presentation"
 												>
-													AbegHelp.me
-												</p>
+													<tbody style="width:100%">
+														<tr style="width:100%">
+															<td data-id="__react-email-column">
+																<img
+																	alt="Abeg Help Logo"
+																	height="30"
+																	src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704816639/abeghelp%20assets/abeg_logo_nfbolw.png"
+																	style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem"
+																	width="30"
+																/>
+															</td>
+															<td data-id="__react-email-column">
+																<p
+																	style="font-size:1.125rem;line-height:1.75rem;margin:16px 0;font-weight:700;color:rgb(43,144,142)"
+																>
+																	AbegHelp.me
+																</p>
+															</td>
+														</tr>
+													</tbody>
+												</table>
 											</td>
 										</tr>
 									</tbody>
 								</table>
 								<h1
-									style="color:rgb(72,72,72);font-size:24px;font-weight:600;text-align:center;padding:0px;margin-top:30px;margin-bottom:30px;margin-left:0px;margin-right:0px"
+									style="font-size:1.25rem;line-height:1.75rem;letter-spacing:0.025em;font-weight:700;text-align:center"
 								>
-									You are almost there!🎉
+									Suspicious Sign-in Detected!
 								</h1>
-								<table
-									align="center"
-									width="100%"
-									border="0"
-									cellpadding="0"
-									cellspacing="0"
-									role="presentation"
-									style="margin-left:auto;margin-right:auto;display:flex;align-items:center;justify-content:center;margin-bottom:0.5rem"
-								>
+								<table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 									<tbody>
 										<tr>
 											<td>
 												<img
-													src="https://res.cloudinary.com/dbpybyx2l/image/upload/v1704887801/3d_cartoon_style_paper_with_green_tick_in_envelope_icon_1_zxvpqk.png"
-													alt="envelope"
-													class=""
-													style="align-items:center;outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;height:258px"
+													alt="Abeg help Illustration"
+													src="https://static.abeghelp.me/login-notification.png"
+													style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover"
 												/>
 											</td>
 										</tr>
 									</tbody>
 								</table>
-								<p
-									class="line-height-[32.78px]"
-									style="font-size:24px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:600;text-align:center;padding:0px;margin-top:35px;margin-bottom:35px;margin-left:0px;margin-right:0px"
-								>
-									Verify your email
-								</p>
-								<p
-									style="font-size:20px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:600;text-align:center;padding:0px;margin-top:3.5rem;margin-bottom:30px;margin-left:0px;margin-right:0px"
-								>
-									Hello ${data.name},
-								</p>
-								<p
-									style="font-size:20px;line-height:24px;margin:16px 0;color:rgb(0,0,0);font-weight:400;text-align:center"
-								>
-									We noticed a sign-in to your Abeg-help account: <br />
-									${data.to} on a ${data.os} device
-								</p>
-								<table
-									align="center"
-									width="100%"
-									class=""
-									border="0"
-									cellpadding="0"
-									cellspacing="0"
-									role="presentation"
-									style="text-align:center;margin-top:4rem;margin-bottom:3.5rem"
-								>
+								<table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 									<tbody>
-										<th>Login details</th>
 										<tr>
-											<td>${data.ipv4 && `<span style="font-weight: 600">Ip Address: </span> ${data.ipv4}`}</td>
-											<td>${data.country && `<span style="font-weight: 600">Country: </span> ${data.country}`}</td>
-											<td>${data.city && `<span style="font-weight: 600">City: </span> ${data.city}`}</td>
-											<td>${data.timezone && `<span style="font-weight: 600">Timezone: </span> ${data.timezone}`}</td>
 											<td>
-												<span style="font-weight: 600">Time: </span> ${new Date().toLocaleString('en-GB', {
-													timeZone: data.timeZone || 'UTC',
-												})}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								<p
-									style="font-size:16px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:400;text-align:center;margin-top:1.5rem;margin-bottom:4rem"
-								>
-									If you did not initiate this action, swiftly contact support.
-								</p>
-								<table
-									align="center"
-									width="100%"
-									class=""
-									border="0"
-									cellpadding="0"
-									cellspacing="0"
-									role="presentation"
-									style="display:flex;justify-content:center;align-items:center;margin-left:195px"
-								>
-									<tbody style="width:100%">
-										<tr style="width:100%">
-											<td data-id="__react-email-column">
-												<img
-													alt="Logo"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811240/abeghelp%20assets/fb_icon_ysucrx.png"
-													style="display:block;outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;width:30px;height:30px;margin-right:1.5rem"
-												/>
-											</td>
-											<td data-id="__react-email-column">
-												<img
-													alt="Logo"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811240/abeghelp%20assets/tw_icon_m3kszi.png"
-													style="display:block;outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;width:30px;height:30px;margin-right:1.5rem"
-												/>
-											</td>
-											<td data-id="__react-email-column">
-												<img
-													alt="Logo"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811240/abeghelp%20assets/insta_icn_r1nqj2.png"
-													style="display:block;outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;width:30px;height:30px;margin-right:1.5rem"
-												/>
-											</td>
-											<td data-id="__react-email-column">
-												<img
-													alt="Logo"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811241/abeghelp%20assets/linkdin_icn_wpfzka.png"
-													style="display:block;outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;width:30px;height:30px;margin-right:1.5rem"
-												/>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								<table
-									align="center"
-									width="100%"
-									border="0"
-									cellpadding="0"
-									cellspacing="0"
-									role="presentation"
-									style="display:flex;justify-content:center;align-items:center;margin-top:1rem;margin-left:235px"
-								>
-									<tbody style="width:100%">
-										<tr style="width:100%">
-											<td data-id="__react-email-column">
-												<img
-													alt="Logo"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704816639/abeghelp%20assets/abeg_logo_nfbolw.png"
-													style="outline:2px solid transparent;outline-offset:2px;border-style:none;text-decoration-line:none;height:20px;margin-right:0.5rem"
-												/>
-											</td>
-											<td data-id="__react-email-column">
+												<p class="" style="font-size:1.25rem;line-height:1.75rem;margin:16px 0">Dear, ${data.name}</p>
+												<p style="font-size:14px;line-height:24px;margin:16px 0">
+													We noticed a sign-in attempt from a new device or location with email ${data.to} on a
+													${data.os} device<br />
+												</p>
 												<p
-													style="font-size:14px;line-height:24px;margin:0px;color:rgb(0,128,128);font-weight:700;text-align:center"
+													style="font-size:1.125rem;line-height:1.75rem;margin:16px 0;font-weight:600;text-align:center;text-decoration-line:underline"
 												>
-													AbegHelp.me
+													Sign in Details
+												</p>
+												<table
+													align="center"
+													width="100%"
+													border="0"
+													cellpadding="0"
+													cellspacing="0"
+													role="presentation"
+												>
+													<tbody>
+														<tr>
+															<td>
+																${
+																	data.country &&
+																	`<table
+																	align="center"
+																	width="100%"
+																	border="0"
+																	cellpadding="0"
+																	cellspacing="0"
+																	role="presentation"
+																>
+																<tbody style="width:100%">
+																		<tr style="width:100%">
+																			<td data-id="__react-email-column">
+																				<p
+																					class=""
+																					style="font-size:14px;line-height:24px;margin:16px 0;font-weight:600"
+																				>
+																					Country:
+																				</p>
+																			</td>
+																			<td class="" data-id="__react-email-column" style="width:50%">
+																				<p style="font-size:14px;line-height:24px;margin:16px 0">${data.country}</p>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>`
+																}
+																${
+																	data.ipv4 &&
+																	`<table
+																	align="center"
+																	width="100%"
+																	border="0"
+																	cellpadding="0"
+																	cellspacing="0"
+																	role="presentation"
+																>
+																	<tbody style="width:100%">
+																		<tr style="width:100%">
+																			<td data-id="__react-email-column" style="width:50%">
+																				<p
+																					class=""
+																					style="font-size:14px;line-height:24px;margin:16px 0;font-weight:600"
+																				>
+																					IP Address:
+																				</p>
+																			</td>
+																			<td data-id="__react-email-column" style="width:50%">
+																				<p style="font-size:14px;line-height:24px;margin:16px 0">${data.ipv4}</p>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>`
+																}
+																${
+																	data.city &&
+																	`	<table
+																	align="center"
+																	width="100%"
+																	border="0"
+																	cellpadding="0"
+																	cellspacing="0"
+																	role="presentation"
+																>
+																	<tbody style="width:100%">
+																		<tr style="width:100%">
+																			<td data-id="__react-email-column" style="width:50%">
+																				<p
+																					class=""
+																					style="font-size:14px;line-height:24px;margin:16px 0;font-weight:600"
+																				>
+																					City:
+																				</p>
+																			</td>
+																			<td data-id="__react-email-column" style="width:50%">
+																				<p style="font-size:14px;line-height:24px;margin:16px 0">${data.city}</p>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>`
+																}
+																${
+																	data.country &&
+																	`<table
+																	align="center"
+																	width="100%"
+																	border="0"
+																	cellpadding="0"
+																	cellspacing="0"
+																	role="presentation"
+																>
+																	<tbody style="width:100%">
+																		<tr style="width:100%">
+																			<td data-id="__react-email-column" style="width:50%">
+																				<p
+																					class=""
+																					style="font-size:14px;line-height:24px;margin:16px 0;font-weight:600"
+																				>
+																					Timezone:
+																				</p>
+																			</td>
+																			<td data-id="__react-email-column" style="width:50%">
+																			<p style="font-size:14px;line-height:24px;margin:16px 0">${new Date().toLocaleString('en-GB', {
+																				timeZone: data.timezone || 'UTC',
+																			})}</p>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>`
+																}
+															</td>
+														</tr>
+													</tbody>
+												</table>
+												<p style="font-size:14px;line-height:24px;margin:16px 0">
+													If you did not attempt to sign in, your account may be at risk. Kindly contact us immediately
+													at donotreply@abeghelp.me.
 												</p>
 											</td>
 										</tr>
 									</tbody>
 								</table>
-								<p
-									class="mt-"
-									style="font-size:16px;line-height:24px;margin:16px 0;color:rgb(72,72,72);font-weight:400;text-align:center"
+								<table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+									<tbody>
+										<tr>
+											<td>
+												<p style="font-size:14px;line-height:24px;margin:16px 0">Best Regards,<br />The team</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table
+									align="center"
+									width="100%"
+									class=""
+									border="0"
+									cellpadding="0"
+									cellspacing="0"
+									role="presentation"
+									style="width:100%;max-width:100px;margin-left:auto;margin-right:auto"
 								>
+									<tbody>
+										<tr>
+											<td>
+												<table
+													align="center"
+													width="100%"
+													border="0"
+													cellpadding="0"
+													cellspacing="0"
+													role="presentation"
+												>
+													<tbody style="width:100%">
+														<tr style="width:100%">
+															<td data-id="__react-email-column">
+																<img
+																	alt="Abeg Help Logo"
+																	height="20"
+																	src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811240/abeghelp%20assets/fb_icon_ysucrx.png"
+																	style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem"
+																	width="20"
+																/>
+															</td>
+															<td data-id="__react-email-column">
+																<img
+																	alt="Abeg Help Logo"
+																	height="20"
+																	src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811241/abeghelp%20assets/linkdin_icn_wpfzka.png"
+																	style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem"
+																	width="20"
+																/>
+															</td>
+															<td data-id="__react-email-column">
+																<img
+																	alt="Abeg Help Logo"
+																	height="20"
+																	src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811240/abeghelp%20assets/tw_icon_m3kszi.png"
+																	style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem"
+																	width="20"
+																/>
+															</td>
+															<td data-id="__react-email-column">
+																<img
+																	alt="Abeg Help Logo"
+																	height="20"
+																	src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811240/abeghelp%20assets/insta_icn_r1nqj2.png"
+																	style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem"
+																	width="20"
+																/>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<table
+									align="center"
+									width="100%"
+									class=""
+									border="0"
+									cellpadding="0"
+									cellspacing="0"
+									role="presentation"
+									style="width:100%;max-width:100px;margin-left:auto;margin-right:auto"
+								>
+									<tbody>
+										<tr>
+											<td>
+												<table
+													align="center"
+													width="100%"
+													border="0"
+													cellpadding="0"
+													cellspacing="0"
+													role="presentation"
+												>
+													<tbody style="width:100%">
+														<tr style="width:100%">
+															<td data-id="__react-email-column">
+																<img
+																	alt="Abeg Help Logo"
+																	height="15"
+																	src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704816639/abeghelp%20assets/abeg_logo_nfbolw.png"
+																	style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem"
+																	width="15"
+																/>
+															</td>
+															<td data-id="__react-email-column">
+																<p
+																	style="font-size:0.75rem;line-height:1rem;margin:16px 0;font-weight:700;color:rgb(43,144,142)"
+																>
+																	AbegHelp.me
+																</p>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<p style="font-size:14px;line-height:24px;margin:16px 0;text-align:center">
 									Your journey into fundraising with ease
 								</p>
 							</td>
