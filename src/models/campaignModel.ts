@@ -89,6 +89,10 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 			type: Boolean,
 			default: false,
 		},
+		isPublished: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
