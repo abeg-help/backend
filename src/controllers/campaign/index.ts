@@ -10,3 +10,4 @@ export * from './fetch/featured';
 export * from './fetch/getOne';
 export * from './fetch/getAll';
 export * from './delete';
+export * from './publish';

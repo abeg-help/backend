@@ -19,7 +19,6 @@ export interface ICampaign {
 		type: string;
 		ref: string;
 	};
-	isComplete: boolean;
 	isPublished: boolean;
 	status: StatusEnum;
 	isFlagged: boolean;
