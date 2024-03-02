@@ -23,7 +23,7 @@ const TEMPLATES = {
 		template: resetPassword,
 	},
 	forgotPassword: {
-		subject: 'Reset Your Password',
+		subject: 'Password Change Request',
 		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: forgotPassword,
 	},

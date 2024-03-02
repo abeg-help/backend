@@ -65,17 +65,6 @@ export const resetPassword = () => {
                 </tr>
               </tbody>
             </table>
-            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
-              <tbody>
-                <tr>
-                  <td>
-                    <p style="font-size:0.875rem;line-height:1.25rem;margin:16px 0">This email was sent to<span style="color:rgb(43,144,142);font-weight:500;text-decoration-line:underline">thelocsdesigner@gmail.com</span>because you signed up for an account on AbegHelp.me
-                    <p style="font-size:14px;line-height:24px;margin:16px 0">© 2024 Abeghelp.me</p>
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
             <table align="center" width="100%" class="" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="width:100%;max-width:100px;margin-left:auto;margin-right:auto">
               <tbody>
                 <tr>

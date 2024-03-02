@@ -71,6 +71,7 @@ export const authenticate = async ({
 	const handleTokenRefresh = async () => {
 		try {
 			const decodeRefreshToken = await decodeData(abegRefreshToken, ENVIRONMENT.JWT.REFRESH_KEY!);
+
 			const currentUser = await handleUserVerification(decodeRefreshToken);
 
 			// generate access tokens

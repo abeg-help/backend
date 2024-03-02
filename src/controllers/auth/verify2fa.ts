@@ -17,13 +17,14 @@ import { DateTime } from 'luxon';
 
 export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response) => {
 	const { user } = req;
+
 	const { token } = req.body;
 
 	const userFromDb = await UserModel.findOne({ email: user?.email }).select(
 		'+twoFA.secret +twoFA.recoveryCode +lastLogin'
 	);
 
-	if (!user || !userFromDb || !userFromDb?.lastLogin) {
+	if (!user || !userFromDb || !userFromDb?.lastLogin || !userFromDb.twoFA.secret || !userFromDb.twoFA.recoveryCode) {
 		throw new AppError('Unable to complete request, try again later', 404);
 	}
 

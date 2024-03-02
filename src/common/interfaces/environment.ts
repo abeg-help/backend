@@ -36,4 +36,7 @@ export interface IEnvironment {
 		ACCOUNT_ID: string;
 		CDN_URL: string;
 	};
+	GEMINI: {
+		API_KEY: string;
+	};
 }
