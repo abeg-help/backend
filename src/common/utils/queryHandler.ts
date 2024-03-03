@@ -75,7 +75,10 @@ export default class QueryHandler<T extends ICampaign> {
 
 	paginate(defaultPage: number = 1, defaultLimit: number = 10): QueryHandler<T> {
 		const page = parseInt(this.queryString.page || '') || defaultPage;
-		const limit = parseInt(this.queryString.limit || '') || defaultLimit;
+		const parsedLimit = parseInt(this.queryString.limit || '');
+
+		const limit = parsedLimit > 100 ? defaultLimit : parsedLimit || defaultLimit;
+
 		const skip = (page - 1) * limit;
 
 		this.query = this.query.skip(skip).limit(limit);

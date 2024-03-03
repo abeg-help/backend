@@ -1,7 +1,8 @@
 import { ENVIRONMENT } from '@/common/config';
-import { Job, Queue, Worker, WorkerOptions } from 'bullmq';
+import { Job, Queue, Worker, WorkerOptions, QueueEvents } from 'bullmq';
 import IORedis from 'ioredis';
 import { processCampaign } from '@/queues/handlers/processCampaign';
+import { logger } from '@/common/utils';
 
 export enum CampaignJobEnum {
 	PROCESS_CAMPAIGN_REVIEW = 'PROCESS_CAMPAIGN_REVIEW',
@@ -23,7 +24,7 @@ const campaignQueue = new Queue('campaignQueue', {
 		attempts: 3,
 		backoff: {
 			type: 'exponential',
-			delay: 1000,
+			delay: 500,
 		},
 	},
 });
@@ -55,6 +56,31 @@ const campaignWorker = new Worker(
 	},
 	workerOptions
 );
+// EVENT LISTENERS
+// create a queue event listener
+const campaignQueueEvents = new QueueEvents('emailQueue', { connection });
+
+campaignQueueEvents.on('failed', ({ jobId, failedReason }) => {
+	console.log(`Job ${jobId} failed with error ${failedReason}`);
+	logger.error(`Job ${jobId} failed with error ${failedReason}`);
+	// Do something with the return value of failed job
+});
+
+campaignQueueEvents.on('waiting', ({ jobId }) => {
+	console.log(`A job with ID ${jobId} is waiting`);
+});
+
+campaignQueueEvents.on('completed', ({ jobId, returnvalue }) => {
+	console.log(`Job ${jobId} completed`, returnvalue);
+	logger.info(`Job ${jobId} completed`, returnvalue);
+	// Called every time a job is completed in any worker
+});
+
+campaignWorker.on('error', (err) => {
+	// log the error
+	console.error(err);
+	logger.error(`Error processing email job: ${err}`);
+});
 
 const startCampaignQueue = async () => {
 	await campaignQueue.waitUntilReady();

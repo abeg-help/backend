@@ -38,4 +38,7 @@ export const ENVIRONMENT: IEnvironment = {
 		ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID!,
 		CDN_URL: process.env.R2_CDN_URL!,
 	},
+	OPENAI: {
+		API_KEY: process.env.OPENAI_API_KEY!,
+	},
 };
