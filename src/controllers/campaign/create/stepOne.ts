@@ -12,7 +12,7 @@ export const stepOne = async (req: Request, res: Response) => {
 		throw new AppError('Country and categoryId are required', 400);
 	}
 
-	const existingCampaign = await campaignModel.findOne({ isComplete: false, creator: user?._id });
+	const existingCampaign = await campaignModel.findOne({ status: { $ne: StatusEnum.APPROVED }, creator: user?._id });
 
 	if (existingCampaign && !campaignId) {
 		throw new AppError('Only one incomplete campaign allowed at a time.', 400);
