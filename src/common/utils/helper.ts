@@ -76,6 +76,7 @@ const setCookie = (res: Response, name: string, value: string | number, options:
 		path: '/',
 		sameSite: 'none',
 		partitioned: true,
+		domain: 'abeghelp.me',
 		...options,
 	});
 };
