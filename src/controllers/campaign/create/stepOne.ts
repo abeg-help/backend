@@ -13,6 +13,7 @@ export const stepOne = async (req: Request, res: Response) => {
 	}
 
 	const existingCampaign = await campaignModel.findOne({ status: { $ne: StatusEnum.APPROVED }, creator: user?._id });
+	console.log(existingCampaign);
 
 	if (existingCampaign && !campaignId) {
 		throw new AppError('Only one incomplete campaign allowed at a time.', 400);
