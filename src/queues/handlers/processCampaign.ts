@@ -52,13 +52,8 @@ export const processCampaign = async (id: string) => {
 		await campaignModel.findByIdAndUpdate(campaign._id, {
 			flaggedReasons: reasons,
 			isFlagged: reasons.length > 0 ? true : false,
-			status: reasons.length > 0 ? StatusEnum.IN_REVIEW : StatusEnum.APPROVED,
+			status: reasons.length > 0 ? StatusEnum.REJECTED : StatusEnum.APPROVED,
 		});
-
-		campaign.flaggedReasons = reasons;
-		campaign.isFlagged = reasons.length > 0;
-		campaign.status = reasons.length > 0 ? StatusEnum.REJECTED : StatusEnum.APPROVED;
-		await campaign.save();
 
 		return campaign;
 	} catch (e) {
