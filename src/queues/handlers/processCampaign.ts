@@ -14,7 +14,6 @@ export const processCampaign = async (id: string) => {
 		}[] = [];
 
 		const campaign = await campaignModel.findById(id);
-		console.log({ campaign });
 
 		if (!campaign) {
 			throw new AppError('Campaign not found', 404);
@@ -50,9 +49,15 @@ export const processCampaign = async (id: string) => {
 			});
 		}
 
+		await campaignModel.findByIdAndUpdate(campaign._id, {
+			flaggedReasons: reasons,
+			isFlagged: reasons.length > 0 ? true : false,
+			status: reasons.length > 0 ? StatusEnum.IN_REVIEW : StatusEnum.APPROVED,
+		});
+
 		campaign.flaggedReasons = reasons;
 		campaign.isFlagged = reasons.length > 0;
-		campaign.status = reasons.length > 0 ? StatusEnum.IN_REVIEW : StatusEnum.APPROVED;
+		campaign.status = reasons.length > 0 ? StatusEnum.REJECTED : StatusEnum.APPROVED;
 		await campaign.save();
 
 		return campaign;
@@ -102,17 +107,13 @@ story: ${story}`;
 		};
 		const response: OpenAI.Chat.ChatCompletion = await openai.chat.completions.create(params);
 
-		console.log('Generated text:', response?.choices[0]?.message?.content);
-
 		const rating = Number(response?.choices[0]?.message?.content);
 		if (!isNaN(rating) && rating >= 5 && rating <= 10) {
 			return true;
 		} else {
-			console.error('Failed to parse rating from GPT-3.5 response.');
-			return false; // Or handle this error case accordingly
+			return false;
 		}
 	} catch (error) {
-		console.error('Error:', error);
 		return false; // Or handle this error case accordingly
 	}
 }
