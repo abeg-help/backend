@@ -20,7 +20,13 @@ declare global {
 	}
 }
 
-declare module 'express-serve-static-core' {
+// declare module 'express-serve-static-core' {
+// 	export interface CookieOptions {
+// 		partitioned?: boolean;
+// 	}
+// }
+
+declare module 'express' {
 	export interface CookieOptions {
 		partitioned?: boolean;
 	}
