@@ -75,8 +75,8 @@ const setCookie = (res: Response, name: string, value: string | number, options:
 		secure: ENVIRONMENT.APP.ENV === 'production',
 		path: '/',
 		sameSite: 'none',
-		partitioned: true,
-		domain: 'abeghelp.me',
+		partitioned: ENVIRONMENT.APP.ENV === 'production',
+		...(ENVIRONMENT.APP.ENV === 'production' && { domain: 'abeghelp.me' }),
 		...options,
 	});
 };
