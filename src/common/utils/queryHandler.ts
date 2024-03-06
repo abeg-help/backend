@@ -59,7 +59,7 @@ export default class QueryHandler<T extends ICampaign> {
 
 		return this;
 	}
-	sort(defaultSort: string = '-updatedAt'): QueryHandler<T> {
+	sort(defaultSort: string = 'updatedAt'): QueryHandler<T> {
 		const sortBy = this.queryString.sort ? this.queryString.sort.split(',').join(' ') : defaultSort;
 		this.query = this.query.sort(sortBy);
 
