@@ -45,7 +45,9 @@ export const mainSchema = z.object({
 		errorMap: () => ({ message: 'Please choose one of the gender options' }),
 	}),
 	token: z.string(),
-	userId: z.string(),
+	userId: z.string().regex(/^[a-f\d]{24}$/i, {
+		message: `Invalid user id`
+	}),
 	isTermAndConditionAccepted: z.boolean(),
 	receiveCodeViaEmail: z.boolean(),
 	twoFactorType: z.enum([twoFactorTypeEnum.APP, twoFactorTypeEnum.EMAIL]),
@@ -60,14 +62,18 @@ export const mainSchema = z.object({
 		])
 		.default(VerifyTimeBased2faTypeEnum.CODE),
 	name: z.string(),
-	categoryId: z.string(),
+	categoryId: z.string().regex(/^[a-f\d]{24}$/i, {
+		message: `Invalid category id`
+	}),
 	title: z.string().min(3),
 	fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
 	goal: z.number().min(1),
 	deadline: z.custom((value) => dateFromString(value as string)),
 	story: z.string().min(100),
 	storyHtml: z.string(),
-	campaignId: z.string(),
+	campaignId: z.string().regex(/^[a-f\d]{24}$/i, {
+		message: `Invalid campaign id`
+	}),
 	donorEmail: z.string().email(),
 	donorName: z.string(),
 	amount: z.number().positive(),
