@@ -11,7 +11,7 @@ import {
 	toJSON,
 } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel } from '@/models';
+import { UserModel, campaignModel } from '@/models';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
@@ -84,6 +84,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 	}
 
 	await setCache(user._id.toString(), { ...user, ...toJSON(updatedUser, ['password']) });
+	const campaigns = await campaignModel.find({ creator: user._id }).sort({ createdAt: -1 }).limit(10);
 
-	return AppResponse(res, 200, toJSON(updatedUser), '2FA verified successfully');
+	return AppResponse(res, 200, { user: toJSON(updatedUser), campaigns }, '2FA verified successfully');
 });

@@ -12,7 +12,7 @@ import {
 	toJSON,
 } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
-import { UserModel } from '@/models';
+import { UserModel, campaignModel } from '@/models';
 import { locationModel } from '@/models/LocationModel';
 import { addEmailToQueue } from '@/queues';
 import type { Request, Response } from 'express';
@@ -126,6 +126,8 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 				},
 			});
 		}
-		return AppResponse(res, 200, toJSON(updatedUser), 'Sign in successful');
+
+		const campaigns = await campaignModel.find({ creator: user._id }).sort({ createdAt: -1 }).limit(10);
+		return AppResponse(res, 200, { user: toJSON(updatedUser), campaigns }, 'Sign in successful');
 	}
 });
