@@ -62,7 +62,6 @@ export default class QueryHandler<T extends ICampaign> {
 		}
 
 		this.query = this.query.find(parsedQueryObj as FilterQuery<T>);
-
 		return this;
 	}
 	sort(defaultSort: string = 'updatedAt'): QueryHandler<T> {

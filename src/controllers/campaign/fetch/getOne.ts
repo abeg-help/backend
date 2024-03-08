@@ -14,21 +14,28 @@ export const getOneCampaign = catchAsync(async (req: Request, res: Response) => 
 		return AppResponse(res, 400, null, 'Please provide a campaign url');
 	}
 
-	// fetch from cache
-	const cachedCampaign = await getFromCache<Require_id<ICampaign>>(shortId);
+	let cachedCampaign: Require_id<ICampaign> | null = null;
+
+	// check if request is from localhost
+	if (!req.get('Referrer')?.includes('localhost')) {
+		// fetch from cache
+		cachedCampaign = await getFromCache<Require_id<ICampaign>>(shortId);
+	}
 
 	// fetch from DB if not previously cached
 	const campaign = cachedCampaign
 		? cachedCampaign
-		: ((await campaignModel.findOne({ url: `${ENVIRONMENT.FRONTEND_URL}/c/${shortId}` })) as Require_id<ICampaign>);
+		: ((await campaignModel.findOne({
+				url: `${ENVIRONMENT.FRONTEND_URL}/c/${shortId}`,
+			})) as Require_id<ICampaign>);
 
 	if (!campaign) {
 		throw new AppError(`Campaign not found`, 404);
 	}
 
-	// cache for 24 hours if not previously cached
+	// cache for 15 hours if not previously cached
 	if (!cachedCampaign && campaign) {
-		await setCache(shortId, campaign, 60 * 60 * 24);
+		await setCache(shortId, campaign, 15 * 60);
 	}
 
 	AppResponse(res, 200, campaign, 'Campaigns fetched successfully!');
