@@ -15,6 +15,7 @@ import * as OTPAuth from 'otpauth';
 import qrcode from 'qrcode';
 import { promisify } from 'util';
 import AppError from './appError';
+import { nanoid } from 'nanoid';
 
 if (!ENVIRONMENT.CACHE_REDIS.URL) {
 	throw new Error('Cache redis url not found');
@@ -263,16 +264,9 @@ const extractUAData = (req: Request) => ({
 
 const generateUniqueIdentifier = () => {
 	const prefix = 'ABG-RF-';
-	const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const randomChars = nanoid();
 
-	const timestamp = Date.now().toString(36); // Convert current timestamp to base36 string
-
-	let reference = prefix + timestamp;
-	for (let i = 0; i < 8; i++) {
-		reference += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
-	}
-
-	return reference;
+	return `${prefix}${randomChars}`;
 };
 
 export {
@@ -296,5 +290,3 @@ export {
 	validateTimeBased2fa,
 	generateUniqueIdentifier,
 };
-
-generateUniqueIdentifier();

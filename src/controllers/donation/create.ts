@@ -23,6 +23,19 @@ export const createDonation = catchAsync(async (req: Request, res: Response) => 
 
 	const reference = generateUniqueIdentifier();
 
+	const paymentUrlResponse = await initializeTransaction({
+		amount: amount * 100,
+		email: donorEmail,
+		reference,
+		metadata: {
+			campaignId,
+		},
+	});
+
+	if (!paymentUrlResponse || !paymentUrlResponse?.data) {
+		throw new AppError('Error processing donation, try again later', 500);
+	}
+
 	const donation = await donationModel.create({
 		reference,
 		campaignId,
@@ -39,23 +52,10 @@ export const createDonation = catchAsync(async (req: Request, res: Response) => 
 		throw new AppError('Error processing donation, try again later', 500);
 	}
 
-	const paymentUrlResponse = await initializeTransaction({
-		amount: amount * 100,
-		email: donorEmail,
-		reference,
-		metadata: {
-			campaignId,
-		},
-	});
-
-	if (paymentUrlResponse && paymentUrlResponse?.data) {
-		return AppResponse(
-			res,
-			200,
-			{ donation, paymentUrl: paymentUrlResponse?.data?.authorization_url },
-			'Donation created successfully'
-		);
-	} else {
-		throw new AppError('Error processing donation, try again later', 500);
-	}
+	return AppResponse(
+		res,
+		200,
+		{ donation, paymentUrl: paymentUrlResponse?.data?.authorization_url },
+		'Donation created successfully'
+	);
 });
