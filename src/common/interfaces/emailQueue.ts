@@ -8,6 +8,7 @@ export interface CommonDataFields {
 
 export interface WelcomeEmailData extends CommonDataFields {
 	verificationLink: string;
+	email: string;
 }
 
 export interface ForgotPasswordData extends CommonDataFields {

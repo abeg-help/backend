@@ -203,6 +203,7 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 		data: {
 			to: user.email,
 			name: user.firstName,
+			email: user.email,
 			verificationLink: `${req.get('Referrer')}verify-email?token=${emailVerificationToken}`,
 		},
 	});
