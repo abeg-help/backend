@@ -9,6 +9,7 @@ export interface ICampaign {
 	country: Country;
 	tags: string[];
 	goal: number;
+	amountRaised: number;
 	story: string;
 	storyHtml: string;
 	images: string[];

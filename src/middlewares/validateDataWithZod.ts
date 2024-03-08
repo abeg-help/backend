@@ -6,11 +6,14 @@ import { catchAsync } from './catchAsyncErrors';
 
 type MyDataShape = z.infer<typeof mainSchema>;
 
+const methodsToSkipValidation = ['GET'];
+const routesToSkipValidation = ['/api/v1/auth/signin', '/api/v1/payment-hook/paystack/donation/verify'];
+
 export const validateDataWithZod = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-	//skip validation for GET requests
-	if (req.method === 'GET') return next();
-	// Skip validation for sign in route
-	if (req.url === '/api/v1/auth/signin') return next();
+	// skip validation for defined methods and routes
+	if (methodsToSkipValidation.includes(req.method) || routesToSkipValidation.includes(req.url)) {
+		return next();
+	}
 
 	const rawData = req.body as Partial<MyDataShape>;
 

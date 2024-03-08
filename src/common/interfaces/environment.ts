@@ -39,4 +39,8 @@ export interface IEnvironment {
 	OPENAI: {
 		API_KEY: string;
 	};
+	PAYSTACK: {
+		HOST: string;
+		SECRET_KEY: string;
+	};
 }

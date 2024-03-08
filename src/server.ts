@@ -15,7 +15,7 @@ import { logger, stream } from '@/common/utils';
 import { errorHandler, socketController } from '@/controllers';
 import { catchSocketAsync, timeoutMiddleware, validateDataWithZod } from '@/middlewares';
 import { campaignQueue, emailQueue, startAllQueuesAndWorkers, stopAllQueuesAndWorkers } from '@/queues';
-import { authRouter, campaignRouter, userRouter } from '@/routes';
+import { authRouter, campaignRouter, donationRouter, paymentHookRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
@@ -173,6 +173,8 @@ app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/campaign', campaignRouter);
+app.use('/api/v1/donation', donationRouter);
+app.use('/api/v1/payment-hook', paymentHookRouter);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);

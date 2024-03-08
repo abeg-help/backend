@@ -97,3 +97,9 @@ export enum FlaggedReasonTypeEnum {
 	MISMATCH = 'Mismatch',
 	EXISTS = 'Exists',
 }
+
+export enum PaymentStatusEnum {
+	UNPAID = 'Unpaid',
+	PAID = 'Paid',
+	FAILED = 'Failed',
+}
