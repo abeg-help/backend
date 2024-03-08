@@ -34,24 +34,30 @@ export default class QueryHandler<T extends ICampaign> {
 		// Parse query parameters
 		for (const key in queryObj) {
 			const keyValue = queryObj[key];
-			if (typeof keyValue === 'string' && keyValue.includes(':')) {
-				const [operator, value] = keyValue.split(':');
+			if (typeof keyValue === 'string') {
+				if (keyValue === 'true') {
+					parsedQueryObj[key] = true;
+				} else if (keyValue === 'false') {
+					parsedQueryObj[key] = false;
+				} else if (keyValue.includes(':')) {
+					const [operator, value] = keyValue.split(':');
 
-				// Convert operator to MongoDB operator
-				const mongoOperator = `$${operator}`;
+					// Convert operator to MongoDB operator
+					const mongoOperator = `$${operator}`;
 
-				// Parse value as a number if it's numeric, otherwise leave it as a string
-				const parsedValue = isNaN(Number(value)) ? value : Number(value);
+					// Parse value as a number if it's numeric, otherwise leave it as a string
+					const parsedValue = isNaN(Number(value)) ? value : Number(value);
 
-				// If the key already exists in parsedQueryObj, add the new operator to it, otherwise create a new object
-				if (typeof parsedQueryObj[key] === 'object' && parsedQueryObj[key] !== null) {
-					(parsedQueryObj[key] as Record<string, unknown>)[mongoOperator] = parsedValue;
+					// If the key already exists in parsedQueryObj, add the new operator to it, otherwise create a new object
+					if (typeof parsedQueryObj[key] === 'object' && parsedQueryObj[key] !== null) {
+						(parsedQueryObj[key] as Record<string, unknown>)[mongoOperator] = parsedValue;
+					} else {
+						parsedQueryObj[key] = { [mongoOperator]: parsedValue };
+					}
 				} else {
-					parsedQueryObj[key] = { [mongoOperator]: parsedValue };
+					// For other fields, use the key and value directly for the filter
+					parsedQueryObj[key] = keyValue;
 				}
-			} else {
-				// For other fields, use the key and value directly for the filter
-				parsedQueryObj[key] = keyValue;
 			}
 		}
 
