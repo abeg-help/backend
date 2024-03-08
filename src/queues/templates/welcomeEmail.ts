@@ -49,7 +49,7 @@ export const welcomeEmail = (data) => {
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
                 <tr>
-                  <td><img alt="Abeg help Illustration" src="https://static.abeghelp.me/welcome-mail.png" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
+                  <td><img alt="Abeg help Illustration" src="https://static.abeghelp.me/assets/welcome-mail.png" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
                 </tr>
               </tbody>
             </table>
