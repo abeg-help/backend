@@ -48,11 +48,11 @@ export const createDonation = catchAsync(async (req: Request, res: Response) => 
 		},
 	});
 
-	if (paymentUrlResponse) {
+	if (paymentUrlResponse && paymentUrlResponse?.data) {
 		return AppResponse(
 			res,
 			200,
-			{ donation, paymentUrl: paymentUrlResponse.data.authorization_url },
+			{ donation, paymentUrl: paymentUrlResponse?.data?.authorization_url },
 			'Donation created successfully'
 		);
 	} else {

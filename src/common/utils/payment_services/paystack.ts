@@ -19,8 +19,8 @@ export const initializeTransaction = async (data: IInitializeTransaction) => {
 
 		return {
 			success: true,
-			data: response.data.data,
-			message: response.data.message,
+			data: response?.data?.data,
+			message: response?.data?.message,
 		};
 	} catch (error) {
 		const err = error as AxiosError;

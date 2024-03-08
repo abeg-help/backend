@@ -7,7 +7,7 @@ import { processDonationCompleted } from '../donation/processCompleteDonation';
 import { IProcessDonationCompleted } from '../../common/interfaces/donation.interface';
 
 export const paystackHook = catchAsync(async (req: Request, res: Response) => {
-	console.log('==== paystackHook ====', { req, reqBody: req.body });
+	console.log('==== paystackHook ====');
 
 	//validate event
 	const hash = createHmac('sha512', ENVIRONMENT.PAYSTACK.SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
