@@ -41,4 +41,8 @@ export const ENVIRONMENT: IEnvironment = {
 	OPENAI: {
 		API_KEY: process.env.OPENAI_API_KEY!,
 	},
+	PAYSTACK: {
+		HOST: process.env.PAYSTACK_HOST!,
+		SECRET_KEY: process.env.PAYSTACK_SECRET_KEY!,
+	},
 };

@@ -261,6 +261,20 @@ const extractUAData = (req: Request) => ({
 	os: req.headers['sec-ch-ua-platform']?.toString() || '',
 });
 
+const generateUniqueIdentifier = () => {
+	const prefix = 'ABG-RF-';
+	const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	const timestamp = Date.now().toString(36); // Convert current timestamp to base36 string
+
+	let reference = prefix + timestamp;
+	for (let i = 0; i < 8; i++) {
+		reference += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+	}
+
+	return reference;
+};
+
 export {
 	extractUAData,
 	dateFromString,
@@ -280,4 +294,7 @@ export {
 	setCookie,
 	toJSON,
 	validateTimeBased2fa,
+	generateUniqueIdentifier,
 };
+
+generateUniqueIdentifier();

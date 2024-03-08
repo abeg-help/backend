@@ -68,6 +68,10 @@ export const mainSchema = z.object({
 	story: z.string().min(100),
 	storyHtml: z.string(),
 	campaignId: z.string(),
+	donorEmail: z.string().email(),
+	donorName: z.string(),
+	amount: z.number().positive(),
+	hideMyDetails: z.boolean().default(false),
 });
 
 // Define the partial for partial validation

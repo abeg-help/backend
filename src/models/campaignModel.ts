@@ -35,6 +35,10 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 		goal: {
 			type: Number,
 		},
+		amountRaised: {
+			type: Number,
+			default: 0,
+		},
 		deadline: {
 			type: Date,
 		},
