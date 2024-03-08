@@ -57,7 +57,7 @@ export const welcomeEmail = (data) => {
               <tbody>
                 <tr>
                   <td>
-                    <p class="" style="font-size:1.25rem;line-height:1.75rem;margin:16px 0">Hi, ${data.firstName}</p>
+                    <p class="" style="font-size:1.25rem;line-height:1.75rem;margin:16px 0">Hi, ${data.name}</p>
                     <p class="" style="font-size:14px;line-height:24px;margin:16px 0">We’re glad to have you onboard! You’re already on your way to fundraising with ease.</p>
                     <p style="font-size:14px;line-height:24px;margin:16px 0">Whether you’re here for yourself, for a cause, or just for fun — welcome!</p>
                     <p style="font-size:14px;line-height:24px;margin:16px 0">To complete your registration and secure your account, please verify your email using the email verification link below</p>
