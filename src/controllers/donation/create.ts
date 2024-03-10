@@ -1,10 +1,10 @@
 import { AppError, AppResponse, extractUAData, generateUniqueIdentifier } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { Request, Response } from 'express';
-import { donationModel } from '../../models/donationModel';
-import { PaymentStatusEnum } from '../../common/constants';
-import { initializeTransaction } from '../../common/utils/payment_services/paystack';
-import { campaignModel } from '../../models';
+import { donationModel } from '@/models';
+import { PaymentStatusEnum } from '@/common/constants';
+import { initializeTransaction } from '@/common/utils/payment_services/paystack';
+import { campaignModel } from '@/models';
 
 export const createDonation = catchAsync(async (req: Request, res: Response) => {
 	const { campaignId, donorEmail, donorName, amount, hideMyDetails } = req.body;

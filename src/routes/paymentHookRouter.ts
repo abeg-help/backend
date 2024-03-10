@@ -1,7 +1,7 @@
 import express from 'express';
-import { paystackHook } from '../controllers/payment_hooks/paystack';
+import { paystackHook } from '@/controllers/payment_hooks/paystack';
 import * as expressIpFilter from 'express-ipfilter'; // Import the entire module
-import { ENVIRONMENT } from '../common/config';
+import { ENVIRONMENT } from '@/common/config';
 const { IpFilter } = expressIpFilter;
 
 let allowedPaystackIps: string[];

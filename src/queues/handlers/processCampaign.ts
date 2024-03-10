@@ -3,7 +3,7 @@ import { AppError } from '@/common/utils';
 import { campaignModel } from '@/models';
 import BadWords from 'bad-words';
 import { ENVIRONMENT } from '@/common/config';
-import { CampaignJobEnum, campaignQueue } from '../campaignQueue';
+import { CampaignJobEnum, campaignQueue } from '@/queues';
 import { OpenAI } from 'openai';
 
 export const processCampaign = async (id: string) => {

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDonation } from '../controllers/donation/create';
+import { createDonation } from '@/controllers/donation/create';
 
 const router = express.Router();
 
