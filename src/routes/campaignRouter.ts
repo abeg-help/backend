@@ -9,6 +9,7 @@ import {
 	getOneCampaign,
 	deleteCategory,
 	publishCampaign,
+	getCampaignStats,
 } from '@/controllers';
 import { protect } from '@/middlewares';
 import express from 'express';
@@ -27,6 +28,7 @@ router.post('/publish', publishCampaign);
 router.get('/categories', getCategories);
 router.post('/category', multerUpload.single('image'), createOrUpdateCategory);
 router.post('/category/delete', deleteCategory);
+router.get('analytics', getCampaignStats);
 
 // campaign
 router.post('/create/:step', multerUpload.array('photos', 5), createCampaign);
