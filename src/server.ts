@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 ///////////////////////////////////////////////////////////////////////
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import '@/common/interfaces/request';
-import { logger, stream } from '@/common/utils';
+import { AppResponse, logger, stream } from '@/common/utils';
 import { errorHandler, socketController } from '@/controllers';
 import { catchSocketAsync, timeoutMiddleware, validateDataWithZod } from '@/middlewares';
 import { campaignQueue, emailQueue, startAllQueuesAndWorkers, stopAllQueuesAndWorkers } from '@/queues';
@@ -36,6 +36,7 @@ import { Server, Socket } from 'socket.io';
 // XSS-CLEAN IS DEPRECATED
 // TODO: REWRITE A CUSTOM XSS CLEANER
 import xss from 'xss-clean';
+import { runSeeders } from './scripts/seeders';
 ////////////////////////////////
 
 dotenv.config();
@@ -175,6 +176,10 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/campaign', campaignRouter);
 app.use('/api/v1/donation', donationRouter);
 app.use('/api/v1/payment-hook', paymentHookRouter);
+app.get('/api/v1/script/seeder', async (req, res) => {
+	await runSeeders();
+	return AppResponse(res, 200, null, 'Seeders ran successfully');
+});
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
