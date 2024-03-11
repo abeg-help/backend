@@ -12,8 +12,11 @@ export const getCampaignStats = catchAsync(async (req: Request, res: Response) =
 	const pipeline: PipelineStage[] = [
 		{
 			$match: {
-				creator: user,
+				creator: user._id,
+				status: 'APPROVED',
 			},
+		},
+		{
 			$lookup: {
 				from: 'donations',
 				localField: '_id',
@@ -29,33 +32,46 @@ export const getCampaignStats = catchAsync(async (req: Request, res: Response) =
 				'donations.paymentStatus': 'PAID', // matching only donations that the payment is successful
 			},
 		},
-
 		{
 			$group: {
-				_id: null,
-				campaignCount: { $sum: 1 },
-				totalAmountRaised: { $sum: '$amountRaised' },
+				_id: {
+					userId: '$_id',
+					country: '$donations.donorIpMeta.country',
+				},
+				campaignCount: {
+					$sum: 1,
+				},
+				totalAmountRaised: {
+					$sum: '$amountRaised',
+				},
 				donorsCount: { $sum: '$donations' },
 				donations: { $push: '$donations' },
 			},
 		},
 		{
-			$project: {
-				_id: 0,
-				campaignCount: 1,
-				totalAmountRaised: 1,
-				donorsCount: 1,
-				donors: { $addToSet: '$donations.donorIpMeta.country' }, // Group donors by country
+			$group: {
+				_id: '$_id.userId',
+				campaignCount: { $first: '$campaignCount' },
+				totalAmountRaised: {
+					$first: '$totalAmountRaised',
+				},
+				donorsByCountry: {
+					$push: {
+						country: '$_id.country',
+						count: { $size: '$donations' },
+					},
+				},
 			},
 		},
 		{
-			$group: {
-				_id: '$donors',
-				donorsByCountry: { $sum: 1 },
+			$project: {
+				name: 1,
+				campaignCount: 1,
+				totalAmountRaised: 1,
+				donorsByCountry: 1,
 			},
 		},
 	];
-
 	const result = await campaignModel.aggregate(pipeline);
 	return AppResponse(res, 200, result, 'Stats fetched successfully');
 });

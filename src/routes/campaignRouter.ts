@@ -28,7 +28,7 @@ router.post('/publish', publishCampaign);
 router.get('/categories', getCategories);
 router.post('/category', multerUpload.single('image'), createOrUpdateCategory);
 router.post('/category/delete', deleteCategory);
-router.get('analytics', getCampaignStats);
+router.get('/analytics', getCampaignStats);
 
 // campaign
 router.post('/create/:step', multerUpload.array('photos', 5), createCampaign);
