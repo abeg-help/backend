@@ -55,10 +55,10 @@ async function seedCampaigns(size?: number) {
 	}
 }
 
-export async function runSeeders() {
+export async function runSeeders(size: number) {
 	try {
 		// Seed the campaigns
-		seedCampaigns(5);
+		seedCampaigns(size);
 	} catch (error) {
 		console.log('Error seeding campaigns:', error);
 	}

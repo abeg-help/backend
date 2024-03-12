@@ -46,7 +46,7 @@ export const mainSchema = z.object({
 	}),
 	token: z.string(),
 	userId: z.string().regex(/^[a-f\d]{24}$/i, {
-		message: `Invalid userId`
+		message: `Invalid userId`,
 	}),
 	isTermAndConditionAccepted: z.boolean(),
 	receiveCodeViaEmail: z.boolean(),
@@ -63,7 +63,7 @@ export const mainSchema = z.object({
 		.default(VerifyTimeBased2faTypeEnum.CODE),
 	name: z.string(),
 	categoryId: z.string().regex(/^[a-f\d]{24}$/i, {
-		message: `Invalid categoryId`
+		message: `Invalid categoryId`,
 	}),
 	title: z.string().min(3),
 	fundraiser: z.enum([...Object.values(FundraiserEnum)] as [string, ...string[]]),
@@ -72,7 +72,7 @@ export const mainSchema = z.object({
 	story: z.string().min(100),
 	storyHtml: z.string(),
 	campaignId: z.string().regex(/^[a-f\d]{24}$/i, {
-		message: `Invalid campaignId`
+		message: `Invalid campaignId`,
 	}),
 	donorEmail: z.string().email(),
 	donorName: z.string(),

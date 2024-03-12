@@ -176,8 +176,11 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/campaign', campaignRouter);
 app.use('/api/v1/donation', donationRouter);
 app.use('/api/v1/payment-hook', paymentHookRouter);
+
 app.get('/api/v1/script/seeder', async (req, res) => {
-	await runSeeders();
+	const size = Number(req?.query?.size || 20);
+
+	await runSeeders(size);
 	return AppResponse(res, 200, null, 'Seeders ran successfully');
 });
 
