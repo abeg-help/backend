@@ -2,6 +2,10 @@ import { faker } from '@faker-js/faker';
 import mongoose from 'mongoose';
 import { Country, FundraiserEnum, StatusEnum } from '../../common/constants';
 import { campaignModel } from '../../models';
+import { ENVIRONMENT } from '../../common/config';
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ', 6);
 
 async function seedCampaigns(size?: number) {
 	// Seed data
@@ -10,7 +14,7 @@ async function seedCampaigns(size?: number) {
 
 		for (let i = 0; i < size! ?? 100; i++) {
 			const newCampaign = {
-				url: faker.internet.url(),
+				url: `${ENVIRONMENT.FRONTEND_URL}/c/${nanoid()}`,
 				category: new mongoose.Types.ObjectId(), // Generate a fake ObjectId
 				country: faker.helpers.arrayElement(Object.values(Country)),
 				tags: [faker.lorem.word(), faker.lorem.word()], // Generate random tags
