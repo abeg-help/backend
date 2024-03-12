@@ -18,7 +18,7 @@ async function seedCampaigns(size?: number) {
 				category: new mongoose.Types.ObjectId(), // Generate a fake ObjectId
 				country: faker.helpers.arrayElement(Object.values(Country)),
 				tags: [faker.lorem.word(), faker.lorem.word()], // Generate random tags
-				title: faker.lorem.words(5),
+				title: faker.lorem.words(10),
 				fundraiser: faker.helpers.arrayElement(Object.values(FundraiserEnum)),
 				goal: faker.number.int({ min: 5000, max: 100000 }),
 				amountRaised: faker.number.int({ min: 5000, max: 100000 }),
@@ -29,10 +29,10 @@ async function seedCampaigns(size?: number) {
 						blurHash: faker.image.urlPlaceholder(),
 					},
 				],
-				story: faker.lorem.paragraph(),
-				storyHtml: faker.lorem.paragraphs(),
+				story: faker.lorem.paragraph(200),
+				storyHtml: faker.lorem.paragraphs(200),
 				creator: new mongoose.Types.ObjectId(),
-				status: faker.helpers.arrayElement(Object.values(StatusEnum)),
+				status: StatusEnum.APPROVED,
 				isFlagged: faker.datatype.boolean(),
 				flaggedReasons: [],
 				isDeleted: false,
