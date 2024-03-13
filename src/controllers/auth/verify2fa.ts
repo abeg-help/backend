@@ -24,7 +24,7 @@ export const verifyTimeBased2fa = catchAsync(async (req: Request, res: Response)
 		'+twoFA.secret +twoFA.recoveryCode +lastLogin'
 	);
 
-	if (!user || !userFromDb || !userFromDb?.lastLogin || !userFromDb.twoFA.secret || !userFromDb.twoFA.recoveryCode) {
+	if (!user || !userFromDb || !userFromDb?.lastLogin || !userFromDb.twoFA.recoveryCode) {
 		throw new AppError('Unable to complete request, try again later', 404);
 	}
 
