@@ -97,6 +97,10 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 			type: Boolean,
 			default: false,
 		},
+		currentStep: {
+			type: Number,
+			default: 1,
+		},
 	},
 	{ timestamps: true }
 );

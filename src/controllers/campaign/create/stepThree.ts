@@ -56,6 +56,7 @@ export const stepThree = async (req: Request, res: Response) => {
 				storyHtml,
 				status: StatusEnum.IN_REVIEW,
 				url: campaignExist.url || `${ENVIRONMENT.FRONTEND_URL}/c/${nanoid()}`,
+				currentStep: 3,
 			},
 			{ new: true }
 		);

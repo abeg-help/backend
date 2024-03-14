@@ -75,7 +75,7 @@ const setCookie = (res: Response, name: string, value: string | number, options:
 		httpOnly: true,
 		secure: ENVIRONMENT.APP.ENV === 'production',
 		path: '/',
-		sameSite: 'none',
+		sameSite: ENVIRONMENT.APP.ENV === 'production' ? 'none' : 'lax',
 		partitioned: ENVIRONMENT.APP.ENV === 'production',
 		...options,
 	});

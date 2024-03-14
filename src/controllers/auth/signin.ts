@@ -102,10 +102,13 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 			res,
 			200,
 			{
-				twoFA: {
-					type: user.twoFA.type,
-					active: user.twoFA.active,
+				user: {
+					twoFA: {
+						type: user.twoFA.type,
+						active: user.twoFA.active,
+					},
 				},
+				campaigns: [],
 			},
 			'Sign in successfully, proceed to 2fa verification'
 		);

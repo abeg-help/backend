@@ -34,6 +34,7 @@ export const stepTwo = async (req: Request, res: Response) => {
 			fundraiser,
 			goal,
 			deadline: deadlineDate,
+			currentStep: 2,
 		},
 		{ new: true }
 	);

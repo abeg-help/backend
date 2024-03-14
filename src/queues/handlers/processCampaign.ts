@@ -113,6 +113,7 @@ story: ${story}`;
 	}
 }
 async function checkForSimilarCampaign(creator, title: string): Promise<boolean> {
+	//TODO: CHECK db wide with fuzzy matching on title or use a search engine like elastic search
 	const existingFundraiser = await campaignModel.find({
 		creator: creator._id ? creator._id : creator,
 		title: { $regex: new RegExp('^' + title + '$', 'i') },

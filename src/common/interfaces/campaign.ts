@@ -29,6 +29,7 @@ export interface ICampaign {
 	}>;
 	isDeleted: boolean;
 	featured: boolean;
+	currentStep: number;
 }
 
 export interface ICampaignCategory {
