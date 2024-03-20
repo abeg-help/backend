@@ -1,5 +1,7 @@
+import { StatusEnum } from '@/common/constants';
 import { AppError, AppResponse } from '@/common/utils';
 import { campaignModel } from '@/models';
+import { CampaignJobEnum, campaignQueue } from '@/queues';
 import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
@@ -30,11 +32,20 @@ export const stepTwo = async (req: Request, res: Response) => {
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
 		{ _id: campaignId, creator: user?._id },
 		{
-			title,
-			fundraiser,
-			goal,
-			deadline: deadlineDate,
-			currentStep: 2,
+			$set: {
+				title,
+				fundraiser,
+				goal,
+				deadline: deadlineDate,
+				currentStep: 2,
+				status: {
+					$cond: {
+						if: { $eq: ['$status', StatusEnum.REJECTED] },
+						then: StatusEnum.IN_REVIEW,
+						else: '$status',
+					},
+				},
+			},
 		},
 		{ new: true }
 	);
@@ -43,5 +54,9 @@ export const stepTwo = async (req: Request, res: Response) => {
 		throw new AppError(`Unable to update campaign, try again later`, 404);
 	}
 
+	if (updatedCampaign.status === StatusEnum.IN_REVIEW) {
+		// add campaign to queue for auto processing and check
+		await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign?._id?.toString() });
+	}
 	AppResponse(res, 200, updatedCampaign, 'Proceed to step 3');
 };

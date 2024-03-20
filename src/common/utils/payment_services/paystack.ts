@@ -3,6 +3,10 @@ import { ENVIRONMENT } from '../../config';
 import { IInitializeTransaction } from '../../interfaces';
 import { axiosHandleError } from '../axios';
 
+if (!ENVIRONMENT.PAYSTACK.HOST || !ENVIRONMENT.PAYSTACK.SECRET_KEY) {
+	throw new Error('PAYSTACK HOST or SECRET_KEY is not set');
+}
+
 const paystackInstance = axios.create({
 	baseURL: ENVIRONMENT.PAYSTACK.HOST,
 	timeout: 1000 * 60 * 2,

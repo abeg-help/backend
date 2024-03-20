@@ -66,7 +66,9 @@ export const stepThree = async (req: Request, res: Response) => {
 		}
 
 		// add campaign to queue for auto processing and check
-		await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, { id: updatedCampaign?._id });
+		await campaignQueue.add(CampaignJobEnum.PROCESS_CAMPAIGN_REVIEW, {
+			id: updatedCampaign?._id?.toString(),
+		});
 		AppResponse(res, 200, updatedCampaign, 'Campaign Created Successfully');
 	};
 
