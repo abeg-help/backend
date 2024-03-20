@@ -37,7 +37,7 @@ export const stepOne = async (req: Request, res: Response) => {
 						$cond: {
 							if: { $eq: ['$status', StatusEnum.REJECTED] },
 							then: StatusEnum.IN_REVIEW,
-							else: '$status',
+							else: StatusEnum.DRAFT,
 						},
 					},
 				},

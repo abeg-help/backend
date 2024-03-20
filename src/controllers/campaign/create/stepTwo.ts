@@ -30,23 +30,25 @@ export const stepTwo = async (req: Request, res: Response) => {
 	}
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
-		{ _id: campaignId, creator: user?._id },
-		{
-			$set: {
-				title,
-				fundraiser,
-				goal,
-				deadline: deadlineDate,
-				currentStep: 2,
-				status: {
-					$cond: {
-						if: { $eq: ['$status', StatusEnum.REJECTED] },
-						then: StatusEnum.IN_REVIEW,
-						else: '$status',
+		{ _id: campaignId, creator: user?._id, status: { $ne: StatusEnum.APPROVED } },
+		[
+			{
+				$set: {
+					title: title,
+					fundraiser: fundraiser,
+					goal: goal,
+					deadline: deadlineDate,
+					currentStep: 2,
+					status: {
+						$cond: {
+							if: { $eq: ['$status', StatusEnum.REJECTED] },
+							then: StatusEnum.IN_REVIEW,
+							else: StatusEnum.DRAFT,
+						},
 					},
 				},
 			},
-		},
+		],
 		{ new: true }
 	);
 
