@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 import { PaymentStatusEnum } from '@/common/constants';
-import { IDonation } from '@/common/interfaces/donation.interface';
+import { IDonation } from '@/common/interfaces';
 
 type donationModel = Model<IDonation>;
 

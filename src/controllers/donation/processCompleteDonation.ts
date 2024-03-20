@@ -1,5 +1,5 @@
 import { PaymentStatusEnum } from '@/common/constants';
-import { IProcessDonationCompleted } from '@/common/interfaces/donation.interface';
+import { IProcessDonationCompleted } from '@/common/interfaces/donation';
 import { campaignModel, donationModel } from '@/models';
 
 export const processDonationCompleted = async (payload: IProcessDonationCompleted, meta: Record<string, string[]>) => {

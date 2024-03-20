@@ -83,16 +83,6 @@ export enum StatusEnum {
 }
 
 export enum FlaggedReasonTypeEnum {
-	RACISM = 'Racism',
-	NUDITY = 'Nudity',
-	DECEIT = 'Deceit',
-	HATE_SPEECH = 'Hate Speech',
-	VIOLENCE = 'Violence',
-	HARASSMENT = 'Harassment',
-	FRAUD = 'Fraud',
-	DISCRIMINATION = 'Discrimination',
-	EXPLICIT_CONTENT = 'Explicit Content',
-	ILLEGAL_ACTIVITY = 'Illegal Activity',
 	INAPPROPRIATE_CONTENT = 'In-appropriate Content',
 	MISMATCH = 'Mismatch',
 	EXISTS = 'Exists',
@@ -102,4 +92,6 @@ export enum PaymentStatusEnum {
 	UNPAID = 'Unpaid',
 	PAID = 'Paid',
 	FAILED = 'Failed',
+	REFUNDED = 'Refunded',
+	REFUND_FAILED = 'Refund failed',
 }

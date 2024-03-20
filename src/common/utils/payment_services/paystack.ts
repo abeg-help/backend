@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ENVIRONMENT } from '../../config';
-import { IInitializeTransaction } from '../../interfaces/paystack.interface';
+import { IInitializeTransaction } from '../../interfaces';
 import { axiosHandleError } from '../axios';
 
 const paystackInstance = axios.create({

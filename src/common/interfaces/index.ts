@@ -8,3 +8,5 @@ export * from './request';
 export * from './token';
 export * from './user';
 export * from './location';
+export * from './donation';
+export * from './paystack';

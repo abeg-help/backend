@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { createHmac } from 'crypto';
 import { ENVIRONMENT } from '@/common/config';
 import { processDonationCompleted } from '../donation/processCompleteDonation';
-import { IProcessDonationCompleted } from '@/common/interfaces/donation.interface';
+import { IProcessDonationCompleted } from '@/common/interfaces/donation';
 
 export const paystackHook = catchAsync(async (req: Request, res: Response) => {
 	console.log('==== paystackHook ====');

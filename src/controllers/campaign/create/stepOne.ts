@@ -27,9 +27,14 @@ export const stepOne = async (req: Request, res: Response) => {
 		tags,
 		category: categoryId,
 		creator: user?._id,
-		...(!campaignId && {
-			currentStep: 1,
-		}),
+
+		...(campaignId
+			? {
+					status: StatusEnum.IN_REVIEW,
+				}
+			: {
+					currentStep: 1,
+				}),
 	};
 
 	// This creates a new document if not existing {upsert: true} or updates the existing document if it exists based on the filter
