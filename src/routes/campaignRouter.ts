@@ -20,11 +20,11 @@ router.get('/featured', featuredCampaigns);
 router.get('/all', getAllCampaigns);
 router.get('/one/:shortId', getOneCampaign);
 router.get('/user/:userId', getAllCampaigns);
+router.get('/categories', getCategories);
 
 router.use(protect);
 // campaign category
 router.post('/publish', publishCampaign);
-router.get('/categories', getCategories);
 router.post('/category', multerUpload.single('image'), createOrUpdateCategory);
 router.post('/category/delete', deleteCategory);
 
