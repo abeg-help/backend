@@ -27,6 +27,7 @@ export const getOneCampaign = catchAsync(async (req: Request, res: Response) => 
 		? cachedCampaign
 		: ((await campaignModel.findOne({
 				url: `${ENVIRONMENT.FRONTEND_URL}/c/${shortId}`,
+				isPublished: true,
 			})) as Require_id<ICampaign>);
 
 	if (!campaign) {
